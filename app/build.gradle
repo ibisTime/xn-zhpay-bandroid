@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "23.0.3"
+    defaultConfig {
+        applicationId "com.zhenghui.zhqb.merchant"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Enabling multidex support.
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    // 圆形ImageView
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    // SwitchButton
+    compile 'com.kyleduo.switchbutton:library:1.4.4'
+    // RecyclerView
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    // 注入式
+    compile 'com.jakewharton:butterknife:8.4.0'
+    // XUtils3
+    compile 'org.xutils:xutils:3.3.36'
+    // 七牛
+    compile 'com.qiniu:qiniu-android-sdk:7.3.+'
+    // Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    // Gson
+    compile 'com.google.code.gson:gson:2.8.0'
+    // LuBan
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'top.zibin:Luban:1.0.9'
+    // RichText
+    compile 'com.zzhoujay.richtext:richtext:2.3.7'
+    // citypicker
+    compile 'liji.library.dev:citypickerview:0.9.0'
+    //    compile 'com.zzhoujay.glideimagegetter:glideimagegetter:1.0.1'
+    compile files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile project(':easeUI')
+    compile 'com.android.support:design:24.2.1'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile files('libs/jcore-android_v1.1.0.jar')
+}
