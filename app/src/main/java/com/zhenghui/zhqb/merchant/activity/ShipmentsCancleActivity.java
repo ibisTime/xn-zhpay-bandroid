@@ -17,6 +17,7 @@ import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.model.OrderModel;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,7 +88,7 @@ public class ShipmentsCancleActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808072", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808066", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -121,9 +122,12 @@ public class ShipmentsCancleActivity extends MyBaseActivity {
 
     private void shipmentsCancle() {
 
+        JSONArray array = new JSONArray();
+        array.put(code);
+
         JSONObject object = new JSONObject();
         try {
-            object.put("code", code);
+            object.put("codeList", array);
             object.put("updater", userInfoSp.getString("userId", null));
             object.put("remark", edtReason.getText().toString().trim());
             object.put("token", appConfigSp.getString("systemCode", null));
@@ -162,7 +166,7 @@ public class ShipmentsCancleActivity extends MyBaseActivity {
 
         for (int i = 0; i < model.getProductOrderList().size(); i++) {
             TextView view = new TextView(this);
-            view.setText(model.getProductOrderList().get(i).getProductName() + " X " + model.getProductOrderList().get(i).getQuantity());
+            view.setText(model.getProductOrderList().get(i).getProduct().getName() + " X " + model.getProductOrderList().get(i).getQuantity());
             view.setTextColor(getResources().getColor(R.color.fontColor_gray));
             layoutProduct.addView(view);
         }

@@ -106,8 +106,13 @@ public class PersonalActivity extends MyBaseActivity {
         inits();
         initEvent();
 
-        getData();
         getStroe();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
     }
 
     @Override
@@ -342,30 +347,36 @@ public class PersonalActivity extends MyBaseActivity {
         //data为B中回传的Intent
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(data == null){
-            return;
+        if (data != null) {
+            if (requestCode == ImageUtil.RESULT_LOAD_IMAGE) {
+                if(data.getData() != null){
+                    Glide.with(PersonalActivity.this).load(album(data)).into(imgPhoto);
+
+                    new QiNiuUtil(PersonalActivity.this, album(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
+                        @Override
+                        public void onSuccess(String key, ResponseInfo info, JSONObject res) {
+                            updatePhoto(key);
+                        }
+                    }, true);
+                }
+
+            } else if (requestCode == ImageUtil.RESULT_CAMARA_IMAGE) {
+                if(data.getExtras() != null){
+                    Glide.with(PersonalActivity.this).load(camara(data)).into(imgPhoto);
+
+                    new QiNiuUtil(PersonalActivity.this, camara(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
+                        @Override
+                        public void onSuccess(String key, ResponseInfo info, JSONObject res) {
+                            updatePhoto(key);
+                        }
+                    }, true);
+                }
+
+            }
+
         }
 
-        if (requestCode == ImageUtil.RESULT_LOAD_IMAGE) {
-            Glide.with(PersonalActivity.this).load(album(data)).into(imgPhoto);
 
-            new QiNiuUtil(PersonalActivity.this, album(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
-                @Override
-                public void onSuccess(String key, ResponseInfo info, JSONObject res) {
-                    updatePhoto(key);
-                }
-            }, true);
-
-        } else if (requestCode == ImageUtil.RESULT_CAMARA_IMAGE) {
-            Glide.with(PersonalActivity.this).load(camara(data)).into(imgPhoto);
-
-            new QiNiuUtil(PersonalActivity.this, camara(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
-                @Override
-                public void onSuccess(String key, ResponseInfo info, JSONObject res) {
-                    updatePhoto(key);
-                }
-            }, true);
-        }
     }
 
     /**
@@ -486,7 +497,7 @@ public class PersonalActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808209", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808218", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -559,7 +570,7 @@ public class PersonalActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808215", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808219", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {

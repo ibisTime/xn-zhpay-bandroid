@@ -1,6 +1,7 @@
 package com.zhenghui.zhqb.merchant.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by dell1 on 2016/12/15.
@@ -10,56 +11,74 @@ public class ProductModel implements Serializable {
 
 
     /**
-     * code : CP201612141529322276
-     * category : 1
-     * type : 1
-     * name : 胶囊咖啡机update
-     * advTitle : 广告语
-     * advPic : 广告图
-     * pic1 : pic1
-     * pic2 :
-     * pic3 :
-     * pic4 :
-     * description : 图文详情
-     * costPrice : 100.0
-     * quantity : 99.0
-     * status : 2
-     * updater : U000000000000001
-     * updateDatetime : Dec 14, 2016 4:12:41 PM
-     * remark : 10
-     * price1 : 20.0
-     * price2 : 10.0
-     * price3 : 10.0
-     * location : 1
-     * orderNo : 1.0
+     * code : CP201703291727333540
+     * category : 0
+     * type : FL201700000000000001
+     * name : we bare bears
+     * slogan : 广告语
+     * advPic : ANDROID_1490779593774_612_344.jpg
+     * pic : ANDROID_1490779659224_421_750.jpg
+     * description : 三只可以一起带走啦，三只可以一起带走啦，三只可以一起带走啦
+     * status : 0
+     * updater : U2017032914155538289
+     * updateDatetime : Mar 29, 2017 5:27:33 PM
+     * boughtCount : 0
      * companyCode : CD-CZH000001
      * systemCode : CD-CZH000001
+     * productSpecs : []
      */
 
     private String code;
     private String category;
     private String type;
     private String name;
-    private String advTitle;
+    private String slogan;
+    private double price1;
+    private double price2;
+    private double price3;
     private String advPic;
-    private String pic1;
-    private String pic2;
-    private String pic3;
-    private String pic4;
+    private String pic;
     private String description;
-    private double costPrice;
-    private double quantity;
     private String status;
     private String updater;
     private String updateDatetime;
-    private String remark;
-    private double price1 = 0;
-    private Integer price2 = 0;
-    private Integer price3 = 0;
-    private String location;
-    private double orderNo;
+    private int boughtCount;
     private String companyCode;
+    private String remark;
     private String systemCode;
+    private List<?> productSpecs;
+
+    public double getPrice1() {
+        return price1;
+    }
+
+    public void setPrice1(double price1) {
+        this.price1 = price1;
+    }
+
+    public double getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(double price2) {
+        this.price2 = price2;
+    }
+
+    public double getPrice3() {
+        return price3;
+    }
+
+    public void setPrice3(double price3) {
+        this.price3 = price3;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        remark = remark;
+    }
 
     public String getCode() {
         return code;
@@ -93,12 +112,12 @@ public class ProductModel implements Serializable {
         this.name = name;
     }
 
-    public String getAdvTitle() {
-        return advTitle;
+    public String getSlogan() {
+        return slogan;
     }
 
-    public void setAdvTitle(String advTitle) {
-        this.advTitle = advTitle;
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
     }
 
     public String getAdvPic() {
@@ -109,36 +128,12 @@ public class ProductModel implements Serializable {
         this.advPic = advPic;
     }
 
-    public String getPic1() {
-        return pic1;
+    public String getPic() {
+        return pic;
     }
 
-    public void setPic1(String pic1) {
-        this.pic1 = pic1;
-    }
-
-    public String getPic2() {
-        return pic2;
-    }
-
-    public void setPic2(String pic2) {
-        this.pic2 = pic2;
-    }
-
-    public String getPic3() {
-        return pic3;
-    }
-
-    public void setPic3(String pic3) {
-        this.pic3 = pic3;
-    }
-
-    public String getPic4() {
-        return pic4;
-    }
-
-    public void setPic4(String pic4) {
-        this.pic4 = pic4;
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public String getDescription() {
@@ -147,22 +142,6 @@ public class ProductModel implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public double getCostPrice() {
-        return costPrice;
-    }
-
-    public void setCostPrice(double costPrice) {
-        this.costPrice = costPrice;
-    }
-
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
     }
 
     public String getStatus() {
@@ -189,52 +168,12 @@ public class ProductModel implements Serializable {
         this.updateDatetime = updateDatetime;
     }
 
-    public String getRemark() {
-        return remark;
+    public int getBoughtCount() {
+        return boughtCount;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public double getPrice1() {
-        return price1;
-    }
-
-    public void setPrice1(double price1) {
-        this.price1 = price1;
-    }
-
-    public Integer getPrice2() {
-        return price2;
-    }
-
-    public void setPrice2(Integer price2) {
-        this.price2 = price2;
-    }
-
-    public Integer getPrice3() {
-        return price3;
-    }
-
-    public void setPrice3(Integer price3) {
-        this.price3 = price3;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public double getOrderNo() {
-        return orderNo;
-    }
-
-    public void setOrderNo(double orderNo) {
-        this.orderNo = orderNo;
+    public void setBoughtCount(int boughtCount) {
+        this.boughtCount = boughtCount;
     }
 
     public String getCompanyCode() {
@@ -251,5 +190,13 @@ public class ProductModel implements Serializable {
 
     public void setSystemCode(String systemCode) {
         this.systemCode = systemCode;
+    }
+
+    public List<?> getProductSpecs() {
+        return productSpecs;
+    }
+
+    public void setProductSpecs(List<?> productSpecs) {
+        this.productSpecs = productSpecs;
     }
 }

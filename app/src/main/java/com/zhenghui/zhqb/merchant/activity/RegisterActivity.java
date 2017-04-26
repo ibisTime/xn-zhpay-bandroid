@@ -80,6 +80,15 @@ public class RegisterActivity extends MyBaseActivity {
         }
     };
 
+    private Handler EBhandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            Toast.makeText(RegisterActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+            super.handleMessage(msg);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -277,6 +286,9 @@ public class RegisterActivity extends MyBaseActivity {
 
             @Override
             public void onError(int i, String s) {
+                Message message = EBhandler.obtainMessage();
+                message.obj = "登录失败: " + i + ", " + s;
+                EBhandler.sendMessage(message);
                 Log.i("Qian","登录失败 " + i + ", " + s);
             }
 

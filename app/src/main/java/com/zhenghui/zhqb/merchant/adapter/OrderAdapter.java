@@ -75,7 +75,7 @@ public class OrderAdapter extends BaseAdapter {
     }
 
     public void setView(int position) {
-        ImageUtil.glide(list.get(position).getProductOrderList().get(0).getAdvPic(),holder.imgPhoto,context);
+        ImageUtil.glide(list.get(position).getProductOrderList().get(0).getProduct().getAdvPic(),holder.imgPhoto,context);
 
         holder.txtTitle.setText(list.get(position).getCode());
 

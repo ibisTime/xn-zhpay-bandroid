@@ -253,18 +253,19 @@ public class DiscountAddActivity extends MyBaseActivity {
             object.put("key2", (int) (Double.parseDouble(edtKey2.getText().toString().trim()) * 1000));
             object.put("description", edtDetail.getText().toString().trim());
             object.put("price", (int) (Double.parseDouble(edtKey2.getText().toString().trim()) * 1000));
-            object.put("currency", "CNY");
+            object.put("currency", "QBB");
             object.put("validateStart", txtDateStart.getText().toString().trim());
             object.put("validateEnd", txtDateEnd.getText().toString().trim());
             object.put("isPutaway", "1");
+            object.put("token", userInfoSp.getString("token", null));
             object.put("storeCode", userInfoSp.getString("storeCode", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
-            object.put("token", userInfoSp.getString("token", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("808220", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808250", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -297,18 +298,19 @@ public class DiscountAddActivity extends MyBaseActivity {
             object.put("key2", (int) (Double.parseDouble(edtKey2.getText().toString().trim()) * 1000));
             object.put("description", edtDetail.getText().toString().trim());
             object.put("price", (int) (Double.parseDouble(edtKey2.getText().toString().trim()) * 1000));
-            object.put("currency", "CNY");
+            object.put("currency", "QBB");
             object.put("validateStart", txtDateStart.getText().toString().trim());
             object.put("validateEnd", txtDateEnd.getText().toString().trim());
             object.put("isPutaway", "1");
             object.put("storeCode", userInfoSp.getString("storeCode", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("token", userInfoSp.getString("token", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("808220", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808252", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -335,12 +337,12 @@ public class DiscountAddActivity extends MyBaseActivity {
         JSONObject object = new JSONObject();
         try {
             object.put("code", code);
-            object.put("token", userInfoSp.getString("token", null));
+//            object.put("token", userInfoSp.getString("token", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("808226", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808256", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -391,7 +393,7 @@ public class DiscountAddActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808223", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808253", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

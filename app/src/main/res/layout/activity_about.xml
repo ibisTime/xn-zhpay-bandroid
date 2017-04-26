@@ -35,7 +35,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:textColor="@color/fontColor_white"
-            android:text="关于我们"
+            android:text="新手入门"
             android:textSize="17sp" />
 
     </RelativeLayout>

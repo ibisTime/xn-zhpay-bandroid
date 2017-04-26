@@ -76,6 +76,7 @@
                 android:layout_marginLeft="16dp"
                 android:hint="请输入手机号码"
                 android:inputType="phone"
+                android:maxLength="11"
                 android:gravity="center_vertical"
                 android:textCursorDrawable="@null"
                 android:textColorHint="@color/white"

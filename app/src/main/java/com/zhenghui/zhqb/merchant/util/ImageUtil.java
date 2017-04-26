@@ -13,7 +13,7 @@ import com.zhenghui.zhqb.merchant.R;
 
 public class ImageUtil {
 
-    public static String IMAGE = "http://7xnuu2.com1.z0.glb.clouddn.com/";
+    public static String IMAGE = "http://omxvtiss6.bkt.clouddn.com/";
 
     public static final int RESULT_LOAD_IMAGE = 8888;
     public static final int RESULT_CAMARA_IMAGE = 9999;

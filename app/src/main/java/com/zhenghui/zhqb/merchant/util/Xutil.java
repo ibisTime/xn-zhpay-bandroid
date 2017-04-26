@@ -15,10 +15,11 @@ import org.xutils.x;
 
 public class Xutil {
 
-//    public static String URL = "http://121.43.101.148:5601/forward-service/api";
+//    public static String URL = "http://121.43.101.148:8901/forward-service/api";
 
-    // 正汇正式环境
-    public static String URL = "http://139.224.200.54:5601/forward-service/api";
+    // 正汇正试环境
+//    public static String URL = "http://139.224.200.54:5601/forward-service/api";
+    public static String URL = "http://118.178.124.16:5601/forward-service/api";
 
     public void post(final String code, String json, final XUtils3CallBackPost backPost){
         RequestParams params = new RequestParams(URL);
