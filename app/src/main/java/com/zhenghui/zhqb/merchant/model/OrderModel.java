@@ -80,8 +80,17 @@ public class OrderModel {
      * productName : Help--001
      * advPic : IOS_1481978079642599_4288_2848.jpg
      */
+    private UserBean user;
 
     private List<ProductOrderListBean> productOrderList;
+
+    public UserBean getUser() {
+        return user;
+    }
+
+    public void setUser(UserBean user) {
+        this.user = user;
+    }
 
     public String getCode() {
         return code;
@@ -315,16 +324,79 @@ public class OrderModel {
         this.productOrderList = productOrderList;
     }
 
+    public static class UserBean {
+        private String userId;
+        private String loginName;
+        private String nickname;
+        private String mobile;
+        private String identityFlag;
+        private String userReferee;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getLoginName() {
+            return loginName;
+        }
+
+        public void setLoginName(String loginName) {
+            this.loginName = loginName;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public void setNickname(String nickname) {
+            this.nickname = nickname;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
+
+        public String getIdentityFlag() {
+            return identityFlag;
+        }
+
+        public void setIdentityFlag(String identityFlag) {
+            this.identityFlag = identityFlag;
+        }
+
+        public String getUserReferee() {
+            return userReferee;
+        }
+
+        public void setUserReferee(String userReferee) {
+            this.userReferee = userReferee;
+        }
+    }
+
     public static class ProductOrderListBean {
         private String code;
         private String orderCode;
         private String productCode;
         private int quantity;
-        private double price1;
+        private int price1;
         private int price2;
         private int price3;
-        private String productName;
-        private String advPic;
+        private String companyCode;
+        private String systemCode;
+        /**
+         * name : 安卓商品
+         * advPic : ANDROID_1491400079469_459_816.jpg
+         */
+
+        private ProductBean product;
 
         public String getCode() {
             return code;
@@ -358,11 +430,11 @@ public class OrderModel {
             this.quantity = quantity;
         }
 
-        public double getPrice1() {
+        public int getPrice1() {
             return price1;
         }
 
-        public void setPrice1(double price1) {
+        public void setPrice1(int price1) {
             this.price1 = price1;
         }
 
@@ -382,20 +454,49 @@ public class OrderModel {
             this.price3 = price3;
         }
 
-        public String getProductName() {
-            return productName;
+        public String getCompanyCode() {
+            return companyCode;
         }
 
-        public void setProductName(String productName) {
-            this.productName = productName;
+        public void setCompanyCode(String companyCode) {
+            this.companyCode = companyCode;
         }
 
-        public String getAdvPic() {
-            return advPic;
+        public String getSystemCode() {
+            return systemCode;
         }
 
-        public void setAdvPic(String advPic) {
-            this.advPic = advPic;
+        public void setSystemCode(String systemCode) {
+            this.systemCode = systemCode;
+        }
+
+        public ProductBean getProduct() {
+            return product;
+        }
+
+        public void setProduct(ProductBean product) {
+            this.product = product;
+        }
+
+        public static class ProductBean {
+            private String name;
+            private String advPic;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getAdvPic() {
+                return advPic;
+            }
+
+            public void setAdvPic(String advPic) {
+                this.advPic = advPic;
+            }
         }
     }
 }

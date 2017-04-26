@@ -16,15 +16,16 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhenghui.zhqb.merchant.MyApplication;
+import com.zhenghui.zhqb.merchant.MyBaseActivity;
+import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.adapter.OrderAdapter;
 import com.zhenghui.zhqb.merchant.adapter.ProductAdapter;
 import com.zhenghui.zhqb.merchant.model.OrderModel;
 import com.zhenghui.zhqb.merchant.model.ProductModel;
-import com.zhenghui.zhqb.merchant.MyBaseActivity;
-import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.util.RefreshLayout;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -162,8 +163,12 @@ public class ManageActivity extends MyBaseActivity implements SwipeRefreshLayout
                 break;
 
             case R.id.img_add:
-                startActivity(new Intent(ManageActivity.this, ProductAddActivity.class));
-
+                // 不是理财商家
+                if(userInfoSp.getString("level","0").equals("2")){ // 是理财商家
+                    startActivity(new Intent(ManageActivity.this, ProductActivity.class));
+                }else {
+                    Toast.makeText(this, "您还不是理财型商家，不能添加商品", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
         }
@@ -185,18 +190,19 @@ public class ManageActivity extends MyBaseActivity implements SwipeRefreshLayout
             object.put("name", "");
             object.put("status", "");
             object.put("location", "");
-            object.put("companyCode", userInfoSp.getString("userId", null));
             object.put("start", productPage);
             object.put("limit", productPageSize);
             object.put("orderDir", "");
             object.put("orderColumn", "");
+            object.put("token", userInfoSp.getString("token", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", userInfoSp.getString("userId", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        new Xutil().post("808020", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808025", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -239,23 +245,24 @@ public class ManageActivity extends MyBaseActivity implements SwipeRefreshLayout
 
     public void getOrder() {
 
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put("2");
+        jsonArray.put("3");
+        jsonArray.put("4");
+
         JSONObject object = new JSONObject();
         try {
-            object.put("mobile", "");
-            object.put("status", "effect");
-            object.put("companyCode", userInfoSp.getString("userId", null));
+            object.put("statusList", jsonArray);
             object.put("start", orderPage+"");
             object.put("limit", orderPageSize+"");
-            object.put("orderDir", "");
-            object.put("orderColumn", "");
-            object.put("applyUser", "");
-            object.put("token", appConfigSp.getString("systemCode", null));
+            object.put("token", userInfoSp.getString("token", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", userInfoSp.getString("userId", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("808070", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808065", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -339,11 +346,11 @@ public class ManageActivity extends MyBaseActivity implements SwipeRefreshLayout
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         if (isAtProduct) {
-            if(productList.size()>0){
-                startActivity(new Intent(ManageActivity.this, ProductAddActivity.class).putExtra("isModifi", true).putExtra("code", productList.get(i).getCode()));
+            if(productList.size() > 0){
+                startActivity(new Intent(ManageActivity.this, ProductActivity.class).putExtra("isModifi", true).putExtra("code", productList.get(i).getCode()));
             }
         } else {
-            if(productList.size()>0){
+            if(orderList.size() > 0){
                 if (orderList.get(i).getStatus().equals("3")) { // 已发货，跳转到取消
                     startActivity(new Intent(ManageActivity.this, ShipmentsCancleActivity.class)
                             .putExtra("code", orderList.get(i).getCode()));

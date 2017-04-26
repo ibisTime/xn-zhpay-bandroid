@@ -9,9 +9,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +39,7 @@ import com.zhenghui.zhqb.merchant.model.UserModel;
 import com.zhenghui.zhqb.merchant.util.ImageUtil;
 import com.zhenghui.zhqb.merchant.util.MoneyUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
+import com.zzhoujay.richtext.RichText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +81,10 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
     LinearLayout layoutMall;
     @BindView(R.id.txt_point)
     TextView txtPoint;
+    @BindView(R.id.txt_introduce)
+    TextView txtIntroduce;
+    @BindView(R.id.txt_earnings)
+    TextView txtEarnings;
 
     private UserModel model;
     private SharedPreferences userInfoSp;
@@ -90,11 +100,11 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
     private boolean storeFlag = false;
     private boolean anotherDeviceFlag = true;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message message) {
             super.handleMessage(message);
-            switch (message.what){
+            switch (message.what) {
                 case 1:
                     txtPoint.setVisibility(View.VISIBLE);
                     break;
@@ -133,7 +143,7 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
         //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener());
 
-        if(userInfoSp.getBoolean("first",true)){ //第一次进入
+        if (userInfoSp.getBoolean("first", true)) { //第一次进入
             showTip();
         }
 
@@ -166,6 +176,8 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
         appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
 
         editor = userInfoSp.edit();
+        editor.putString("level", "0");
+        editor.commit();
     }
 
     private void setWindow() {
@@ -199,23 +211,23 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
                 .setPositiveButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        editor.putBoolean("push",true);
-                        editor.putBoolean("first",false);
+                        editor.putBoolean("push", true);
+                        editor.putBoolean("first", false);
                         editor.commit();
                     }
                 })
                 .setNegativeButton("否", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        editor.putBoolean("push",false);
-                        editor.putBoolean("first",false);
+                        editor.putBoolean("push", false);
+                        editor.putBoolean("first", false);
                         editor.commit();
                     }
                 })
                 .show();
     }
 
-    @OnClick({R.id.img_photo, R.id.txt_bill, R.id.txt_cash, R.id.layout_service, R.id.layout_notice, R.id.layout_store, R.id.layout_mall})
+    @OnClick({R.id.img_photo, R.id.txt_bill, R.id.txt_cash, R.id.layout_service, R.id.layout_notice, R.id.layout_store, R.id.layout_mall, R.id.txt_introduce, R.id.txt_earnings})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_photo:
@@ -227,7 +239,7 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
                 break;
 
             case R.id.txt_cash:
-                if (userInfoSp.getString("identityFlag", null).equals("1")) { //identityFlag 实名认证标示 1有 0 无
+//                if (userInfoSp.getString("identityFlag", null).equals("1")) { //identityFlag 实名认证标示 1有 0 无
 
                     if (userInfoSp.getString("tradepwdFlag", null).equals("1")) { // tradepwdFlag 交易密码标示 1有 0 无
 
@@ -242,16 +254,16 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
 
                     }
 
-                } else {
-                    Toast.makeText(this, "请先实名认证", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this, AuthenticateActivity.class));
-                }
+//                } else {
+//                    Toast.makeText(this, "请先实名认证", Toast.LENGTH_SHORT).show();
+//                    startActivity(new Intent(MainActivity.this, AuthenticateActivity.class));
+//                }
                 break;
 
             case R.id.layout_service:
                 Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
                 intent.putExtra("nickName", "客服");
-                intent.putExtra("myPhoto", userInfoSp.getString("photo",""));
+                intent.putExtra("myPhoto", userInfoSp.getString("photo", ""));
                 intent.putExtra("otherPhoto", "");
                 intent.putExtra(EaseConstant.EXTRA_USER_ID, "androidkefu");
                 intent.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
@@ -272,6 +284,25 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
 
             case R.id.layout_mall:
                 startActivity(new Intent(MainActivity.this, ManageActivity.class));
+                break;
+
+            case R.id.txt_introduce:
+                startActivity(new Intent(MainActivity.this, RichTextActivity.class).putExtra("ckey","new_start"));
+//                startActivity(new Intent(MainActivity.this, ParameterActivity.class));
+                break;
+
+            case R.id.txt_earnings:
+                System.out.println("userInfoSp.getString(\"level\",\"-1\")="+userInfoSp.getString("level","-1"));
+                // 不是理财商家
+                if(userInfoSp.getString("level","0").equals("1")){
+                    statement(view);
+                }else if(userInfoSp.getString("level","0").equals("2")){ // 是理财商家
+                    startActivity(new Intent(MainActivity.this, EarningsActivity.class));
+                }else if(userInfoSp.getString("level","0").equals("0")){
+                    Toast.makeText(MainActivity.this, "您的店铺还未上架", Toast.LENGTH_SHORT).show();
+                }
+
+
                 break;
         }
     }
@@ -298,7 +329,6 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
                     Gson gson = new Gson();
                     model = gson.fromJson(jsonObject.toString(), new TypeToken<UserModel>() {
                     }.getType());
-
 
                     editor.putString("identityFlag", model.getIdentityFlag());
                     editor.putString("tradepwdFlag", model.getTradepwdFlag());
@@ -340,15 +370,20 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
             e.printStackTrace();
         }
 
-        new Xutil().post("808215", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808219", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
-                    JSONArray jsonObject = new JSONArray(result);
-                    if (jsonObject.length() != 0) {
+                    JSONArray jsonArray = new JSONArray(result);
+                    if (jsonArray.length() != 0) {
                         storeFlag = true;
-                        txtName.setText(jsonObject.getJSONObject(0).getString("name"));
-                        editor.putString("storeCode", jsonObject.getJSONObject(0).getString("code"));
+                        if(jsonArray.getJSONObject(0).getJSONObject("store").getString("level").equals("2")){
+                            txtName.setText("公益商家");
+                        }else{
+                            txtName.setText(jsonArray.getJSONObject(0).getJSONObject("store").getString("name"));
+                        }
+                        editor.putString("storeCode", jsonArray.getJSONObject(0).getJSONObject("store").getString("code"));
+                        editor.putString("level", jsonArray.getJSONObject(0).getJSONObject("store").getString("level"));
                         editor.commit();
                     } else {
                         storeFlag = false;
@@ -432,25 +467,24 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
     }
 
 
-
     private void getServiceUnReade() {
         try {
             Message msg = new Message();
             EMConversation conversation = EMClient.getInstance().chatManager().getConversation(SERVICE_ID);
-            if(conversation != null){
+            if (conversation != null) {
                 if (conversation.getUnreadMsgCount() > 0) {
                     msg.what = 1;
-                }else{
+                } else {
                     msg.what = 2;
                 }
                 handler.sendMessage(msg);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void addMessageListener(){
+    private void addMessageListener() {
         EaseUI.getInstance().pushActivity(this);
         EMClient.getInstance().chatManager().addMessageListener(this);
     }
@@ -488,20 +522,21 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
         @Override
         public void onConnected() {
         }
+
         @Override
         public void onDisconnected(final int error) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 
-                    System.out.println("error="+error);
+                    System.out.println("error=" + error);
 
-                    if(error == EMError.USER_REMOVED){
+                    if (error == EMError.USER_REMOVED) {
                         // 显示帐号已经被移除
                         Toast.makeText(MainActivity.this, "帐号已被移除", Toast.LENGTH_SHORT).show();
-                    }else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                    } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
 
-                        if(anotherDeviceFlag){
+                        if (anotherDeviceFlag) {
                             anotherDeviceFlag = false;
                             // 显示帐号在其他设备登录
 //                            Toast.makeText(MainActivity.this, "帐号在其他设备登录", Toast.LENGTH_SHORT).show();
@@ -510,18 +545,6 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
 
                     } else {
 
-//                        if(userInfoSp.getString("userId",null) != null){
-//
-//                            System.out.println("NetUtils.hasNetwork(MainActivity.this)="+NetUtils.hasNetwork(MainActivity.this));
-//
-//                            if (NetUtils.hasNetwork(MainActivity.this)){
-//                                //连接不到聊天服务器
-//                                Toast.makeText(MainActivity.this, "连接不到聊天服务器", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                //当前网络不可用，请检查网络设置
-//                                Toast.makeText(MainActivity.this, "当前网络不可用，请检查网络设置", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
 
                     }
                 }
@@ -550,9 +573,131 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
             public void onError(int code, String message) {
                 // TODO Auto-generated method stub
                 System.out.println("logout()------>onError()");
-                System.out.println("code="+code);
-                System.out.println("message="+message);
+                System.out.println("code=" + code);
+                System.out.println("message=" + message);
             }
         });
+    }
+
+    private TextView content;
+
+    private void statement(View view) {
+
+        // 一个自定义的布局，作为显示的内容
+        View mview = LayoutInflater.from(this).inflate(R.layout.popup_statement, null);
+
+        content = (TextView) mview.findViewById(R.id.txt_content);
+        TextView ok = (TextView) mview.findViewById(R.id.txt_ok);
+        LinearLayout layoutStatement = (LinearLayout) mview.findViewById(R.id.layout_statement);
+
+        getStatement();
+
+        final PopupWindow popupWindow = new PopupWindow(mview,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+
+        popupWindow.setTouchable(true);
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return false;
+                // 这里如果返回true的话，touch事件将被拦截
+                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                popupWindow.dismiss();
+                getLevelUp();
+            }
+        });
+
+        layoutStatement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
+
+        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.corners_layout));
+        // 设置好参数之后再show
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 50);
+
+    }
+
+    public void getStatement() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("ckey", "store_up_statement");
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("token", userInfoSp.getString("token", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("807717", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    RichText.from(jsonObject.getString("note")).into(content);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(MainActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(MainActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public void getLevelUp() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("code", userInfoSp.getString("storeCode", null));
+            object.put("token", userInfoSp.getString("token", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("808207", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                startActivity(new Intent(MainActivity.this, EarningsActivity.class));
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(MainActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(MainActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

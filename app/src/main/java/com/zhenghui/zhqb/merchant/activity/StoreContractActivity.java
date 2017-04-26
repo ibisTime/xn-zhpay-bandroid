@@ -44,10 +44,12 @@ import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.adapter.RecyclerViewAdapter;
 import com.zhenghui.zhqb.merchant.model.StoreModel;
+import com.zhenghui.zhqb.merchant.model.StoreTypeModel;
 import com.zhenghui.zhqb.merchant.util.ImageUtil;
 import com.zhenghui.zhqb.merchant.util.QiNiuUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,8 +80,8 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
     LinearLayout layoutBack;
     @BindView(R.id.txt_btn)
     TextView txtBtn;
-    @BindView(R.id.txt_status)
-    TextView txtStatus;
+    @BindView(R.id.txt_yijian)
+    TextView txtYijian;
     @BindView(R.id.img_cover)
     ImageView imgCover;
     @BindView(R.id.txt_type)
@@ -100,30 +102,33 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
     LinearLayout layoutOrientation;
     @BindView(R.id.edt_phone)
     EditText edtPhone;
-    @BindView(R.id.edt_advertisement)
-    EditText edtAdvertisement;
+    @BindView(R.id.edt_smsMobile)
+    EditText edtSmsMobile;
     @BindView(R.id.edt_legalPerson)
     EditText edtLegalPerson;
     @BindView(R.id.edt_referrer)
     EditText edtReferrer;
-    @BindView(R.id.edt_use)
-    EditText edtUse;
-    @BindView(R.id.edt_nonuse)
-    EditText edtNonuse;
+    @BindView(R.id.edt_advertisement)
+    EditText edtAdvertisement;
+    @BindView(R.id.txt_use)
+    TextView txtUse;
+    @BindView(R.id.txt_nonuse)
+    TextView txtNonuse;
     @BindView(R.id.edt_detail)
     EditText edtDetail;
     @BindView(R.id.img_add)
     ImageView imgAdd;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    private String type = "1";
+
     private String imageUrl = "";
     private String latitude = "";
     private String longitude = "";
     private String addressName = "";
 
-    private String[] storeType = {"美食", "KTV", "美发", "便利店", "足浴", "酒店", "亲子", "蔬果"};
-
+    private int type = -1;
+    private String[] storeType;
+    private List<StoreTypeModel> list;
 
     private boolean isCover = true;
     private boolean isModifi = false;
@@ -153,6 +158,7 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         inits();
         initRecyclerView();
         initEvent();
+        getStoreType();
     }
 
     @Override
@@ -163,23 +169,18 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
 
     private void inits() {
 
+        list = new ArrayList<>();
         listPic = new ArrayList<>();
         listPicUrl = new ArrayList<>();
 
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
 
-        isModifi = getIntent().getBooleanExtra("isModifi",false);
+        isModifi = getIntent().getBooleanExtra("isModifi", false);
 
         userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
 
-        if(isModifi){
-            txtBtn.setText("修改");
-            getDatas();
-        }else {
-            txtBtn.setText("保存");
-        }
     }
 
     private void initRecyclerView() {
@@ -188,7 +189,7 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         //设置适配器
-        recyclerViewAdapter = new RecyclerViewAdapter(StoreContractActivity.this, listPic,listPicUrl);
+        recyclerViewAdapter = new RecyclerViewAdapter(StoreContractActivity.this, listPic, listPicUrl);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -203,7 +204,7 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
                 break;
 
             case R.id.txt_btn:
-                if(checkData()){
+                if (checkData()) {
                     commit();
                 }
                 break;
@@ -237,11 +238,10 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
 
     private void chooseBankCard() {
         new AlertDialog.Builder(this).setTitle("请选择店铺类型").setSingleChoiceItems(
-                storeType, 0, new DialogInterface.OnClickListener() {
+                storeType, type, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         txtType.setText(storeType[which]);
-                        type = (which + 1) + "";
-                        System.out.println("type="+type);
+                        type = which;
                         dialog.dismiss();
                     }
                 }).setNegativeButton("取消", null).show();
@@ -345,60 +345,60 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         //data为B中回传的Intent
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(data == null){
-            return;
-        }
-
-        if (requestCode == ImageUtil.RESULT_LOAD_IMAGE) {
-            if (isCover) {
-                Glide.with(StoreContractActivity.this).load(album(data)).into(imgCover);
-            } else {
-                listPic.add(album(data));
-                recyclerViewAdapter.notifyDataSetChanged();
-            }
-
-            new QiNiuUtil(StoreContractActivity.this, album(data),null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
-                @Override
-                public void onSuccess(String key, ResponseInfo info, JSONObject res) {
-                    System.out.println("key=" + key);
-
-                    if(isCover){
-                        imageUrl = key;
-                    }else{
-                        listPicUrl.add(key);
+        if (data != null) {
+            if (requestCode == ImageUtil.RESULT_LOAD_IMAGE) {
+                if(data.getData() != null){
+                    if (isCover) {
+                        Glide.with(StoreContractActivity.this).load(album(data)).into(imgCover);
+                    } else {
+                        listPic.add(album(data));
+                        recyclerViewAdapter.notifyDataSetChanged();
                     }
 
+                    new QiNiuUtil(StoreContractActivity.this, album(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
+                        @Override
+                        public void onSuccess(String key, ResponseInfo info, JSONObject res) {
+                            System.out.println("key=" + key);
+
+                            if (isCover) {
+                                imageUrl = key;
+                            } else {
+                                listPicUrl.add(key);
+                            }
+
+                        }
+                    }, true);
                 }
-            }, true);
 
-        } else if (requestCode == ImageUtil.RESULT_CAMARA_IMAGE) {
+            } else if (requestCode == ImageUtil.RESULT_CAMARA_IMAGE) {
+                if(data.getExtras() != null){
+                    if (isCover) {
+                        Glide.with(StoreContractActivity.this).load(camara(data)).into(imgCover);
+                    } else {
+                        listPic.add(camara(data));
+                        recyclerViewAdapter.notifyDataSetChanged();
 
-            if (isCover) {
-                Glide.with(StoreContractActivity.this).load(camara(data)).into(imgCover);
-            } else {
-                listPic.add(camara(data));
-                recyclerViewAdapter.notifyDataSetChanged();
-
-            }
-
-            new QiNiuUtil(StoreContractActivity.this, camara(data),null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
-                @Override
-                public void onSuccess(String key, ResponseInfo info, JSONObject res) {
-                    if(isCover){
-                        imageUrl = key;
-                    }else{
-                        listPicUrl.add(key);
                     }
+
+                    new QiNiuUtil(StoreContractActivity.this, camara(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
+                        @Override
+                        public void onSuccess(String key, ResponseInfo info, JSONObject res) {
+                            if (isCover) {
+                                imageUrl = key;
+                            } else {
+                                listPicUrl.add(key);
+                            }
+                        }
+                    }, true);
                 }
-            }, true);
-
-
-        } else if (requestCode == 0 && resultCode == 0) {
-            longitude = data.getStringExtra("longitude");
-            latitude = data.getStringExtra("latitude");
-            addressName = data.getStringExtra("addressName");
-            txtOrientation.setText(addressName);
+            } else if (requestCode == 0 && resultCode == 0) {
+                longitude = data.getStringExtra("longitude");
+                latitude = data.getStringExtra("latitude");
+                addressName = data.getStringExtra("addressName");
+                txtOrientation.setText(addressName);
+            }
         }
+
     }
 
 
@@ -465,7 +465,7 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         return fileName;
     }
 
-    private void cityPicker(){
+    private void cityPicker() {
         CityPicker cityPicker = new CityPicker.Builder(StoreContractActivity.this)
                 .textSize(18)
                 .titleBackgroundColor("#ffffff")
@@ -505,28 +505,30 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
     }
 
 
-
     private void commit() {
         String pic = "";
 
-        for(String s : listPicUrl){
-            pic = pic + s + "||" ;
+        for (String s : listPicUrl) {
+            pic = pic + s + "||";
         }
-        System.out.println("pic="+pic);
+        System.out.println("pic=" + pic);
 
         JSONObject object = new JSONObject();
         try {
-            if(isModifi){
-                object.put("code", userInfoSp.getString("storeCode",null));
+            if (isModifi) {
+                object.put("code", userInfoSp.getString("storeCode", null));
+                object.put("updater", userInfoSp.getString("userId", null));
+            } else {
+                object.put("owner", userInfoSp.getString("userId", null));
             }
             object.put("name", edtName.getText().toString().trim());
-            object.put("type", type);
+            object.put("type", list.get(type).getCode());
             object.put("legalPersonName", edtLegalPerson.getText().toString().trim());
             object.put("userReferee", edtReferrer.getText().toString().trim());
-            object.put("rate1", (Double.parseDouble(edtUse.getText().toString().trim())/100)+"");
-            object.put("rate2", (Double.parseDouble(edtNonuse.getText().toString().trim())/100)+"");
+            object.put("rate1", (Double.parseDouble(txtUse.getText().toString().trim()) / 100) + "");
+            object.put("rate2", (Double.parseDouble(txtNonuse.getText().toString().trim()) / 100) + "");
             object.put("slogan", edtAdvertisement.getText().toString().trim());
-            object.put("adPic", imageUrl);
+            object.put("advPic", imageUrl);
             object.put("pic", pic.substring(0, pic.length() - 2));
             object.put("description", edtDetail.getText().toString().trim());
             object.put("province", mCurrentProviceName);
@@ -536,20 +538,20 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
             object.put("longitude", longitude);
             object.put("latitude", latitude);
             object.put("bookMobile", edtPhone.getText().toString().trim());
-            object.put("smsMobile", "");
+            object.put("smsMobile", edtSmsMobile.getText().toString().trim());
             object.put("pdf", "");
             object.put("token", userInfoSp.getString("token", null));
-            object.put("owner", userInfoSp.getString("userId", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         String httCode = "";
-        if(isModifi){
+        if (isModifi) {
             httCode = "808203";
 
-        }else {
+        } else {
             httCode = "808201";
         }
 
@@ -557,11 +559,11 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
             @Override
             public void onSuccess(String result) {
                 try {
-                    if(isModifi){
+                    if (isModifi) {
                         Toast.makeText(StoreContractActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         Toast.makeText(StoreContractActivity.this, "签约成功", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(StoreContractActivity.this,StoreManageActivity.class));
+                        startActivity(new Intent(StoreContractActivity.this, StoreManageActivity.class));
                     }
 
                     finish();
@@ -587,11 +589,11 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
 
     private boolean checkData() {
 
-        if(imageUrl.equals("")){
+        if (imageUrl.equals("")) {
             Toast.makeText(this, "请添加店铺封面", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (type.equals("")) {
+        if (type == -1) {
             Toast.makeText(this, "请选择店铺类型", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -619,6 +621,10 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
             Toast.makeText(this, "请填写店铺广告", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (edtSmsMobile.getText().toString().trim().length() != 11) {
+            Toast.makeText(this, "请填写正确的短信手机号码", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         if (edtLegalPerson.getText().toString().trim().equals("")) {
             Toast.makeText(this, "请填写法人姓名", Toast.LENGTH_SHORT).show();
             return false;
@@ -627,19 +633,19 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
             Toast.makeText(this, "请填写正确的推荐人账号", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (edtUse.getText().toString().trim().equals("")) {
-            Toast.makeText(this, "请填写使用抵扣券分成比例", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (edtNonuse.getText().toString().trim().equals("")) {
-            Toast.makeText(this, "请填写不使用抵扣券分成比例", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+//        if (edtUse.getText().toString().trim().equals("")) {
+//            Toast.makeText(this, "请填写使用抵扣券分成比例", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//        if (edtNonuse.getText().toString().trim().equals("")) {
+//            Toast.makeText(this, "请填写不使用抵扣券分成比例", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
         if (edtDetail.getText().toString().trim().length() < 20) {
             Toast.makeText(this, "店铺详情不能少于20个字", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (listPic.size() == 0){
+        if (listPic.size() == 0) {
             Toast.makeText(this, "请添加店铺图片", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -650,17 +656,17 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
     /**
      * 获取商家详情
      */
-    private void getDatas(){
+    private void getDatas() {
         JSONObject object = new JSONObject();
         try {
-            object.put("fromUser",userInfoSp.getString("userId",null));
-            object.put("code",userInfoSp.getString("storeCode",null));
-            object.put("token",userInfoSp.getString("token",null));
+            object.put("userId", userInfoSp.getString("userId", null));
+            object.put("code", userInfoSp.getString("storeCode", null));
+            object.put("token", userInfoSp.getString("token", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("808209", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808218", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -668,7 +674,8 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
                     JSONObject jsonObject = new JSONObject(result);
 
                     Gson gson = new Gson();
-                    model = gson.fromJson(jsonObject.toString(), new TypeToken<StoreModel>(){}.getType());
+                    model = gson.fromJson(jsonObject.toString(), new TypeToken<StoreModel>() {
+                    }.getType());
 
                     setView();
 
@@ -690,15 +697,82 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         });
     }
 
-    private void setView() {
-        ImageUtil.glide(model.getAdPic(),imgCover,this);
-        imageUrl = model.getAdPic();
+    private void getStoreType() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("type", "2");
+            object.put("name", "");
+            object.put("status", "1");
+            object.put("parentCode", "");
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        txtType.setText(storeType[(Integer.parseInt(model.getType())-1)]);
-        type = model.getType();
+        new Xutil().post("808007", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                try {
+                    JSONArray jsonArray = new JSONArray(result);
+
+                    Gson gson = new Gson();
+                    list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<StoreTypeModel>>() {
+                    }.getType());
+
+                    storeType = new String[list.size()];
+                    for (int i = 0; i < list.size(); i++) {
+                        storeType[i] = list.get(i).getName();
+                    }
+
+                    if (storeType.length != 0) {
+                        txtType.setText(list.get(0).getName());
+                        type = 0;
+                    }
+
+                    if (isModifi) {
+                        txtBtn.setText("修改");
+                        getDatas();
+                    } else {
+                        txtBtn.setText("保存");
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(StoreContractActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(StoreContractActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setView() {
+        ImageUtil.glide(model.getAdvPic(), imgCover, this);
+        imageUrl = model.getAdvPic();
+
+        if (!model.getRemark().equals("")) {
+            txtYijian.setText("审核反馈:" + model.getRemark());
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            if (model.getType().equals(list.get(i).getCode())) {
+                txtType.setText(list.get(i).getName());
+                type = i;
+            }
+        }
 
         edtName.setText(model.getName());
-        txtLocation.setText(model.getProvince()+model.getCity()+model.getArea());
+        txtLocation.setText(model.getProvince() + model.getCity() + model.getArea());
         edtAddress.setText(model.getAddress());
 
         mCurrentProviceName = model.getProvince();
@@ -706,16 +780,17 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         mCurrentDistrictName = model.getArea();
 
         edtPhone.setText(model.getBookMobile());
+        edtSmsMobile.setText(model.getSmsMobile());
         edtAdvertisement.setText(model.getSlogan());
         edtLegalPerson.setText(model.getLegalPersonName());
         edtReferrer.setText(model.getRefereeMobile());
         edtDetail.setText(model.getDescription());
 
-        edtUse.setText((model.getRate1()*100)+"");
-        edtNonuse.setText(model.getRate2()*100+"");
+        txtUse.setText((model.getRate1() * 100) + "");
+        txtNonuse.setText(model.getRate2() * 100 + "");
 
-        String[] pic =  model.getPic().split("\\|\\|");
-        for (int i = 0; i<pic.length; i++){
+        String[] pic = model.getPic().split("\\|\\|");
+        for (int i = 0; i < pic.length; i++) {
             listPic.add(pic[i]);
             listPicUrl.add(pic[i]);
         }
@@ -742,12 +817,12 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
                     && result.getRegeocodeAddress().getFormatAddress() != null) {
                 addressName = result.getRegeocodeAddress().getFormatAddress();
             } else {
-                addressName = longitude+","+latitude;
+                addressName = longitude + "," + latitude;
             }
 
-        }else{
+        } else {
             addressName = "获取位置失败";
-            Log.i("MapActivity","onRegeocodeSearched------>wrong");
+            Log.i("MapActivity", "onRegeocodeSearched------>wrong");
         }
 
         txtOrientation.setText(addressName);

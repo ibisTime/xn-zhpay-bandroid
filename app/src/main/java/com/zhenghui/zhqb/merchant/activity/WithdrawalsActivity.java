@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -70,6 +73,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
         MyApplication.getInstance().addActivity(this);
 
         inits();
+        initEditText();
     }
 
     @Override
@@ -88,6 +92,27 @@ public class WithdrawalsActivity extends MyBaseActivity {
         accountNumber = getIntent().getStringExtra("accountNumber");
 
         txtCanUsePrice.setText("可提现金额" + MoneyUtil.moneyFormatDouble(balance) + "元");
+    }
+
+    private void initEditText() {
+        edtPrice.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
+        //设置字符过滤
+        edtPrice.setFilters(new InputFilter[]{new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if (source.equals(".") && dest.toString().length() == 0) {
+                    return "0.";
+                }
+                if (dest.toString().contains(".")) {
+                    int index = dest.toString().indexOf(".");
+                    int mlength = dest.toString().substring(index).length();
+                    if (mlength == 3) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        }});
     }
 
     @OnClick({R.id.layout_back, R.id.layout_bankCard, R.id.txt_confirm})
@@ -150,7 +175,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("token", userInfoSp.getString("token", null));
             object.put("bankcardNumber", bankcardCode);
-            object.put("transAmount", (int) (Double.parseDouble(edtPrice.getText().toString().trim()) * 1000));
+            object.put("transAmount", "-"+(int) (Double.parseDouble(edtPrice.getText().toString().trim()) * 1000));
             object.put("accountNumber", accountNumber);
             object.put("tradePwd", edtRepassword.getText().toString());
         } catch (JSONException e) {
@@ -158,6 +183,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
         }
 
         new Xutil().post("802526", object.toString(), new Xutil.XUtils3CallBackPost() {
+
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(WithdrawalsActivity.this, "提现成功", Toast.LENGTH_SHORT).show();

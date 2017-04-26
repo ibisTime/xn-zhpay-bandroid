@@ -3,53 +3,55 @@ package com.zhenghui.zhqb.merchant.model;
 import java.util.List;
 
 /**
- * Created by LeiQ on 2016/12/29.
+ * Created by LeiQ on 2017/3/29.
  */
 
 public class StoreModel {
 
 
     /**
-     * code : SJ201701170134032678
-     * name : 仓前卖吃的
+     * code : SJ201703291508138235
+     * name : 没事店铺
+     * level : 1
      * type : 1
-     * legalPersonName : 雷黔
-     * userReferee : U2017010713451027748
-     * refereeMobile : 18767101909
-     * rate1 : 1
-     * rate2 : 1
      * slogan : 广告语
-     * adPic : ANDROID_1484475660613_3968_2976.jpg
-     * pic : ANDROID_1484475610040_1080_1920.jpg||ANDROID_1484475617134_1080_1920.jpg||ANDROID_1484475623464_1080_1920.jpg||ANDROID_1484475635611_1080_1920.jpg||
-     * description : 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+     * advPic : ANDROID_1490771200292_459_816.jpg
+     * pic : ANDROID_1490771288280_459_816.jpg||ANDROID_1490771292969_459_816.jpg||ANDROID_1490771298721_459_816.jpg
+     * description : 店铺描述需要20个字，店铺描述需要20个字，店铺描述需要20个字，店铺描述需要20个字，
      * province : 浙江省
      * city : 杭州市
      * area : 余杭区
-     * address : 梦想小镇
-     * longitude : 120.15018582344054
-     * latitude : 30.26909832016674
+     * address : 梦想小镇天使村
+     * longitude : 120.00154450535774
+     * latitude : 30.288354960019443
      * bookMobile : 18984955240
-     * smsMobile :
+     * smsMobile : 18984955240
      * pdf :
+     * legalPersonName : 法人姓名
+     * userReferee : U2017010713451027748
+     * rate1 : 0.01
+     * rate2 : 0.01
      * status : 1
-     * updateDatetime : Jan 17, 2017 3:45:03 AM
-     * owner : U2017011401171246726
+     * updater : U201600000000000000
+     * updateDatetime : Mar 29, 2017 3:25:00 PM
+     * owner : U2017032914155538289
+     * contractNo : ZHS-201703291525005168
+     * totalRmbNum : 0
      * totalJfNum : 0
      * totalDzNum : 0
+     * totalScNum : 0
+     * companyCode : CD-CZH000001
      * systemCode : CD-CZH000001
+     * refereeMobile : 13958092437
      * storeTickets : []
      */
 
     private String code;
     private String name;
+    private String level;
     private String type;
-    private String legalPersonName;
-    private String userReferee;
-    private String refereeMobile;
-    private double rate1;
-    private double rate2;
     private String slogan;
-    private String adPic;
+    private String advPic;
     private String pic;
     private String description;
     private String province;
@@ -61,13 +63,32 @@ public class StoreModel {
     private String bookMobile;
     private String smsMobile;
     private String pdf;
+    private String legalPersonName;
+    private String userReferee;
+    private double rate1;
+    private double rate2;
     private String status;
+    private String updater;
     private String updateDatetime;
+    private String remark = "";
     private String owner;
+    private String contractNo;
+    private int totalRmbNum;
     private int totalJfNum;
     private int totalDzNum;
+    private int totalScNum;
+    private String companyCode;
     private String systemCode;
+    private String refereeMobile;
     private List<?> storeTickets;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getCode() {
         return code;
@@ -85,52 +106,20 @@ public class StoreModel {
         this.name = name;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getLegalPersonName() {
-        return legalPersonName;
-    }
-
-    public void setLegalPersonName(String legalPersonName) {
-        this.legalPersonName = legalPersonName;
-    }
-
-    public String getUserReferee() {
-        return userReferee;
-    }
-
-    public void setUserReferee(String userReferee) {
-        this.userReferee = userReferee;
-    }
-
-    public String getRefereeMobile() {
-        return refereeMobile;
-    }
-
-    public void setRefereeMobile(String refereeMobile) {
-        this.refereeMobile = refereeMobile;
-    }
-
-    public double getRate1() {
-        return rate1;
-    }
-
-    public void setRate1(double rate1) {
-        this.rate1 = rate1;
-    }
-
-    public double getRate2() {
-        return rate2;
-    }
-
-    public void setRate2(double rate2) {
-        this.rate2 = rate2;
     }
 
     public String getSlogan() {
@@ -141,12 +130,12 @@ public class StoreModel {
         this.slogan = slogan;
     }
 
-    public String getAdPic() {
-        return adPic;
+    public String getAdvPic() {
+        return advPic;
     }
 
-    public void setAdPic(String adPic) {
-        this.adPic = adPic;
+    public void setAdvPic(String advPic) {
+        this.advPic = advPic;
     }
 
     public String getPic() {
@@ -237,12 +226,52 @@ public class StoreModel {
         this.pdf = pdf;
     }
 
+    public String getLegalPersonName() {
+        return legalPersonName;
+    }
+
+    public void setLegalPersonName(String legalPersonName) {
+        this.legalPersonName = legalPersonName;
+    }
+
+    public String getUserReferee() {
+        return userReferee;
+    }
+
+    public void setUserReferee(String userReferee) {
+        this.userReferee = userReferee;
+    }
+
+    public double getRate1() {
+        return rate1;
+    }
+
+    public void setRate1(double rate1) {
+        this.rate1 = rate1;
+    }
+
+    public double getRate2() {
+        return rate2;
+    }
+
+    public void setRate2(double rate2) {
+        this.rate2 = rate2;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater;
     }
 
     public String getUpdateDatetime() {
@@ -261,6 +290,22 @@ public class StoreModel {
         this.owner = owner;
     }
 
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
+
+    public int getTotalRmbNum() {
+        return totalRmbNum;
+    }
+
+    public void setTotalRmbNum(int totalRmbNum) {
+        this.totalRmbNum = totalRmbNum;
+    }
+
     public int getTotalJfNum() {
         return totalJfNum;
     }
@@ -277,12 +322,36 @@ public class StoreModel {
         this.totalDzNum = totalDzNum;
     }
 
+    public int getTotalScNum() {
+        return totalScNum;
+    }
+
+    public void setTotalScNum(int totalScNum) {
+        this.totalScNum = totalScNum;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
     public String getSystemCode() {
         return systemCode;
     }
 
     public void setSystemCode(String systemCode) {
         this.systemCode = systemCode;
+    }
+
+    public String getRefereeMobile() {
+        return refereeMobile;
+    }
+
+    public void setRefereeMobile(String refereeMobile) {
+        this.refereeMobile = refereeMobile;
     }
 
     public List<?> getStoreTickets() {

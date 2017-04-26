@@ -94,6 +94,7 @@
         android:layout_height="0.5dp"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/layout_authentication"
         android:gravity="center_vertical"
         android:orientation="horizontal"

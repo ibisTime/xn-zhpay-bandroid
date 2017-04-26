@@ -74,7 +74,7 @@ public class ProductAdapter extends BaseAdapter {
         ImageUtil.glide(list.get(position).getAdvPic(),holder.imgPhoto,context);
 
         holder.txtTitle.setText(list.get(position).getName());
-        if(list.get(position).getCategory().equals("FL201600000000000001")){
+        if(list.get(position).getCategory().equals("FL201700000000000001")){
             holder.txtContent.setText("剁手合集");
         }else{
             holder.txtContent.setText("0元试购");
@@ -84,9 +84,9 @@ public class ProductAdapter extends BaseAdapter {
             holder.txtInfo.setText("待审核");
             holder.txtInfo.setTextColor(context.getResources().getColor(R.color.fontColor_gray));
         }else if(list.get(position).getStatus().equals("1")){
-            holder.txtInfo.setText("审核通过");
+            holder.txtInfo.setText("审批通过待上架");
             holder.txtInfo.setTextColor(context.getResources().getColor(R.color.orange));
-        }else if(list.get(position).getStatus().equals("2")){
+        }else if(list.get(position).getStatus().equals("91")){
             holder.txtInfo.setText("审核不通过");
             holder.txtInfo.setTextColor(context.getResources().getColor(R.color.orange));
         }else if(list.get(position).getStatus().equals("3")){

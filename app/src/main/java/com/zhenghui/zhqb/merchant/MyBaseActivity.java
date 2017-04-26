@@ -24,7 +24,8 @@ public class MyBaseActivity extends FragmentActivity {
 
     public static String SERVICE_ID= "androidkefu";
 
-    private SharedPreferences userInfoSp;
+    public SharedPreferences userInfoSp;
+    public SharedPreferences appConfigSp;
 
     private Handler handler = new Handler(){
 
@@ -44,6 +45,7 @@ public class MyBaseActivity extends FragmentActivity {
         setContentView(R.layout.activity_my_base);
 
         userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
 
         // 竖屏显示
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

@@ -7,8 +7,8 @@ android {
         applicationId "com.zhenghui.zhqb.merchant"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "3.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         // Enabling multidex support.
@@ -49,9 +49,11 @@ dependencies {
     // Gson
     compile 'com.google.code.gson:gson:2.8.0'
     // LuBan
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'top.zibin:Luban:1.0.9'
+//    compile 'io.reactivex:rxandroid:1.2.1'
+//    compile 'io.reactivex:rxjava:1.1.6'
+//    compile 'top.zibin:Luban:1.0.9'
+    // Compressor
+    compile 'id.zelory:compressor:1.0.4'
     // RichText
     compile 'com.zzhoujay.richtext:richtext:2.3.7'
     // citypicker

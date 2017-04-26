@@ -131,11 +131,13 @@ public class DiscountManageActivity extends MyBaseActivity implements SwipeRefre
             object.put("orderColumn", "");
             object.put("orderDir", "");
             object.put("token", userInfoSp.getString("token", null));
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("808224", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("808255", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {

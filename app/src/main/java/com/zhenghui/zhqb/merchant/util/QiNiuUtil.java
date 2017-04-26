@@ -2,6 +2,8 @@ package com.zhenghui.zhqb.merchant.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,8 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
+import id.zelory.compressor.Compressor;
 
 /**
  * Created by LeiQ on 2016/12/29.
@@ -54,7 +55,7 @@ public class QiNiuUtil {
 
             Configuration config = new Configuration.Builder().zone(Zone.httpAutoZone).build();
             UploadManager uploadManager = new UploadManager(config);
-            String key = ANDROID + timestamp() + getPicSize(url) + ".jpg";
+            String key = ANDROID + timestamp() + getImageWidthHeight(url) + ".jpg";
             uploadManager.put(url, key, token,
                     new UpCompletionHandler() {
                         @Override
@@ -131,9 +132,9 @@ public class QiNiuUtil {
                         token = jsonObject.getString("uploadToken");
                     }
 
-                    if (isSingle){
-                        luBan(callBack);
-                    }else{
+                   if (isSingle){
+                       Compressor(callBack);
+                   }else{
 //                        System.out.println("luploadList(callBack);");
 //                        uploadList(callBack);
                     }
@@ -156,11 +157,11 @@ public class QiNiuUtil {
         });
     }
 
-    private static String getPicSize(String data){
-        String size = "";
-        String imageWidth = "";
-        String imageHeight = "";
+    static String size = "";
+    static String imageWidth = "";
+    static String imageHeight = "";
 
+    private static String getPicSize(String data){
         try {
             ExifInterface exifInterface = new ExifInterface(data);
 
@@ -192,10 +193,32 @@ public class QiNiuUtil {
 
             size = "_" + imageWidth + "_" + imageHeight;
 
+            System.out.print(size = "_" + imageWidth + "_" + imageHeight);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return size;
+    }
+
+    public static String getImageWidthHeight(String path){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        /**
+         * 最关键在此，把options.inJustDecodeBounds = true;
+         * 这里再decodeFile()，返回的bitmap为空，但此时调用options.outHeight时，已经包含了图片的高了
+         */
+        options.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options); // 此时返回的bitmap为null
+        /**
+         *options.outHeight为原始图片的高
+         */
+        imageWidth = options.outWidth + "";
+        imageHeight = options.outHeight + "";
+        size = "_" + imageWidth + "_" + imageHeight;
+
+        System.out.print("size = _" + imageWidth + "_" + imageHeight);
         return size;
     }
 
@@ -205,31 +228,48 @@ public class QiNiuUtil {
         return "_"+time;
     }
 
-    private void luBan(final QiNiuCallBack callBack){
-        File file = new File(data);
-
-        Luban.get(context)
-                .load(file) //传人要压缩的图片
-                .putGear(3)      //设定压缩档次，默认三挡
-                .setCompressListener(new OnCompressListener() { //设置回调
-
-                    @Override
-                    public void onStart() {
-                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
-                    }
-                    @Override
-                    public void onSuccess(File file) {
-                        // TODO 压缩成功后调用，返回压缩后的图片文件
+//    private void luBan(final QiNiuCallBack callBack){
+//        File file = new File(data);
+//
+//        Luban.get(context)
+//                .load(file) //传人要压缩的图片
+//                .putGear(3)      //设定压缩档次，默认三挡
+//                .setCompressListener(new OnCompressListener() { //设置回调
+//
+//                    @Override
+//                    public void onStart() {
+//                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
+//                    }
+//                    @Override
+//                    public void onSuccess(File file) {
+//                        // TODO 压缩成功后调用，返回压缩后的图片文件
+////                        uploadSingle(callBack,data);
+//                        uploadSingle(callBack,file.getAbsolutePath());
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        // TODO 当压缩过去出现问题时调用
 //                        uploadSingle(callBack,data);
-                        uploadSingle(callBack,file.getAbsolutePath());
-                    }
+//                    }
+//                }).launch();    //启动压缩
+//    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        // TODO 当压缩过去出现问题时调用
-                        uploadSingle(callBack,data);
-                    }
-                }).launch();    //启动压缩
+    private void Compressor(QiNiuCallBack callBack){
+        File compressedImageFile = Compressor.getDefault(context).compressToFile(new File(data));
+        uploadSingle(callBack,compressedImageFile.getAbsolutePath());
+
+//        File compressedImage = new Compressor.Builder(context)
+//                .setMaxWidth(Float.parseFloat(imageWidth))
+//                .setMaxHeight(Float.parseFloat(imageHeight))
+//                .setQuality(80)
+//                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+//                .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+//                        Environment.DIRECTORY_PICTURES).getAbsolutePath())
+//                .build()
+//                .compressToFile(new File(data));
+//
+//        uploadSingle(callBack,compressedImage.getAbsolutePath());
     }
 
     public interface QiNiuCallBack {

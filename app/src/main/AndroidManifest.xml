@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zhenghui.zhqb.merchant"
-    android:versionCode="1"
-    android:versionName="1.0.0"
-    >
+    package="com.zhenghui.zhqb.merchant">
 
     <!-- JPush -->
     <permission
@@ -21,7 +18,6 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -53,12 +49,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- JPush SDK 核心功能-->
+        <!-- JPush SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <service
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
@@ -67,13 +63,14 @@
             </intent-filter>
         </service>
 
-        <!-- Required SDK核心功能-->
+        <!-- Required SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-                <category android:name="com.zhenghui.zhqb.merchant"/>
+
+                <category android:name="com.zhenghui.zhqb.merchant" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -83,62 +80,68 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
 
-        <!-- Required SDK核心功能-->
+        <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:exported="false" >
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="com.zhenghui.zhqb.merchant" />
             </intent-filter>
         </activity>
 
-        <!-- Required SDK核心功能-->
+        <!-- Required SDK核心功能 -->
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false" />
 
-        <!-- Required SDK核心功能-->
+        <!-- Required SDK核心功能 -->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
 
-        <!-- User defined. 用户自定义的广播接收器-->
+        <!-- User defined. 用户自定义的广播接收器 -->
         <receiver
             android:name=".receiver.MyReceiver"
             android:enabled="true">
             <intent-filter>
-                <!--Required 用户注册SDK的intent-->
+
+                <!-- Required 用户注册SDK的intent -->
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
-                <!--Required 用户接收SDK消息的intent-->
+                <!-- Required 用户接收SDK消息的intent -->
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
-                <!--Required 用户接收SDK通知栏信息的intent-->
+                <!-- Required 用户接收SDK通知栏信息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
-                <!--Required 用户打开自定义通知栏的intent-->
+                <!-- Required 用户打开自定义通知栏的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
+
                 <category android:name="com.zhenghui.zhqb.merchant" />
             </intent-filter>
         </receiver>
 
         <!-- Required. For publish channel feature -->
-        <!-- JPUSH_CHANNEL 是为了方便开发者统计APK分发渠道。-->
+        <!-- JPUSH_CHANNEL 是为了方便开发者统计APK分发渠道。 -->
         <!-- 例如: -->
         <!-- 发到 Google Play 的APK可以设置为 google-play; -->
         <!-- 发到其他市场的 APK 可以设置为 xxx-market。 -->
-        <!-- 目前这个渠道统计功能的报表还未开放。-->
-        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        <!-- 目前这个渠道统计功能的报表还未开放。 -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
         <!-- Required. AppKey copied from Portal -->
-        <meta-data android:name="JPUSH_APPKEY" android:value="f4e80f56bb9dbc979dd10a5f"/>
-
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="f4e80f56bb9dbc979dd10a5f" />
 
         <!-- 设置高德地图的AppKey -->
         <meta-data
@@ -150,7 +153,7 @@
         <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="tianleios#zh-dev" />
+            android:value="1139170317178872#zhpay" />
         <!-- 声明SDK所需的service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
@@ -160,7 +163,7 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <!-- 声明SDK所需的receiver -->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver" >
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
@@ -190,7 +193,7 @@
         <activity android:name=".activity.WithdrawalsActivity" />
         <activity android:name=".activity.DiscountAddActivity" />
         <activity android:name=".activity.BankCardChangeActivity" />
-        <activity android:name=".activity.ProductAddActivity" />
+        <activity android:name=".activity.ProductActivity" />
         <activity android:name=".activity.SystemMessageActivity" />
         <activity android:name=".activity.ManageActivity" />
         <activity android:name=".activity.BillActivity" />
@@ -210,14 +213,36 @@
         <activity android:name=".activity.DuobaoAddActivity" />
         <activity android:name=".activity.BindBankCardActivity" />
         <activity android:name=".activity.ModifyTradeActivity" />
-        <activity android:name=".activity.AuthenticateActivity" />
-        <activity android:name=".activity.AboutActivity"></activity>
+        <activity
+            android:name=".activity.AuthenticateActivity"
+            android:launchMode="singleTask">
+
+            <!-- 需要添加下面的intent-filter配置 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="certi.back"
+                    android:scheme="zhqb" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".activity.RichTextActivity" />
+        <activity android:name=".activity.EarningsActivity" />
+        <activity android:name=".activity.RightsActivity" />
+        <activity android:name=".activity.EarningsPayActivity" />
+        <activity android:name=".activity.RightsListActivity" />
 
         <receiver android:name=".receiver.LogoutReceiver">
             <intent-filter>
                 <action android:name="com.zhenghui.zhqb.merchant.receiver.LogoutReceiver" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activity.ParameterActivity"></activity>
     </application>
 
 </manifest>
