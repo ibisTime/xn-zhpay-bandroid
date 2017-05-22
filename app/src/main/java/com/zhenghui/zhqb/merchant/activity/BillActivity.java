@@ -63,6 +63,12 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
         inits();
         initListView();
         initRefreshLayout();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getData();
     }
 

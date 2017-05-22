@@ -8,7 +8,6 @@ import android.media.ExifInterface;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.qiniu.android.common.Zone;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UpCompletionHandler;
@@ -53,7 +52,7 @@ public class QiNiuUtil {
 
         if(url.indexOf(ANDROID) == -1 || url.indexOf(IOS) == -1){
 
-            Configuration config = new Configuration.Builder().zone(Zone.httpAutoZone).build();
+            Configuration config = new Configuration.Builder().build();
             UploadManager uploadManager = new UploadManager(config);
             String key = ANDROID + timestamp() + getImageWidthHeight(url) + ".jpg";
             uploadManager.put(url, key, token,

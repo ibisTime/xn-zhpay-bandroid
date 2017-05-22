@@ -177,7 +177,7 @@ public class MapActivity extends MyBaseActivity implements LocationSource, AMapL
                     .icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             marker.setDraggable(false);
-            marker.setClickable(false);
+//            marker.setClickable(false);
         }
 
         marker.setPosition(target);

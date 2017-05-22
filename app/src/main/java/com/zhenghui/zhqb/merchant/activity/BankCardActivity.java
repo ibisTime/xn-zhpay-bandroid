@@ -61,7 +61,7 @@ public class BankCardActivity extends MyBaseActivity implements AdapterView.OnIt
         MyApplication.getInstance().addActivity(this);
 
         // 初始返回数据
-        setResult(0,new Intent().putExtra("bankcardCode","").putExtra("bankName",""));
+        setResult(0,new Intent().putExtra("bankcardNumber","").putExtra("subbranch","").putExtra("bankName",""));
 
         inits();
         initListView();
@@ -135,6 +135,9 @@ public class BankCardActivity extends MyBaseActivity implements AdapterView.OnIt
                     }
 
                     list.addAll(lists);
+                    if(list.size()>0){
+                        txtChange.setVisibility(View.GONE);
+                    }
                     adapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -159,7 +162,7 @@ public class BankCardActivity extends MyBaseActivity implements AdapterView.OnIt
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
-                setResult(0,new Intent().putExtra("bankcardCode","").putExtra("bankName",""));
+                setResult(0,new Intent().putExtra("bankcardNumber","").putExtra("subbranch","").putExtra("bankName",""));
                 finish();
                 break;
 
@@ -172,7 +175,9 @@ public class BankCardActivity extends MyBaseActivity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if(isWithdrawal){
-            setResult(0,new Intent().putExtra("bankcardCode",list.get(i).getBankcardNumber()).putExtra("bankName",list.get(i).getBankName()));
+            setResult(0,new Intent().putExtra("bankcardNumber",list.get(i).getBankcardNumber())
+                    .putExtra("subbranch",list.get(i).getSubbranch())
+                    .putExtra("bankName",list.get(i).getBankName()));
             finish();
         }else {
             startActivity(new Intent(BankCardActivity.this, BindBankCardActivity.class)

@@ -679,6 +679,8 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
 
                     setView();
 
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -772,6 +774,7 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         }
 
         edtName.setText(model.getName());
+
         txtLocation.setText(model.getProvince() + model.getCity() + model.getArea());
         edtAddress.setText(model.getAddress());
 
@@ -783,7 +786,11 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
         edtSmsMobile.setText(model.getSmsMobile());
         edtAdvertisement.setText(model.getSlogan());
         edtLegalPerson.setText(model.getLegalPersonName());
+
         edtReferrer.setText(model.getRefereeMobile());
+        edtReferrer.setFocusable(false);
+        edtReferrer.setFocusableInTouchMode(false);
+
         edtDetail.setText(model.getDescription());
 
         txtUse.setText((model.getRate1() * 100) + "");

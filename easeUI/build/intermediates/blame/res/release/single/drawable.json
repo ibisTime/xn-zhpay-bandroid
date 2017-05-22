@@ -24,12 +24,12 @@
         "source": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\src\\main\\res\\drawable\\ease_chat_takepic_selector.xml"
     },
     {
-        "merged": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\res\\merged\\release\\drawable\\ease_chatto_bg.xml",
-        "source": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\src\\main\\res\\drawable\\ease_chatto_bg.xml"
-    },
-    {
         "merged": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\res\\merged\\release\\drawable\\ease_btn_cancel_normal_shape.xml",
         "source": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\src\\main\\res\\drawable\\ease_btn_cancel_normal_shape.xml"
+    },
+    {
+        "merged": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\res\\merged\\release\\drawable\\ease_chatto_bg.xml",
+        "source": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\src\\main\\res\\drawable\\ease_chatto_bg.xml"
     },
     {
         "merged": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\res\\merged\\release\\drawable\\ease_type_select_btn.xml",
