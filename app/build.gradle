@@ -7,8 +7,8 @@ android {
         applicationId "com.zhenghui.zhqb.merchant"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 5
-        versionName "3.0.2"
+        versionCode 7
+        versionName "3.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         // Enabling multidex support.
@@ -16,8 +16,23 @@ android {
     }
     buildTypes {
         release {
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            ndk {
+//                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a" // 保留这三种架构的CPU
+//                abiFilters "armeabi-v7a" // 保留这种架构的CPU
+                abiFilters "armeabi" // 保留这种架构的CPU
+            }
+        }
+
+        debug {
+            ndk {
+//                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a" // 保留这三种架构的CPU
+//                abiFilters "armeabi-v7a" // 保留这种架构的CPU
+                abiFilters "armeabi" // 保留这种架构的CPU
+            }
         }
     }
     sourceSets {
@@ -25,6 +40,18 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+
+//    task nativeLibsToJar(type: Zip, description: "create a jar archive of the native libs") {
+//        destinationDir file("$projectDir/libs")
+//        baseName "Native_Libs2"
+//        extension "jar"
+//        from fileTree(dir: "libs", include: "**/*.so")
+//        into "lib"
+//    }
+//
+//    tasks.withType(JavaCompile) {
+//        compileTask -> compileTask.dependsOn(nativeLibsToJar)
+//    }
 }
 
 dependencies {

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,8 +47,13 @@ public class LoginActivity extends MyBaseActivity {
     Button btnLogin;
     @BindView(R.id.txt_forget)
     TextView txtForget;
+    @BindView(R.id.box_remenber)
+    CheckBox boxRemenber;
 
     public static final String TIP = "tip";
+
+    SharedPreferences.Editor editor;
+    private boolean isRemenberPwd = false;
 
     private SharedPreferences appConfigSp;
     private SharedPreferences userInfoSp;
@@ -55,7 +62,7 @@ public class LoginActivity extends MyBaseActivity {
 
         @Override
         public void handleMessage(Message msg) {
-            Toast.makeText(LoginActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "暂时无法连接，请稍候重试!", Toast.LENGTH_SHORT).show();
             super.handleMessage(msg);
         }
     };
@@ -70,6 +77,27 @@ public class LoginActivity extends MyBaseActivity {
 
         inits();
 
+        boxRemenber.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isRemenberPwd = b;
+                editor.putBoolean("isRemenberPwd",isRemenberPwd);
+                editor.commit();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        System.out.println("loginPwd="+userInfoSp.getString("loginPwd",""));
+        System.out.println("loginName="+userInfoSp.getString("loginName",""));
+        System.out.println("isRemenberPwd="+userInfoSp.getBoolean("isRemenberPwd",false));
+
+        edtPhone.setText(userInfoSp.getString("loginName",""));
+        edtPassword.setText(userInfoSp.getString("loginPwd",""));
     }
 
     @Override
@@ -93,14 +121,11 @@ public class LoginActivity extends MyBaseActivity {
         appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
         userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
-        if(getIntent() != null){
-            boolean isTip = getIntent().getBooleanExtra(TIP,false);
-            if(isTip){
+        editor = userInfoSp.edit();
+        isRemenberPwd = userInfoSp.getBoolean("isRemenberPwd",false);
+        boxRemenber.setChecked(isRemenberPwd);
 
-            }
-        }
     }
-
 
     @OnClick({R.id.layout_back, R.id.txt_register, R.id.btn_login, R.id.txt_forget})
     public void onClick(View view) {
@@ -146,12 +171,22 @@ public class LoginActivity extends MyBaseActivity {
         new Xutil().post("805043",object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
-                SharedPreferences.Editor editor = userInfoSp.edit();
-
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     editor.putString("userId",jsonObject.getString("userId"));
                     editor.putString("token",jsonObject.getString("token"));
+
+                    System.out.println("isRemenberPwd="+isRemenberPwd);
+                    System.out.println("loginName="+edtPhone.getText().toString().trim());
+                    System.out.println("loginPwd="+edtPassword.getText().toString().trim());
+
+                    if(isRemenberPwd){
+                        editor.putString("loginName", edtPhone.getText().toString().trim());
+                        editor.putString("loginPwd", edtPassword.getText().toString().trim());
+                    }else {
+                        editor.putString("loginName", "");
+                        editor.putString("loginPwd", "");
+                    }
                     editor.commit();
 
                     // 收起键盘
@@ -191,14 +226,43 @@ public class LoginActivity extends MyBaseActivity {
 
             @Override
             public void onError(int i, String s) {
-                Message message = handler.obtainMessage();
-                message.obj = "登录失败: " + i + ", " + s;
-                handler.sendMessage(message);
-                Log.i("Qian","登录失败 " + i + ", " + s);
+                if (i == 200) {
+                    logout();
+                } else {
+                    Message message = handler.obtainMessage();
+                    message.obj = "登录失败: " + i + ", " + s;
+                    handler.sendMessage(message);
+                    Log.i("EMClient_login", "登录失败 " + i + ", " + s);
+                }
             }
 
             @Override
             public void onProgress(int i, String s) {
+
+            }
+        });
+    }
+
+    private void logout() {
+
+        EMClient.getInstance().logout(true, new EMCallBack() {
+
+            @Override
+            public void onSuccess() {
+                signin();
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                Message msg = handler.obtainMessage();
+                msg.obj = "退出失败: " + code + ", " + message;
+                handler.sendMessage(msg);
 
             }
         });

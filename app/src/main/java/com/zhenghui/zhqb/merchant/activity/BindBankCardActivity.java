@@ -89,6 +89,8 @@ public class BindBankCardActivity extends MyBaseActivity {
         isModifi = getIntent().getBooleanExtra("isModifi", false);
         if (isModifi) {
             txtTitle.setText("修改银行卡");
+            edtName.setFocusable(false);
+            edtName.setFocusableInTouchMode(false);
             getData();
         }
 

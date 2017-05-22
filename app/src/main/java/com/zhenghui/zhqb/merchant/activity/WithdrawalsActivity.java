@@ -13,10 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhenghui.zhqb.merchant.MyApplication;
-import com.zhenghui.zhqb.merchant.model.BankModel;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.model.BankModel;
+import com.zhenghui.zhqb.merchant.model.MyBankCardModel;
 import com.zhenghui.zhqb.merchant.util.MoneyUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
@@ -53,16 +56,21 @@ public class WithdrawalsActivity extends MyBaseActivity {
     TextView txtConfirm;
     @BindView(R.id.edt_repassword)
     EditText edtRepassword;
+    @BindView(R.id.txt_tip)
+    TextView txtTip;
 
 
     private List<BankModel> list;
+    private List<MyBankCardModel> bankCardList;
+
     private SharedPreferences userInfoSp;
     private SharedPreferences appConfigSp;
 
     private double balance;
     private String accountNumber;
 
-    private String bankcardCode;
+    private String subbranch;
+    private String bankcardNumber;
 
 
     @Override
@@ -74,6 +82,9 @@ public class WithdrawalsActivity extends MyBaseActivity {
 
         inits();
         initEditText();
+
+        getTip();
+        getList();
     }
 
     @Override
@@ -84,6 +95,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
 
     private void inits() {
         list = new ArrayList<>();
+        bankCardList = new ArrayList<>();
 
         userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
@@ -137,9 +149,9 @@ public class WithdrawalsActivity extends MyBaseActivity {
                         if (txtBankCard.getText().toString().equals("选择银行卡")) {
                             Toast.makeText(WithdrawalsActivity.this, "请先选择银行卡", Toast.LENGTH_SHORT).show();
                         } else {
-                            if(edtRepassword.getText().toString().length() == 6){
+                            if (edtRepassword.getText().toString().length() == 6) {
                                 withdrawal();
-                            }else{
+                            } else {
                                 Toast.makeText(WithdrawalsActivity.this, "请输入6位支付密码", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -160,9 +172,113 @@ public class WithdrawalsActivity extends MyBaseActivity {
             txtBankCard.setText(data.getStringExtra("bankName"));
         }
 
-        bankcardCode = data.getStringExtra("bankcardCode");
+        subbranch = data.getStringExtra("subbranch");
+        bankcardNumber = data.getStringExtra("bankcardNumber");
 
 
+    }
+
+    private void getList() {
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("bankcardNumber", "");
+            object.put("bankName", "");
+            object.put("userId", userInfoSp.getString("userId", null));
+            object.put("realName", "");
+            object.put("type", "");
+            object.put("status", "1");
+            object.put("start", "1");
+            object.put("limit", "1");
+            object.put("orderColumn", "");
+            object.put("orderDir", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("802015", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    Gson gson = new Gson();
+                    ArrayList<MyBankCardModel> lists = gson.fromJson(jsonObject.getJSONArray("list").toString(), new TypeToken<ArrayList<MyBankCardModel>>() {
+                    }.getType());
+
+                    bankCardList.addAll(lists);
+                    if (bankCardList.size() > 0) {
+                        System.out.println("bankCardList.get(0).getSubbranch()=" + bankCardList.get(0).getSubbranch());
+                        System.out.println("bankCardList.get(0).getBankCode()=" + bankCardList.get(0).getBankCode());
+
+                        subbranch = bankCardList.get(0).getSubbranch();
+                        bankcardNumber = bankCardList.get(0).getBankcardNumber();
+
+                        System.out.println("subbranch=" + subbranch);
+                        System.out.println("bankcardNumber=" + bankcardNumber);
+
+                        txtBankCard.setText(bankCardList.get(0).getBankName());
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(WithdrawalsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(WithdrawalsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getTip() {
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("key", "BUSERMONTIMES");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("802027", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    txtTip.setText("* 每月最大取现次数为" + jsonObject.getString("cvalue") + "次");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(WithdrawalsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(WithdrawalsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void withdrawal() {
@@ -174,19 +290,22 @@ public class WithdrawalsActivity extends MyBaseActivity {
         try {
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("token", userInfoSp.getString("token", null));
-            object.put("bankcardNumber", bankcardCode);
-            object.put("transAmount", "-"+(int) (Double.parseDouble(edtPrice.getText().toString().trim()) * 1000));
             object.put("accountNumber", accountNumber);
+            object.put("amount", (int) (Double.parseDouble(edtPrice.getText().toString().trim()) * 1000));
+            object.put("payCardNo", bankcardNumber);
+            object.put("payCardInfo", subbranch);
+            object.put("applyNote", "");
+            object.put("applyUser", userInfoSp.getString("userId", null));
             object.put("tradePwd", edtRepassword.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("802526", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("802750", object.toString(), new Xutil.XUtils3CallBackPost() {
 
             @Override
             public void onSuccess(String result) {
-                Toast.makeText(WithdrawalsActivity.this, "提现成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WithdrawalsActivity.this, "提现申请成功", Toast.LENGTH_SHORT).show();
                 finish();
             }
 

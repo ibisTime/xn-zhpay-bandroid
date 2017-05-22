@@ -241,7 +241,7 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
             case R.id.txt_cash:
 //                if (userInfoSp.getString("identityFlag", null).equals("1")) { //identityFlag 实名认证标示 1有 0 无
 
-                    if (userInfoSp.getString("tradepwdFlag", null).equals("1")) { // tradepwdFlag 交易密码标示 1有 0 无
+                    if (userInfoSp.getString("tradepwdFlag", null).equals("1")) { // tradepwdFlag 支付密码标示 1有 0 无
 
                         startActivity(new Intent(MainActivity.this, WithdrawalsActivity.class)
                                 .putExtra("balance", frb)
@@ -249,7 +249,7 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
 
                     } else {
 
-                        Toast.makeText(this, "请先设置交易密码", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "请先设置支付密码", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(MainActivity.this, ModifyTradeActivity.class).putExtra("isModify", false));
 
                     }

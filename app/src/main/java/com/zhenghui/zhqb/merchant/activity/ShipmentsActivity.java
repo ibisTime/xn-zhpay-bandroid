@@ -189,7 +189,7 @@ public class ShipmentsActivity extends MyBaseActivity {
     private void setView() {
 
         txtName.setText(model.getReceiver());
-        txtPhone.setText(model.getUser().getMobile());
+        txtPhone.setText(model.getReMobile());
         txtAddress.setText(model.getReAddress());
         txtExplain.setText(model.getApplyNote());
         if (input) {

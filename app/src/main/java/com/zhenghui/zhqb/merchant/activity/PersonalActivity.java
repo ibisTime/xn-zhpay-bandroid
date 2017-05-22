@@ -375,8 +375,6 @@ public class PersonalActivity extends MyBaseActivity {
             }
 
         }
-
-
     }
 
     /**

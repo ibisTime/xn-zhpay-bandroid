@@ -83,9 +83,9 @@ public class RightsAdapter extends BaseAdapter {
         holder.txtTotal.setText(MoneyUtil.moneyFormatDouble(list.get(i).getProfitAmount()));
         holder.txtHas.setText(MoneyUtil.moneyFormatDouble(list.get(i).getBackAmount()));
         holder.txtCondition.setText(MoneyUtil.moneyFormatDouble(list.get(i).getCostAmount()) + "交易额");
-        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
-        if (list.get(i).getNextBackDate() != null){
-            Date d5 = new Date(list.get(i).getNextBackDate());
+        if (list.get(i).getCreateDatetime() != null){
+            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+            Date d5 = new Date(list.get(i).getCreateDatetime());
             holder.txtDate.setText(s.format(d5));
         }
 
