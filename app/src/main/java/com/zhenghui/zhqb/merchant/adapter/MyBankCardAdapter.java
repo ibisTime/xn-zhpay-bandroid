@@ -70,6 +70,7 @@ public class MyBankCardAdapter extends BaseAdapter {
 
         if(list.get(position).getBankCode() != null){
             String bankCode = list.get(position).getBankCode().toLowerCase();
+
             int logoId = context.getResources().getIdentifier("logo_"+bankCode, "mipmap" , context.getPackageName());
             int backId = context.getResources().getIdentifier("back_"+bankCode, "mipmap" , context.getPackageName());
             holder.imgBankCart.setBackgroundResource(logoId);

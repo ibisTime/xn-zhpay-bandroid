@@ -122,7 +122,7 @@
         android:layout_height="50dp">
 
         <TextView
-            android:text="银行名称"
+            android:text="开户行"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:textSize="15sp"
@@ -163,7 +163,7 @@
         android:layout_height="50dp">
 
         <TextView
-            android:text="开户行"
+            android:text="开户支行"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:textSize="15sp"

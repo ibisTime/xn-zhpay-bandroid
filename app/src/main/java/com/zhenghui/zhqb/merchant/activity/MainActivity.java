@@ -36,6 +36,7 @@ import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.model.AssetsModel;
 import com.zhenghui.zhqb.merchant.model.UserModel;
+import com.zhenghui.zhqb.merchant.services.UpdateService;
 import com.zhenghui.zhqb.merchant.util.ImageUtil;
 import com.zhenghui.zhqb.merchant.util.MoneyUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
@@ -146,6 +147,8 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
         if (userInfoSp.getBoolean("first", true)) { //第一次进入
             showTip();
         }
+
+        getVersion();
 
     }
 
@@ -698,6 +701,60 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
                 Toast.makeText(MainActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void getVersion(){
+        JSONObject object = new JSONObject();
+        try {
+            object.put("key", "bVersionCode");
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        new Xutil().post("615917", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    int versionCode = Integer.parseInt(jsonObject.getString("cvalue"));
+
+                    if(versionCode > getVersionCode()){
+                        update();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(MainActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(MainActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void update() {
+        new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage("发现新版本请及时更新")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        startService(new Intent(MainActivity.this, UpdateService.class)
+                                .putExtra("appname", "zhsj-release")
+                                .putExtra("appurl", "http://m.zhenghuijituan.com/app/zhsj-release.apk"));
+
+                    }
+                }).setNegativeButton("取消", null).show();
     }
 }
