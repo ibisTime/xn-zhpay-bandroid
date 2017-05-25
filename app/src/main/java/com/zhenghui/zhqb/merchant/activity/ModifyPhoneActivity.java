@@ -128,7 +128,7 @@ public class ModifyPhoneActivity extends MyBaseActivity {
                     return;
                 }
                 if (edtTrade.getText().toString().trim().length() != 6) {
-                    Toast.makeText(ModifyPhoneActivity.this, "请填写正确的交易密码", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ModifyPhoneActivity.this, "请填写正确的支付密码", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 modifyPhone();

@@ -1,6 +1,8 @@
 package com.zhenghui.zhqb.merchant.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -33,6 +35,7 @@ import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.model.UserModel;
+import com.zhenghui.zhqb.merchant.services.UpdateService;
 import com.zhenghui.zhqb.merchant.util.CacheUtil;
 import com.zhenghui.zhqb.merchant.util.ImageUtil;
 import com.zhenghui.zhqb.merchant.util.QiNiuUtil;
@@ -90,6 +93,10 @@ public class PersonalActivity extends MyBaseActivity {
     LinearLayout layoutCache;
     @BindView(R.id.txt_cache)
     TextView txtCache;
+    @BindView(R.id.txt_versionName)
+    TextView txtVersionName;
+    @BindView(R.id.layout_version)
+    LinearLayout layoutVersion;
 
     private UserModel model;
     private SharedPreferences userInfoSp;
@@ -131,41 +138,43 @@ public class PersonalActivity extends MyBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        txtVersionName.setText("V"+getVersionName());
     }
 
     private void initEvent() {
         final SharedPreferences.Editor editor = userInfoSp.edit();
 
-        System.out.println("userInfoSp.getBoolean(\"push\",false)="+userInfoSp.getBoolean("push",false));
-        if(userInfoSp.getBoolean("push",false)){ // true:当前消息通知开关为 打开状态
+        System.out.println("userInfoSp.getBoolean(\"push\",false)=" + userInfoSp.getBoolean("push", false));
+        if (userInfoSp.getBoolean("push", false)) { // true:当前消息通知开关为 打开状态
 
             switchButton.setChecked(true);
             // 当天晚上23：59点到第二天晚上0：0点为静音时段。 全天打开消息通知
             JPushInterface.setSilenceTime(getApplicationContext(), 23, 59, 0, 0);
-            editor.putBoolean("push",true);
+            editor.putBoolean("push", true);
 
         } else {
             switchButton.setChecked(false);
             // 当天晚上0：0点到第二天晚上23：59点为静音时段。 全天关闭消息通知
             JPushInterface.setSilenceTime(getApplicationContext(), 0, 0, 23, 59);
-            editor.putBoolean("push",false);
+            editor.putBoolean("push", false);
         }
 
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("switchButton.isChecked()="+switchButton.isChecked());
-                if(switchButton.isChecked()){ // true:打开消息通知
+                System.out.println("switchButton.isChecked()=" + switchButton.isChecked());
+                if (switchButton.isChecked()) { // true:打开消息通知
 
                     // 当天晚上23：59点到第二天晚上0：0点为静音时段。 全天打开消息通知
                     JPushInterface.setSilenceTime(getApplicationContext(), 23, 59, 0, 0);
-                    editor.putBoolean("push",true);
+                    editor.putBoolean("push", true);
 
-                }else{ // false:关闭消息通知
+                } else { // false:关闭消息通知
 
                     // 当天晚上0：0点到第二天晚上23：59点为静音时段。 全天关闭消息通知
                     JPushInterface.setSilenceTime(getApplicationContext(), 0, 0, 23, 59);
-                    editor.putBoolean("push",false);
+                    editor.putBoolean("push", false);
 
                 }
                 editor.commit();
@@ -173,7 +182,8 @@ public class PersonalActivity extends MyBaseActivity {
         });
     }
 
-    @OnClick({R.id.layout_back, R.id.layout_photo, R.id.layout_bankCard, R.id.layout_account, R.id.layout_about, R.id.txt_logout, R.id.layout_cache})
+    @OnClick({R.id.layout_back, R.id.layout_photo, R.id.layout_bankCard, R.id.layout_account,
+            R.id.layout_about, R.id.txt_logout, R.id.layout_cache, R.id.layout_version})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
@@ -193,7 +203,7 @@ public class PersonalActivity extends MyBaseActivity {
                 break;
 
             case R.id.layout_about:
-                startActivity(new Intent(PersonalActivity.this,AboutActivity.class));
+                startActivity(new Intent(PersonalActivity.this, AboutActivity.class));
                 break;
 
             case R.id.txt_logout:
@@ -202,6 +212,10 @@ public class PersonalActivity extends MyBaseActivity {
 
             case R.id.layout_cache:
                 clearCache();
+                break;
+
+            case R.id.layout_version:
+                getVersion();
                 break;
         }
     }
@@ -224,7 +238,6 @@ public class PersonalActivity extends MyBaseActivity {
         editor.putString("userId", null);
         editor.putString("token", null);
         editor.commit();
-
 
 
         EMClient.getInstance().logout(true, new EMCallBack() {
@@ -349,7 +362,7 @@ public class PersonalActivity extends MyBaseActivity {
 
         if (data != null) {
             if (requestCode == ImageUtil.RESULT_LOAD_IMAGE) {
-                if(data.getData() != null){
+                if (data.getData() != null) {
                     Glide.with(PersonalActivity.this).load(album(data)).into(imgPhoto);
 
                     new QiNiuUtil(PersonalActivity.this, album(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
@@ -361,7 +374,7 @@ public class PersonalActivity extends MyBaseActivity {
                 }
 
             } else if (requestCode == ImageUtil.RESULT_CAMARA_IMAGE) {
-                if(data.getExtras() != null){
+                if (data.getExtras() != null) {
                     Glide.with(PersonalActivity.this).load(camara(data)).into(imgPhoto);
 
                     new QiNiuUtil(PersonalActivity.this, camara(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
@@ -485,12 +498,12 @@ public class PersonalActivity extends MyBaseActivity {
         txtPhone.setText(model.getMobile());
     }
 
-    private void getContractNo(){
+    private void getContractNo() {
         JSONObject object = new JSONObject();
         try {
-            object.put("fromUser",userInfoSp.getString("userId",null));
-            object.put("code",userInfoSp.getString("storeCode",null));
-            object.put("token",userInfoSp.getString("token",null));
+            object.put("fromUser", userInfoSp.getString("userId", null));
+            object.put("code", userInfoSp.getString("storeCode", null));
+            object.put("token", userInfoSp.getString("token", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -502,13 +515,13 @@ public class PersonalActivity extends MyBaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
-                    if(jsonObject.getString("contractNo") == null){
+                    if (jsonObject.getString("contractNo") == null) {
                         txtContract.setText("合同编号:暂无");
-                    }else{
-                        if(jsonObject.getString("contractNo").equals("")){
+                    } else {
+                        if (jsonObject.getString("contractNo").equals("")) {
                             txtContract.setText("合同编号:暂无");
-                        }else{
-                            txtContract.setText("合同编号:"+jsonObject.getString("contractNo"));
+                        } else {
+                            txtContract.setText("合同编号:" + jsonObject.getString("contractNo"));
                         }
                     }
 
@@ -573,7 +586,7 @@ public class PersonalActivity extends MyBaseActivity {
             public void onSuccess(String result) {
                 try {
                     JSONArray jsonObject = new JSONArray(result);
-                    if(jsonObject.length() != 0){
+                    if (jsonObject.length() != 0) {
                         getContractNo();
 
                     }
@@ -596,5 +609,62 @@ public class PersonalActivity extends MyBaseActivity {
                 Toast.makeText(PersonalActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void getVersion(){
+        JSONObject object = new JSONObject();
+        try {
+            object.put("key", "bVersionCode");
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        new Xutil().post("615917", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    int versionCode = Integer.parseInt(jsonObject.getString("cvalue"));
+
+                    if(versionCode > getVersionCode()){
+                        update();
+                    }else {
+                        Toast.makeText(PersonalActivity.this, "当前已是最新版本哦", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(PersonalActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(PersonalActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void update() {
+        new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage("发现新版本请及时更新")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        startService(new Intent(PersonalActivity.this, UpdateService.class)
+                                .putExtra("appname", "zhsj-release")
+                                .putExtra("appurl", "http://m.zhenghuijituan.com/app/zhsj-release.apk"));
+
+                    }
+                }).setNegativeButton("取消", null).show();
     }
 }

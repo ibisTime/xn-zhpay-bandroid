@@ -134,7 +134,7 @@ public class ModifyTradeActivity extends MyBaseActivity {
                     return;
                 }
 //                if (edtPassword.getText().toString().trim().length() != 6) {
-//                    Toast.makeText(ModifyTradeActivity.this, "请填写6位的原交易密码", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ModifyTradeActivity.this, "请填写6位的原支付密码", Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
                 if (edtRepassword.getText().toString().trim().length() != 6) {
