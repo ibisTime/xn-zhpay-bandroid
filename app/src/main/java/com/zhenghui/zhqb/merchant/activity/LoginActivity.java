@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -19,8 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
@@ -32,6 +29,8 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 
 public class LoginActivity extends MyBaseActivity {
 
@@ -50,13 +49,12 @@ public class LoginActivity extends MyBaseActivity {
     @BindView(R.id.box_remenber)
     CheckBox boxRemenber;
 
+    public static LoginActivity instance;
+
     public static final String TIP = "tip";
 
     SharedPreferences.Editor editor;
     private boolean isRemenberPwd = false;
-
-    private SharedPreferences appConfigSp;
-    private SharedPreferences userInfoSp;
 
     private Handler handler = new Handler() {
 
@@ -91,11 +89,6 @@ public class LoginActivity extends MyBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        System.out.println("loginPwd="+userInfoSp.getString("loginPwd",""));
-        System.out.println("loginName="+userInfoSp.getString("loginName",""));
-        System.out.println("isRemenberPwd="+userInfoSp.getBoolean("isRemenberPwd",false));
-
         edtPhone.setText(userInfoSp.getString("loginName",""));
         edtPassword.setText(userInfoSp.getString("loginPwd",""));
     }
@@ -118,8 +111,7 @@ public class LoginActivity extends MyBaseActivity {
     }
 
     private void inits() {
-        appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
-        userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        instance = this;
 
         editor = userInfoSp.edit();
         isRemenberPwd = userInfoSp.getBoolean("isRemenberPwd",false);
@@ -176,10 +168,6 @@ public class LoginActivity extends MyBaseActivity {
                     editor.putString("userId",jsonObject.getString("userId"));
                     editor.putString("token",jsonObject.getString("token"));
 
-                    System.out.println("isRemenberPwd="+isRemenberPwd);
-                    System.out.println("loginName="+edtPhone.getText().toString().trim());
-                    System.out.println("loginPwd="+edtPassword.getText().toString().trim());
-
                     if(isRemenberPwd){
                         editor.putString("loginName", edtPhone.getText().toString().trim());
                         editor.putString("loginPwd", edtPassword.getText().toString().trim());
@@ -200,7 +188,7 @@ public class LoginActivity extends MyBaseActivity {
                 }
 
 //                finish();
-                signin();
+                getStroe();
             }
 
             @Override
@@ -215,55 +203,41 @@ public class LoginActivity extends MyBaseActivity {
         });
     }
 
-    private void signin(){
-        EMClient.getInstance().login(userInfoSp.getString("userId",null), "888888", new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                finish();
-                startActivity(new Intent(LoginActivity.this,MainActivity.class));
+    private void getStroe() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("userId", userInfoSp.getString("userId", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            }
-
+        new Xutil().post(CODE_808219, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
-            public void onError(int i, String s) {
-                if (i == 200) {
-                    logout();
-                } else {
-                    Message message = handler.obtainMessage();
-                    message.obj = "登录失败: " + i + ", " + s;
-                    handler.sendMessage(message);
-                    Log.i("EMClient_login", "登录失败 " + i + ", " + s);
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.length() != 0) {
+                        startActivity(new Intent(LoginActivity.this,Main2Activity.class));
+                    } else {
+                        startActivity(new Intent(LoginActivity.this,StoreContract2Activity.class));
+                    }
+                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onProgress(int i, String s) {
-
-            }
-        });
-    }
-
-    private void logout() {
-
-        EMClient.getInstance().logout(true, new EMCallBack() {
-
-            @Override
-            public void onSuccess() {
-                signin();
-            }
-
-            @Override
-            public void onProgress(int progress, String status) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
-            public void onError(int code, String message) {
-                Message msg = handler.obtainMessage();
-                msg.obj = "退出失败: " + code + ", " + message;
-                handler.sendMessage(msg);
+            public void onTip(String tip) {
+                Toast.makeText(LoginActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(LoginActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
             }
         });
     }

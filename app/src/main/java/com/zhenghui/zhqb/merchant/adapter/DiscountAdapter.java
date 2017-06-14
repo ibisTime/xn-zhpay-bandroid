@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zhenghui.zhqb.merchant.model.DiscountModel;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.model.DiscountModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,7 +70,6 @@ public class DiscountAdapter extends BaseAdapter {
             holder.imgZhang.setVisibility(View.GONE);
             holder.layoutBg.setBackground(context.getResources().getDrawable(R.mipmap.discount_used_bg));
 
-            holder.txtAstrict.setTextColor(context.getResources().getColor(R.color.graycc));
             holder.txtName.setTextColor(context.getResources().getColor(R.color.graycc));
             holder.txtTime.setTextColor(context.getResources().getColor(R.color.graycc));
 
@@ -78,16 +77,14 @@ public class DiscountAdapter extends BaseAdapter {
             holder.imgZhang.setVisibility(View.GONE);
             holder.layoutBg.setBackground(context.getResources().getDrawable(R.mipmap.discount_unused_bg));
 
-            holder.txtAstrict.setTextColor(context.getResources().getColor(R.color.fontColor_orange));
-            holder.txtName.setTextColor(context.getResources().getColor(R.color.fontColor_gray));
+            holder.txtName.setTextColor(context.getResources().getColor(R.color.fontColor_pink));
             holder.txtTime.setTextColor(context.getResources().getColor(R.color.fontColor_support));
 
-        }else if (list.get(position).getStatus().equals("2")){ // 已下架
+        } else if (list.get(position).getStatus().equals("2")) { // 已下架
             holder.imgZhang.setVisibility(View.VISIBLE);
             holder.imgZhang.setBackgroundResource(R.mipmap.discount_lower);
             holder.layoutBg.setBackground(context.getResources().getDrawable(R.mipmap.discount_used_bg));
 
-            holder.txtAstrict.setTextColor(context.getResources().getColor(R.color.graycc));
             holder.txtName.setTextColor(context.getResources().getColor(R.color.graycc));
             holder.txtTime.setTextColor(context.getResources().getColor(R.color.graycc));
         } else {
@@ -95,21 +92,18 @@ public class DiscountAdapter extends BaseAdapter {
             holder.imgZhang.setBackgroundResource(R.mipmap.discount_timeout);
             holder.layoutBg.setBackground(context.getResources().getDrawable(R.mipmap.discount_used_bg));
 
-            holder.txtAstrict.setTextColor(context.getResources().getColor(R.color.graycc));
             holder.txtName.setTextColor(context.getResources().getColor(R.color.graycc));
             holder.txtTime.setTextColor(context.getResources().getColor(R.color.graycc));
         }
 
-        holder.txtAstrict.setText("满"+(list.get(position).getKey1()/1000)+"减"+(list.get(position).getKey2()/1000));
+        holder.txtName.setText("消费满" + (list.get(position).getKey1() / 1000) + "抵扣" + (list.get(position).getKey2() / 1000)+"元");
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         Date d5 = new Date(list.get(position).getValidateEnd());
-        holder.txtTime.setText("有效期至"+s.format(d5));
+        holder.txtTime.setText("有效期: " + s.format(d5));
 
     }
 
     static class ViewHolder {
-        @BindView(R.id.txt_astrict)
-        TextView txtAstrict;
         @BindView(R.id.txt_name)
         TextView txtName;
         @BindView(R.id.txt_time)

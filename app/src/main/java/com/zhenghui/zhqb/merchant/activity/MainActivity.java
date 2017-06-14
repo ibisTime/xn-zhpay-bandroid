@@ -38,7 +38,7 @@ import com.zhenghui.zhqb.merchant.model.AssetsModel;
 import com.zhenghui.zhqb.merchant.model.UserModel;
 import com.zhenghui.zhqb.merchant.services.UpdateService;
 import com.zhenghui.zhqb.merchant.util.ImageUtil;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 import com.zzhoujay.richtext.RichText;
 
@@ -461,7 +461,7 @@ public class MainActivity extends MyBaseActivity implements EMMessageListener {
     private void setAssets() {
         for (AssetsModel model : list) {
             if (model.getCurrency().equals("FRB")) {
-                txtMoney.setText("¥" + MoneyUtil.moneyFormatDouble(model.getAmount()) + "");
+                txtMoney.setText("¥" + NumberUtil.doubleFormatMoney(model.getAmount()) + "");
                 frbCode = model.getAccountNumber();
                 frb = model.getAmount();
 

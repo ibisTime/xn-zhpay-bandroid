@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
 import org.json.JSONException;
@@ -351,8 +351,8 @@ public class DiscountAddActivity extends MyBaseActivity {
 
                     edtName.setText(jsonObject.getString("name"));
 
-                    edtKey1.setText(MoneyUtil.moneyFormatDouble(jsonObject.getDouble("key1")) + "");
-                    edtKey2.setText(MoneyUtil.moneyFormatDouble(jsonObject.getDouble("key2")) + "");
+                    edtKey1.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("key1")) + "");
+                    edtKey2.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("key2")) + "");
 
                     SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
                     Date start = new Date(jsonObject.getString("validateStart"));

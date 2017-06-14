@@ -3,10 +3,12 @@ package com.zhenghui.zhqb.merchant.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -15,6 +17,7 @@ import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.adapter.RightsAdapter;
 import com.zhenghui.zhqb.merchant.model.RightsModel;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 import com.zhenghui.zhqb.merchant.util.RefreshLayout;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
@@ -29,6 +32,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802502;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808275;
+
 public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener,AdapterView.OnItemClickListener {
 
     @BindView(R.id.layout_back)
@@ -38,8 +44,15 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
     @BindView(R.id.swipe_container)
     RefreshLayout swipeContainer;
 
+    TextView txtFhq;
+    TextView txtPool;
+    TextView txtEarnings;
+    TextView txtTurnover;
+
     List<RightsModel> list;
     RightsAdapter adapter;
+
+    private View headView;
 
     private int page = 1;
     private int pageSize = 10;
@@ -51,10 +64,14 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         ButterKnife.bind(this);
 
         inits();
+        initHeadView();
         initsListView();
         initRefreshLayout();
 
         getData();
+        getTotal();
+        getLimit();
+        getProperty();
     }
 
     private void inits() {
@@ -62,7 +79,17 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         adapter = new RightsAdapter(this,list);
     }
 
+    private void initHeadView() {
+        headView = LayoutInflater.from(this).inflate(R.layout.head_rights,null);
+
+        txtFhq = (TextView) headView.findViewById(R.id.txt_fhq);
+        txtPool = (TextView) headView.findViewById(R.id.txt_pool);
+        txtEarnings = (TextView) headView.findViewById(R.id.txt_earnings);
+        txtTurnover = (TextView) headView.findViewById(R.id.txt_turnover);
+    }
+
     private void initsListView() {
+        listRights.addHeaderView(headView);
         listRights.setAdapter(adapter);
         listRights.setOnItemClickListener(this);
     }
@@ -82,6 +109,116 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         finish();
     }
 
+    private void getTotal() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("accountNumber", "A2017100000000000002");
+            object.put("token", userInfoSp.getString("token",""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_802502, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    txtPool.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("amount")));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(RightsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(RightsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getProperty() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("userId", userInfoSp.getString("userId", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_808275, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    txtEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getInt("stockCount")*150000-jsonObject.getDouble("totalStockProfit")));
+                    txtFhq.setText(jsonObject.getInt("stockCount")+"");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(RightsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(RightsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 查询所需消费额
+     */
+    private void getLimit() {
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("userId", userInfoSp.getString("userId", null));
+            object.put("token", userInfoSp.getString("token", null));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("808418", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    txtTurnover.setText(NumberUtil.doubleFormatMoney(500000 - jsonObject.getDouble("costAmount")));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(RightsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(RightsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void getData() {
 
@@ -157,6 +294,10 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        startActivity(new Intent(RightsActivity.this, RightsListActivity.class).putExtra("code",list.get(i).getCode()));
+        startActivity(new Intent(RightsActivity.this, RightsListActivity.class)
+                .putExtra("received", NumberUtil.doubleFormatMoney(list.get(i-1).getBackAmount()))
+                .putExtra("unclaimed", NumberUtil.doubleFormatMoney(list.get(i-1).getProfitAmount() - list.get(i-1).getBackAmount()))
+                .putExtra("date",list.get(i-1).getCreateDatetime())
+                .putExtra("code",list.get(i-1).getCode()));
     }
 }

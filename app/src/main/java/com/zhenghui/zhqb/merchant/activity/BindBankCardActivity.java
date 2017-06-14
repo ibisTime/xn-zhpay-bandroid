@@ -5,9 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,18 +37,15 @@ import butterknife.OnClick;
 
 public class BindBankCardActivity extends MyBaseActivity {
 
+
     @BindView(R.id.layout_back)
     LinearLayout layoutBack;
     @BindView(R.id.txt_title)
     TextView txtTitle;
     @BindView(R.id.edt_name)
     EditText edtName;
-    @BindView(R.id.edt_phone)
-    EditText edtPhone;
     @BindView(R.id.txt_bankName)
     TextView txtBankName;
-    @BindView(R.id.edt_subbranch)
-    EditText edtSubbranch;
     @BindView(R.id.edt_cardId)
     EditText edtCardId;
     @BindView(R.id.txt_confirm)
@@ -89,8 +91,8 @@ public class BindBankCardActivity extends MyBaseActivity {
         isModifi = getIntent().getBooleanExtra("isModifi", false);
         if (isModifi) {
             txtTitle.setText("修改银行卡");
-            edtName.setFocusable(false);
-            edtName.setFocusableInTouchMode(false);
+//            edtName.setFocusable(false);
+//            edtName.setFocusableInTouchMode(false);
             getData();
         }
 
@@ -106,7 +108,7 @@ public class BindBankCardActivity extends MyBaseActivity {
             case R.id.txt_confirm:
                 if (check()) {
                     if (isModifi) {
-                        modifiBankCard();
+                        tip(view);
                     } else {
                         bindBankCard();
                     }
@@ -209,10 +211,7 @@ public class BindBankCardActivity extends MyBaseActivity {
                     JSONObject jsonObject = new JSONObject(result);
 
                     edtName.setText(jsonObject.getString("realName"));
-                    edtPhone.setText(jsonObject.getString("bindMobile"));
-                    edtSubbranch.setText(jsonObject.getString("subbranch"));
                     edtCardId.setText(jsonObject.getString("bankcardNumber"));
-
                     txtBankName.setText(jsonObject.getString("bankName"));
                     bc = jsonObject.getString("bankCode");
 
@@ -241,8 +240,6 @@ public class BindBankCardActivity extends MyBaseActivity {
             object.put("bankcardNumber", edtCardId.getText().toString().trim());
             object.put("bankName", txtBankName.getText().toString().trim());
             object.put("bankCode", bc);
-            object.put("subbranch", edtSubbranch.getText().toString().trim());
-            object.put("bindMobile", edtPhone.getText().toString().trim());
             object.put("currency", "CNY");
             object.put("type", "C");
             object.put("token", userInfoSp.getString("token", null));
@@ -271,7 +268,7 @@ public class BindBankCardActivity extends MyBaseActivity {
         });
     }
 
-    private void modifiBankCard() {
+    private void modifiBankCard(String tradePwd) {
         JSONObject object = new JSONObject();
         try {
             object.put("realName", edtName.getText().toString().trim());
@@ -279,9 +276,8 @@ public class BindBankCardActivity extends MyBaseActivity {
             object.put("bankName", txtBankName.getText().toString().trim());
             object.put("bankCode", bc);
             object.put("code", code);
-            object.put("subbranch", edtSubbranch.getText().toString().trim());
-            object.put("bindMobile", edtPhone.getText().toString().trim());
             object.put("status", "1");
+            object.put("tradePwd", tradePwd);
             object.put("token", userInfoSp.getString("token", null));
             object.put("userId", userInfoSp.getString("userId", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
@@ -289,7 +285,7 @@ public class BindBankCardActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802012", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post("802013", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 finish();
@@ -313,16 +309,8 @@ public class BindBankCardActivity extends MyBaseActivity {
             Toast.makeText(this, "请填写您的姓名", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (edtPhone.getText().toString().length() != 11) {
-            Toast.makeText(this, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
-            return false;
-        }
         if (txtBankName.getText().toString().equals("")) {
             Toast.makeText(this, "请填写银行名称", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (edtSubbranch.getText().toString().equals("")) {
-            Toast.makeText(this, "请填写开户行", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (edtCardId.getText().toString().length() < 16 || edtCardId.getText().toString().length() > 19) {
@@ -330,5 +318,62 @@ public class BindBankCardActivity extends MyBaseActivity {
             return false;
         }
         return true;
+    }
+
+    private void tip(View view) {
+
+        // 一个自定义的布局，作为显示的内容
+        View mview = LayoutInflater.from(this).inflate(R.layout.popup_trade, null);
+
+        final EditText edtTradePwd = (EditText) mview.findViewById(R.id.edt_tradePwd);
+
+        TextView txtCancel = (TextView) mview.findViewById(R.id.txt_cancel);
+        TextView txtConfirm = (TextView) mview.findViewById(R.id.txt_confirm);
+
+        final PopupWindow popupWindow = new PopupWindow(mview,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+
+        popupWindow.setTouchable(true);
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return false;
+                // 这里如果返回true的话，touch事件将被拦截
+                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            }
+        });
+
+
+        txtCancel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                popupWindow.dismiss();
+            }
+        });
+
+        txtConfirm.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                if (edtTradePwd.getText().toString().trim().equals("")) {
+                    Toast.makeText(BindBankCardActivity.this, "请输入支付密码", Toast.LENGTH_SHORT).show();
+                }else {
+                    popupWindow.dismiss();
+
+                    modifiBankCard(edtTradePwd.getText().toString().toString());
+                }
+            }
+        });
+
+        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.corners_layout));
+        // 设置好参数之后再show
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 50);
+
     }
 }

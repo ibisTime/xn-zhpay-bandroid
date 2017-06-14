@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.zhenghui.zhqb.merchant.model.MessageModel;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.model.MessageModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +50,7 @@ public class SystemMessageAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_system_message, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_system_message2, null);
             holder = new ViewHolder(view);
             view.setTag(holder);
         } else {
@@ -63,22 +63,20 @@ public class SystemMessageAdapter extends BaseAdapter {
     }
 
     private void setView(int position) {
-        holder.txtTitle.setText(list.get(position).getSmsTitle());
-        holder.txtContent.setText(list.get(position).getSmsContent());
+//        holder.txtMessage.setText(list.get(position).getSmsTitle());
+        holder.txtMessage.setText(list.get(position).getSmsContent());
 
-        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date d5 = new Date(list.get(position).getPushedDatetime());
         holder.txtTime.setText(s.format(d5));
 
     }
 
     static class ViewHolder {
-        @BindView(R.id.txt_title)
-        TextView txtTitle;
         @BindView(R.id.txt_time)
         TextView txtTime;
-        @BindView(R.id.txt_content)
-        TextView txtContent;
+        @BindView(R.id.txt_message)
+        TextView txtMessage;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

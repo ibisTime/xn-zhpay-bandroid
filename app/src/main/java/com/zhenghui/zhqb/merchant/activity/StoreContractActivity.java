@@ -466,7 +466,7 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
     }
 
     private void cityPicker() {
-        CityPicker cityPicker = new CityPicker.Builder(StoreContractActivity.this)
+        final CityPicker cityPicker = new CityPicker.Builder(StoreContractActivity.this)
                 .textSize(18)
                 .titleBackgroundColor("#ffffff")
                 .titleTextColor("#ffffff")
@@ -500,6 +500,11 @@ public class StoreContractActivity extends MyBaseActivity implements GeocodeSear
                 String code = citySelected[3];
 
                 txtLocation.setText(mCurrentProviceName + mCurrentCityName + mCurrentDistrictName);
+            }
+
+            @Override
+            public void onCancel() {
+                cityPicker.hide();
             }
         });
     }

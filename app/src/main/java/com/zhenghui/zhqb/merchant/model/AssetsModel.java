@@ -7,17 +7,22 @@ package com.zhenghui.zhqb.merchant.model;
 public class AssetsModel {
 
     /**
-     * accountNumber : A2017010320352810486
-     * userId : U2017010320352790096
+     * accountNumber : A2017040718104733758
+     * userId : U2017040718104693069
      * realName : 18984955240
-     * type : C
+     * type : B
      * status : 0
-     * currency : CNY
-     * amount : 0
-     * frozenAmount : 0
-     * md5 : f0ed31502f5d1f206753a5e8114c87e0
-     * createDatetime : Jan 3, 2017 8:35:28 PM
+     * currency : FRB
+     * amount : 5321380
+     * frozenAmount : 20000
+     * md5 : f36ca52888cd7babad750138f29f3f19
+     * addAmount : 7051810
+     * inAmount : 10000
+     * outAmount : 12000
+     * createDatetime : Apr 7, 2017 6:10:47 PM
+     * lastOrder : AJ2017052900000031753
      * systemCode : CD-CZH000001
+     * companyCode : CD-CZH000001
      */
 
     private String accountNumber;
@@ -27,11 +32,15 @@ public class AssetsModel {
     private String status;
     private String currency;
     private double amount;
-    private double frozenAmount;
+    private int frozenAmount;
     private String md5;
+    private int addAmount;
+    private int inAmount;
+    private int outAmount;
     private String createDatetime;
+    private String lastOrder;
     private String systemCode;
-
+    private String companyCode;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -89,11 +98,11 @@ public class AssetsModel {
         this.amount = amount;
     }
 
-    public double getFrozenAmount() {
+    public int getFrozenAmount() {
         return frozenAmount;
     }
 
-    public void setFrozenAmount(double frozenAmount) {
+    public void setFrozenAmount(int frozenAmount) {
         this.frozenAmount = frozenAmount;
     }
 
@@ -105,6 +114,30 @@ public class AssetsModel {
         this.md5 = md5;
     }
 
+    public int getAddAmount() {
+        return addAmount;
+    }
+
+    public void setAddAmount(int addAmount) {
+        this.addAmount = addAmount;
+    }
+
+    public int getInAmount() {
+        return inAmount;
+    }
+
+    public void setInAmount(int inAmount) {
+        this.inAmount = inAmount;
+    }
+
+    public int getOutAmount() {
+        return outAmount;
+    }
+
+    public void setOutAmount(int outAmount) {
+        this.outAmount = outAmount;
+    }
+
     public String getCreateDatetime() {
         return createDatetime;
     }
@@ -113,12 +146,28 @@ public class AssetsModel {
         this.createDatetime = createDatetime;
     }
 
+    public String getLastOrder() {
+        return lastOrder;
+    }
+
+    public void setLastOrder(String lastOrder) {
+        this.lastOrder = lastOrder;
+    }
+
     public String getSystemCode() {
         return systemCode;
     }
 
     public void setSystemCode(String systemCode) {
         this.systemCode = systemCode;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 }
 

@@ -20,7 +20,7 @@ import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.model.BankModel;
 import com.zhenghui.zhqb.merchant.model.MyBankCardModel;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
 import org.json.JSONArray;
@@ -58,6 +58,8 @@ public class WithdrawalsActivity extends MyBaseActivity {
     EditText edtRepassword;
     @BindView(R.id.txt_tip)
     TextView txtTip;
+    @BindView(R.id.txt_tip2)
+    TextView txtTip2;
 
 
     private List<BankModel> list;
@@ -103,7 +105,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
         balance = getIntent().getDoubleExtra("balance", 0.00);
         accountNumber = getIntent().getStringExtra("accountNumber");
 
-        txtCanUsePrice.setText("可提现金额" + MoneyUtil.moneyFormatDouble(balance) + "元");
+        txtCanUsePrice.setText("可提现金额" + NumberUtil.doubleFormatMoney(balance) + "元");
     }
 
     private void initEditText() {
@@ -169,8 +171,10 @@ public class WithdrawalsActivity extends MyBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (!data.getStringExtra("bankName").equals("")) {
-            txtBankCard.setText(data.getStringExtra("bankName"));
+            bankName = data.getStringExtra("bankName");
             bankcardNumber = data.getStringExtra("bankcardNumber");
+
+            txtBankCard.setText(bankName);
         }
 
     }
@@ -259,6 +263,86 @@ public class WithdrawalsActivity extends MyBaseActivity {
                     JSONObject jsonObject = new JSONObject(result);
 
                     txtTip.setText("* 每月最大取现次数为" + jsonObject.getString("cvalue") + "次");
+
+                    getTip2();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(WithdrawalsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(WithdrawalsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getTip2() {
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("key", "BUSERQXBS");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("802027", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    txtTip2.setText("* 提现金额是" + jsonObject.getString("cvalue"));
+
+                    getTip3();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(WithdrawalsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(WithdrawalsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getTip3() {
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("key", "QXDBZDJE");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("802027", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    txtTip2.setText(txtTip2.getText()+ "的倍数，单笔最高" + jsonObject.getString("cvalue"));
 
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -1,32 +1,24 @@
 package com.zhenghui.zhqb.merchant.activity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Spanned;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,11 +30,12 @@ import com.qiniu.android.http.ResponseInfo;
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.adapter.ParameterAdapter;
 import com.zhenghui.zhqb.merchant.adapter.RecyclerViewAdapter;
+import com.zhenghui.zhqb.merchant.model.ParameterModel;
 import com.zhenghui.zhqb.merchant.model.ProductModel;
 import com.zhenghui.zhqb.merchant.model.ProductTypeModel;
 import com.zhenghui.zhqb.merchant.util.ImageUtil;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
 import com.zhenghui.zhqb.merchant.util.QiNiuUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
@@ -50,21 +43,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.zhenghui.zhqb.merchant.R.id.layout_parameter;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.RESULT_CAMARA_IMAGE;
+import static com.zhenghui.zhqb.merchant.util.ImageUtil.album;
+import static com.zhenghui.zhqb.merchant.util.ImageUtil.camara;
 
 /**
  * Created by Leiq on 2016/12/26.
@@ -76,52 +64,34 @@ public class ProductActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)
     LinearLayout layoutBack;
-    @BindView(layout_parameter)
-    LinearLayout layoutParameter;
-    @BindView(R.id.img_photo)
-    ImageView imgPhoto;
-    @BindView(R.id.edt_name)
-    EditText edtName;
-    @BindView(R.id.txt_bigType)
-    TextView txtBigType;
-    @BindView(R.id.layout_bigType)
-    LinearLayout layoutBigType;
-    @BindView(R.id.txt_smallType)
-    TextView txtSmallType;
-    @BindView(R.id.layout_smallType)
-    LinearLayout layoutSmallType;
-    @BindView(R.id.edt_detail)
-    EditText edtDetail;
-    @BindView(R.id.img_add)
-    ImageView imgAdd;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.txt_confirm)
-    TextView txtConfirm;
-    @BindView(R.id.edt_advertisement)
-    EditText edtAdvertisement;
-    @BindView(R.id.edt_quantity)
-    EditText edtQuantity;
-    @BindView(R.id.edt_costPrice)
-    EditText edtCostPrice;
+    @BindView(R.id.list_product)
+    ListView listProduct;
+    @BindView(R.id.txt_btn)
+    TextView txtBtn;
     @BindView(R.id.txt_title)
     TextView txtTitle;
-    @BindView(R.id.txt_reason)
-    TextView txtReason;
-    @BindView(R.id.edt_rmb)
-    EditText edtRmb;
-    @BindView(R.id.edt_gwb)
-    EditText edtGwb;
-    @BindView(R.id.edt_qbb)
-    EditText edtQbb;
+
+    EditText edtName;
+    EditText edtDetail;
+    EditText edtAdvertisement;
+    ImageView imgAdd;
+    ImageView imgPhoto;
+    TextView txtBigType;
+    TextView txtSmallType;
+    FrameLayout layoutAdvPic;
+    RecyclerView recyclerView;
+    LinearLayout layoutBigType;
+    LinearLayout layoutSmallType;
+
+    ImageView imgAddParamter;
+    Button btnSend;
+
+    private View headerView;
+    private View footerView;
 
     private String cover = "";
 
     private boolean isCover = true;
-
-    private SharedPreferences appConfigSp;
-    private SharedPreferences userInfoSp;
-
 
     // 所有
     private List<ProductTypeModel> typeList;
@@ -133,7 +103,7 @@ public class ProductActivity extends MyBaseActivity {
     private List<ProductTypeModel> smallList3;
 
 
-    private String[] bigType = {"剁手合集", "0元试购"};
+    private String[] bigType = {"剁手合集"};
     private String[] smallType1;
     private String[] smallType2;
     private String[] smallType3;
@@ -150,21 +120,32 @@ public class ProductActivity extends MyBaseActivity {
 
     private ProductModel model;
 
-    private double rmb = 0;
-    private double gwb = 0;
-    private double qbb = 0;
+    private ParameterAdapter adapter;
+    private List<ParameterModel> listParamter;
+    private JSONArray productSpecsList;
+
+    private int PARAMETER_ADD = 233;
+    private int PARAMETER_DETAIL = 234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_add);
+        setContentView(R.layout.activity_product_add2);
         ButterKnife.bind(this);
         MyApplication.getInstance().addActivity(this);
 
         inits();
-        getProductType();
+        initHeadView();
+        initFootView();
+        initListView();
         initRecyclerView();
-        initEditText();
+
+        getProductType();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -174,8 +155,12 @@ public class ProductActivity extends MyBaseActivity {
     }
 
     private void inits() {
-        userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
+        code = getIntent().getStringExtra("code");
+        isModifi = getIntent().getBooleanExtra("isModifi", false);
+
+        if(isModifi){
+            txtTitle.setText("修改商品");
+        }
 
         typeList = new ArrayList<>();
         bigTypeList = new ArrayList<>();
@@ -188,8 +173,105 @@ public class ProductActivity extends MyBaseActivity {
         listPic = new ArrayList<>();
         listPicUrl = new ArrayList<>();
 
-        code = getIntent().getStringExtra("code");
-        isModifi = getIntent().getBooleanExtra("isModifi", false);
+        listParamter = new ArrayList<>();
+        adapter = new ParameterAdapter(ProductActivity.this, listParamter);
+    }
+
+    private void initHeadView() {
+        headerView = LayoutInflater.from(this).inflate(R.layout.head_product, null);
+
+        txtBigType = (TextView) headerView.findViewById(R.id.txt_bigType);
+        txtSmallType = (TextView) headerView.findViewById(R.id.txt_smallType);
+
+        layoutBigType = (LinearLayout) headerView.findViewById(R.id.layout_bigType);
+        layoutSmallType = (LinearLayout) headerView.findViewById(R.id.layout_smallType);
+
+        imgAdd = (ImageView) headerView.findViewById(R.id.img_add);
+        imgPhoto = (ImageView) headerView.findViewById(R.id.img_photo);
+
+        layoutAdvPic = (FrameLayout) headerView.findViewById(R.id.layout_advPic);
+        recyclerView = (RecyclerView) headerView.findViewById(R.id.recycler_view);
+
+        edtName = (EditText) headerView.findViewById(R.id.edt_name);
+        edtDetail = (EditText) headerView.findViewById(R.id.edt_detail);
+        edtAdvertisement = (EditText) headerView.findViewById(R.id.edt_advertisement);
+
+        layoutBigType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseBigType();
+            }
+        });
+
+        layoutSmallType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (txtBigType.getText().equals("")) {
+                    Toast.makeText(ProductActivity.this, "请先选择大类", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                chooseSmallType();
+            }
+        });
+
+        imgAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listPicUrl.size() < 3){
+                    isCover = false;
+                    choosePhoto(view);
+                }else {
+                    Toast.makeText(ProductActivity.this, "图片最多只能选择三张", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        imgPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isCover = true;
+                choosePhoto(view);
+            }
+        });
+    }
+
+    private void initFootView() {
+        footerView = LayoutInflater.from(this).inflate(R.layout.foot_product, null);
+        btnSend = (Button) footerView.findViewById(R.id.btn_send);
+        imgAddParamter = (ImageView) footerView.findViewById(R.id.img_add);
+
+        if (isModifi) {
+            btnSend.setText("保存修改");
+        }
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkData()) {
+
+                    if (isModifi) {
+                        modifi();
+                    } else {
+                        commit();
+                    }
+                }
+            }
+        });
+
+        imgAddParamter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isModifi) {
+                    startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                            .putExtra("orderNo", listParamter.size() + 1)
+                            .putExtra("code", model.getCode())
+                            .putExtra("isModify", isModifi), PARAMETER_ADD);
+                } else {
+                    startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class), PARAMETER_ADD);
+
+                }
+            }
+        });
     }
 
     private void initRecyclerView() {
@@ -202,125 +284,39 @@ public class ProductActivity extends MyBaseActivity {
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    private void initEditText() {
-        edtRmb.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
-        edtQbb.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
-        edtGwb.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
-        //设置字符过滤
-        edtRmb.setFilters(new InputFilter[]{new InputFilter() {
+    private void initListView() {
+        listProduct.addHeaderView(headerView);
+        listProduct.addFooterView(footerView);
+        listProduct.setAdapter(adapter);
+        listProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (source.equals(".") && dest.toString().length() == 0) {
-                    return "0.";
-                }
-                if (dest.toString().contains(".")) {
-                    int index = dest.toString().indexOf(".");
-                    int mlength = dest.toString().substring(index).length();
-                    if (mlength == 3) {
-                        return "";
-                    }
-                }
-                return null;
-            }
-        }});
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        edtQbb.setFilters(new InputFilter[]{new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (source.equals(".") && dest.toString().length() == 0) {
-                    return "0.";
-                }
-                if (dest.toString().contains(".")) {
-                    int index = dest.toString().indexOf(".");
-                    int mlength = dest.toString().substring(index).length();
-                    if (mlength == 3) {
-                        return "";
-                    }
-                }
-                return null;
+                startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                        .putExtra("index", (i - 1))
+                        .putExtra("isModify", isModifi)
+                        .putExtra("model", listParamter.get(i - 1)), PARAMETER_DETAIL);
             }
-        }});
-
-        edtGwb.setFilters(new InputFilter[]{new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (source.equals(".") && dest.toString().length() == 0) {
-                    return "0.";
-                }
-                if (dest.toString().contains(".")) {
-                    int index = dest.toString().indexOf(".");
-                    int mlength = dest.toString().substring(index).length();
-                    if (mlength == 3) {
-                        return "";
-                    }
-                }
-                return null;
-            }
-        }});
+        });
     }
 
-    @OnClick({R.id.layout_back, R.id.img_photo, R.id.layout_bigType, R.id.layout_smallType, R.id.img_add, R.id.txt_confirm, layout_parameter})
+    @OnClick({R.id.layout_back, R.id.txt_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
                 finish();
                 break;
 
-            case R.id.img_photo:
-                isCover = true;
-                choosePhoto(view);
-                break;
+            case R.id.txt_btn:
+                switch (txtBtn.getText().toString()){
+                    case "下架":
+                        soldOut();
+                        break;
 
-            case R.id.layout_bigType:
-                chooseBigType();
-                break;
-
-            case R.id.layout_smallType:
-                if (txtBigType.getText().equals("")) {
-                    Toast.makeText(this, "请先选择大类", Toast.LENGTH_SHORT).show();
-                    return;
+                    case "上架":
+                        putAway();
+                        break;
                 }
-                chooseSmallType();
-                break;
-
-            case R.id.img_add:
-                isCover = false;
-                choosePhoto(view);
-                break;
-
-            case layout_parameter:
-                startActivity(new Intent(ProductActivity.this, ParameterActivity.class)
-                        .putExtra("code",code)
-                        .putExtra("isModifi",true));
-                break;
-
-            case R.id.txt_confirm:
-                if (checkData()) {
-
-                    if (!edtRmb.getText().toString().trim().equals("")) {
-                        rmb = Double.parseDouble(edtRmb.getText().toString().trim());
-                    }else{
-                        rmb = 0;
-                    }
-                    if (!edtGwb.getText().toString().trim().equals("")) {
-                        gwb = Double.parseDouble(edtGwb.getText().toString().trim());
-                    }else{
-                        gwb = 0;
-                    }
-                    if (!edtQbb.getText().toString().trim().equals("")) {
-                        qbb = Double.parseDouble(edtQbb.getText().toString().trim());
-                    }else{
-                        qbb = 0;
-                    }
-
-                    if (isModifi) {
-                        modifi();
-                    } else {
-                        commit();
-                    }
-                }
-
-
                 break;
         }
     }
@@ -423,15 +419,15 @@ public class ProductActivity extends MyBaseActivity {
 
         if (data != null) {
             if (requestCode == ImageUtil.RESULT_LOAD_IMAGE) {
-                if(data.getData() != null){
+                if (data.getData() != null) {
                     if (isCover) {
-                        Glide.with(ProductActivity.this).load(album(data)).into(imgPhoto);
+                        Glide.with(ProductActivity.this).load(album(ProductActivity.this, data)).into(imgPhoto);
                     } else {
-                        listPic.add(album(data));
+                        listPic.add(album(ProductActivity.this, data));
                         recyclerViewAdapter.notifyDataSetChanged();
                     }
 
-                    new QiNiuUtil(ProductActivity.this, album(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
+                    new QiNiuUtil(ProductActivity.this, album(ProductActivity.this, data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
                         @Override
                         public void onSuccess(String key, ResponseInfo info, JSONObject res) {
                             System.out.println("key=" + key);
@@ -447,16 +443,16 @@ public class ProductActivity extends MyBaseActivity {
                 }
 
             } else if (requestCode == ImageUtil.RESULT_CAMARA_IMAGE) {
-                if(data.getExtras() != null){
+                if (data.getExtras() != null) {
                     if (isCover) {
-                        Glide.with(ProductActivity.this).load(camara(data)).into(imgPhoto);
+                        Glide.with(ProductActivity.this).load(camara(ProductActivity.this, data)).into(imgPhoto);
                     } else {
-                        listPic.add(camara(data));
+                        listPic.add(camara(ProductActivity.this, data));
                         recyclerViewAdapter.notifyDataSetChanged();
 
                     }
 
-                    new QiNiuUtil(ProductActivity.this, camara(data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
+                    new QiNiuUtil(ProductActivity.this, camara(ProductActivity.this, data), null).qiNiu(new QiNiuUtil.QiNiuCallBack() {
                         @Override
                         public void onSuccess(String key, ResponseInfo info, JSONObject res) {
                             if (isCover) {
@@ -467,67 +463,26 @@ public class ProductActivity extends MyBaseActivity {
                         }
                     }, true);
                 }
+            } else if (requestCode == PARAMETER_ADD) {
+                ParameterModel model = (ParameterModel) data.getSerializableExtra("model");
+                if (model != null) {
+                    listParamter.add(model);
+                    adapter.notifyDataSetChanged();
+                }
+
+            } else if (requestCode == PARAMETER_DETAIL) {
+                int index = data.getIntExtra("index", 0);
+                if(resultCode == 101){
+                    ParameterModel model = (ParameterModel) data.getSerializableExtra("model");
+                    if (model != null) {
+                        listParamter.set(index,model);
+                    }
+                }else {
+                    listParamter.remove(index);
+                }
+                adapter.notifyDataSetChanged();
             }
         }
-    }
-
-    /**
-     * 调用系统相册的操作,在onActivityResult中调用
-     *
-     * @param data onActivityResult中的Intent
-     */
-    public String album(Intent data) {
-        Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = this.getContentResolver().query(selectedImage,
-                filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex);
-        cursor.close();
-        Log.d("picturePath", picturePath);
-        BitmapFactory.decodeFile(picturePath);
-        return picturePath;
-    }
-
-    /**
-     * 调用系统相机,在onActivityResult中调用，拍照后保存到sdcard卡中
-     *
-     * @param data onActivityResult中的Intent
-     * @return
-     */
-    public String camara(Intent data) {
-        String sdStatus = Environment.getExternalStorageState();
-        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-            Log.i("TestFile", "SD card is not avaiable/writeable right now.");
-            Toast.makeText(this,
-                    "SD card is not avaiable/writeable right now.",
-                    Toast.LENGTH_LONG).show();
-            return null;
-        }
-        String name = new DateFormat().format("yyyyMMdd_hhmmss",
-                Calendar.getInstance(Locale.CHINA))
-                + ".jpg";
-        Bundle bundle = data.getExtras();
-        Bitmap bitmap = (Bitmap) bundle.get("data");
-        FileOutputStream b = null;
-        File file = new File("sdcard/DCIM/Camera/");
-        file.mkdirs();// 创建文件夹
-        String fileName = "sdcard/DCIM/Camera/" + name;
-        try {
-            b = new FileOutputStream(fileName);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                b.flush();
-                b.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return fileName;
     }
 
     /**
@@ -607,6 +562,7 @@ public class ProductActivity extends MyBaseActivity {
                     }
                 }
             }
+        }
 //            else if (big.getOrderNo() == 2) {
 ////                bigType[1] = big.getName();
 //                for (ProductTypeModel small : smallTypeList) {
@@ -615,15 +571,15 @@ public class ProductActivity extends MyBaseActivity {
 //                    }
 //                }
 //            }
-            else if (big.getCode().equals("FL201700000000000002")) {
+//            else if (big.getCode().equals("FL201700000000000002")) {
 //                bigType[2] = big.getName();
-                for (ProductTypeModel small : smallTypeList) {
-                    if (small.getParentCode().equals(big.getCode())) {
-                        smallList3.add(small);
-                    }
-                }
-            }
-        }
+//                for (ProductTypeModel small : smallTypeList) {
+//                    if (small.getParentCode().equals(big.getCode())) {
+//                        smallList3.add(small);
+//                    }
+//                }
+//            }
+//        }
 
 
         smallType1 = new String[smallList1.size()];
@@ -643,8 +599,6 @@ public class ProductActivity extends MyBaseActivity {
         }
 
         if (isModifi) {
-            txtTitle.setText("修改商品");
-            layoutParameter.setVisibility(View.VISIBLE);
             getDatas();
         }
 
@@ -696,6 +650,24 @@ public class ProductActivity extends MyBaseActivity {
 
 
     private void modifi() {
+        productSpecsList = new JSONArray();
+        for(int i=0; i<listParamter.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("name", listParamter.get(i).getName());
+                jsonObject.put("price1", listParamter.get(i).getPrice1());
+                jsonObject.put("price2", listParamter.get(i).getPrice2());
+                jsonObject.put("price3", listParamter.get(i).getPrice3());
+                jsonObject.put("weight", listParamter.get(i).getWeight());
+                jsonObject.put("province", listParamter.get(i).getProvince());
+                jsonObject.put("quantity", listParamter.get(i).getQuantity());
+                jsonObject.put("orderNo", i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            productSpecsList.put(jsonObject);
+        }
+
         String pic = "";
 
         for (String s : listPicUrl) {
@@ -709,9 +681,6 @@ public class ProductActivity extends MyBaseActivity {
             object.put("type", type);
             object.put("name", edtName.getText().toString().trim());
             object.put("slogan", edtAdvertisement.getText().toString().trim());
-            object.put("price1", rmb * 1000);
-            object.put("price2", gwb * 1000);
-            object.put("price3", qbb * 1000);
             object.put("advPic", cover);
             object.put("pic", pic.substring(0, pic.length() - 2));
             object.put("description", edtDetail.getText().toString().trim());
@@ -719,6 +688,7 @@ public class ProductActivity extends MyBaseActivity {
             object.put("token", userInfoSp.getString("token", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("companyCode", userInfoSp.getString("userId", null));
+            object.put("productSpecsList", productSpecsList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -726,15 +696,8 @@ public class ProductActivity extends MyBaseActivity {
         new Xutil().post("808012", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
-                try {
-                    Toast.makeText(ProductActivity.this, "修改商品成功", Toast.LENGTH_LONG).show();
-                    JSONObject jsonObject = new JSONObject(result);
-
-                    finish();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Toast.makeText(ProductActivity.this, "修改商品成功", Toast.LENGTH_LONG).show();
+                finish();
 
             }
 
@@ -752,21 +715,34 @@ public class ProductActivity extends MyBaseActivity {
     }
 
     private void commit() {
-        String pic = "";
+        productSpecsList = new JSONArray();
+        for(int i=0; i<listParamter.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("name", listParamter.get(i).getName());
+                jsonObject.put("price1", listParamter.get(i).getPrice1());
+                jsonObject.put("price2", listParamter.get(i).getPrice2());
+                jsonObject.put("price3", listParamter.get(i).getPrice3());
+                jsonObject.put("weight", listParamter.get(i).getWeight());
+                jsonObject.put("province", listParamter.get(i).getProvince());
+                jsonObject.put("quantity", listParamter.get(i).getQuantity());
+                jsonObject.put("orderNo", i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            productSpecsList.put(jsonObject);
+        }
 
+        String pic = "";
         for (String s : listPicUrl) {
             pic = pic + s + "||";
         }
-        System.out.println("pic=" + pic);
 
         JSONObject object = new JSONObject();
         try {
             object.put("type", type);
             object.put("name", edtName.getText().toString().trim());
             object.put("slogan", edtAdvertisement.getText().toString().trim());
-            object.put("price1", rmb * 1000);
-            object.put("price2", gwb * 1000);
-            object.put("price3", qbb * 1000);
             object.put("advPic", cover);
             object.put("pic", pic.substring(0, pic.length() - 2));
             object.put("description", edtDetail.getText().toString().trim());
@@ -774,6 +750,7 @@ public class ProductActivity extends MyBaseActivity {
             object.put("token", userInfoSp.getString("token", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("companyCode", userInfoSp.getString("userId", null));
+            object.put("productSpecsList", productSpecsList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -782,18 +759,8 @@ public class ProductActivity extends MyBaseActivity {
         new Xutil().post("808010", object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
-                try {
-                    Toast.makeText(ProductActivity.this, "添加商品成功", Toast.LENGTH_SHORT).show();
-                    JSONObject jsonObject = new JSONObject(result);
-
-                    startActivity(new Intent(ProductActivity.this, ParameterActivity.class)
-                            .putExtra("code",jsonObject.getString("code")));
-
-                    finish();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Toast.makeText(ProductActivity.this, "添加商品成功", Toast.LENGTH_SHORT).show();
+                finish();
 
             }
 
@@ -838,6 +805,66 @@ public class ProductActivity extends MyBaseActivity {
 
                 setView();
                 setData();
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(ProductActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(ProductActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /**
+     * 获取商品规格
+     */
+    public void getParameter() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("productCode", code);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("808037", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+
+                try {
+                    JSONArray jsonArray = new JSONArray(result);
+
+                    Gson gson = new Gson();
+                    List<ParameterModel> lists = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<ParameterModel>>() {
+                    }.getType());
+
+                    if (lists != null) {
+                        listParamter.clear();
+                        for (ParameterModel bean : lists) {
+
+                            ParameterModel parameterModel = new ParameterModel();
+                            parameterModel.setName(bean.getName());
+                            parameterModel.setCode(bean.getCode());
+                            parameterModel.setPrice1(bean.getPrice1());
+                            parameterModel.setPrice2(bean.getPrice2());
+                            parameterModel.setPrice3(bean.getPrice3());
+                            parameterModel.setWeight(bean.getWeight());
+                            parameterModel.setOrderNo(bean.getOrderNo());
+                            parameterModel.setQuantity(bean.getQuantity());
+                            parameterModel.setProvince(bean.getProvince());
+                            listParamter.add(parameterModel);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
 
             }
 
@@ -855,6 +882,16 @@ public class ProductActivity extends MyBaseActivity {
     }
 
     private void setView() {
+        if (isModifi) {
+            if(model.getStatus().equals("3")){ // 已上架
+                txtBtn.setText("下架");
+            } else if(model.getStatus().equals("4")){ // 已下架
+                txtBtn.setText("上架");
+            }
+        } else {
+            txtBtn.setVisibility(View.GONE);
+        }
+
         ImageUtil.glide(model.getAdvPic(), imgPhoto, this);
 
         for (ProductTypeModel big : bigTypeList) {
@@ -871,25 +908,36 @@ public class ProductActivity extends MyBaseActivity {
 
         edtName.setText(model.getName());
         edtAdvertisement.setText(model.getSlogan());
-        edtRmb.setText(MoneyUtil.moneyFormatDouble(model.getPrice1()));
-        edtGwb.setText(MoneyUtil.moneyFormatDouble(model.getPrice2()));
-        edtQbb.setText(MoneyUtil.moneyFormatDouble(model.getPrice3()));
-
         edtDetail.setText(model.getDescription());
 
-        if (model.getStatus().equals("91")) {
-            txtReason.setVisibility(View.VISIBLE);
-            txtReason.setText("失败原因:" + model.getRemark());
-        } else {
-            txtReason.setVisibility(View.GONE);
-        }
-
         String[] str = model.getPic().split("\\|\\|");
+        listPic.clear();
+        listPicUrl.clear();
         for (int i = 0; i < str.length; i++) {
             listPic.add(str[i]);
             listPicUrl.add(str[i]);
         }
         recyclerViewAdapter.notifyDataSetChanged();
+
+        if (model.getProductSpecsList() != null) {
+            listParamter.clear();
+            for (ProductModel.ProductSpecsListBean bean : model.getProductSpecsList()) {
+
+                ParameterModel parameterModel = new ParameterModel();
+                parameterModel.setName(bean.getName());
+                parameterModel.setCode(bean.getCode());
+                parameterModel.setPrice1(bean.getPrice1());
+                parameterModel.setPrice2(bean.getPrice2());
+                parameterModel.setPrice3(bean.getPrice3());
+                parameterModel.setWeight(bean.getWeight());
+                parameterModel.setOrderNo(bean.getOrderNo());
+                parameterModel.setQuantity(bean.getQuantity());
+                parameterModel.setProvince(bean.getProvince());
+                listParamter.add(parameterModel);
+            }
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     private void setData() {
@@ -928,8 +976,79 @@ public class ProductActivity extends MyBaseActivity {
             Toast.makeText(this, "请添加商品图片", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (listParamter.size() == 0) {
+            Toast.makeText(this, "请添加商品规格", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         return true;
+    }
+
+    /**
+     * 上架
+     */
+    public void putAway() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("code", code);
+            object.put("location", "1");
+            object.put("orderNo", "1");
+            object.put("updater", userInfoSp.getString("userId",""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("808013", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                Toast.makeText(ProductActivity.this, "上架成功", Toast.LENGTH_SHORT).show();
+                finish();
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(ProductActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(ProductActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /**
+     * 下架
+     */
+    public void soldOut() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("code", code);
+            object.put("updater", userInfoSp.getString("userId",""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post("808014", object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                Toast.makeText(ProductActivity.this, "下架成功", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(ProductActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(ProductActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 }

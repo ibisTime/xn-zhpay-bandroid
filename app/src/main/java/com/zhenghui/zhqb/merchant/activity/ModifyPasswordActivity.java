@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,18 +36,20 @@ public class ModifyPasswordActivity extends MyBaseActivity {
     LinearLayout layoutBack;
     @BindView(R.id.edt_phone)
     EditText edtPhone;
-    @BindView(R.id.edt_code)
-    EditText edtCode;
-    @BindView(R.id.btn_send)
-    TextView btnSend;
     @BindView(R.id.edt_password)
     EditText edtPassword;
-    @BindView(R.id.edt_repassword)
-    EditText edtRepassword;
+    @BindView(R.id.btn_send)
+    Button btnSend;
+    @BindView(R.id.txt_tip)
+    TextView txtTip;
+    @BindView(R.id.edt_code)
+    EditText edtCode;
     @BindView(R.id.btn_confirm)
     Button btnConfirm;
-    private SharedPreferences preferences;
+    @BindView(R.id.layout_code)
+    RelativeLayout layoutCode;
 
+    private SharedPreferences preferences;
 
     // 验证码是否已发送 未发送false 已发送true
     private boolean isCodeSended = false;
@@ -85,11 +89,15 @@ public class ModifyPasswordActivity extends MyBaseActivity {
     }
 
     private void inits() {
-        edtPhone.setText(getIntent().getStringExtra("phone"));
+        if(getIntent().getStringExtra("phone") != null){
+            edtPhone.setText(getIntent().getStringExtra("phone"));
+            edtPhone.setKeyListener(null);
+        }
+
         preferences = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
     }
 
-    @OnClick({R.id.layout_back, R.id.btn_send, R.id.btn_confirm})
+    @OnClick({R.id.layout_back, R.id.btn_send, R.id.btn_confirm, R.id.layout_code})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
@@ -97,37 +105,53 @@ public class ModifyPasswordActivity extends MyBaseActivity {
                 break;
 
             case R.id.btn_send:
-                if (edtPhone.getText().length() == 11) {
-                    if (isCodeSended) {
-                        Toast.makeText(ModifyPasswordActivity.this, "验证码每60秒发送发送一次", Toast.LENGTH_SHORT).show();
-                    } else {
-                        sendCode();
-                    }
+                if (isCodeSended) {
+                    layoutCode.setVisibility(View.VISIBLE);
+//                    Toast.makeText(ModifyPasswordActivity.this, "验证码每60秒发送发送一次", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(ModifyPasswordActivity.this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
+                    if(edtPhone.getText().toString().trim().length() != 11){
+                        Toast.makeText(this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
+
+                    }else {
+                        if (edtPassword.getText().toString().trim().length() < 6) {
+                            Toast.makeText(ModifyPasswordActivity.this, "请填写正确的登陆密码", Toast.LENGTH_SHORT).show();
+                        }else {
+                            sendCode();
+                        }
+                    }
+
                 }
 
                 break;
 
             case R.id.btn_confirm:
-                if (edtPhone.getText().length() != 11) {
-                    Toast.makeText(ModifyPasswordActivity.this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (edtCode.getText().toString().trim().length() != 4) {
-                    Toast.makeText(ModifyPasswordActivity.this, "请填写正确的验证码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (edtPassword.getText().toString().trim().equals(edtRepassword.getText().toString().trim())) {
+                if(check()){
                     modify();
-                } else {
-                    Toast.makeText(ModifyPasswordActivity.this, "两次输入密码不相同", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
+
+            case R.id.layout_code:
+                if (layoutCode.getVisibility() == View.VISIBLE) {
+//                    layoutCode.setVisibility(View.GONE);
+                }
+                break;
+
         }
     }
 
+    private boolean check(){
+        if(edtPhone.getText().toString().trim().length() != 11){
+            Toast.makeText(this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
+            return false;    
+        }
+        if (edtCode.getText().toString().trim().length() != 4) {
+            Toast.makeText(ModifyPasswordActivity.this, "请填写正确的验证码", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        
+        return true;
+    }
 
     private void modify() {
         JSONObject object = new JSONObject();
@@ -152,11 +176,13 @@ public class ModifyPasswordActivity extends MyBaseActivity {
             @Override
             public void onTip(String tip) {
                 Toast.makeText(ModifyPasswordActivity.this, tip, Toast.LENGTH_SHORT).show();
+                layoutCode.setVisibility(View.GONE);
             }
 
             @Override
             public void onError(String error, boolean isOnCallback) {
                 Toast.makeText(ModifyPasswordActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+                layoutCode.setVisibility(View.GONE);
             }
         });
 
@@ -181,6 +207,7 @@ public class ModifyPasswordActivity extends MyBaseActivity {
             public void onSuccess(String result) {
                 isCodeSended = true;
                 startTime();
+                layoutCode.setVisibility(View.VISIBLE);
                 Toast.makeText(ModifyPasswordActivity.this, "短信已发送，请注意查收", Toast.LENGTH_SHORT).show();
             }
 
@@ -218,8 +245,20 @@ public class ModifyPasswordActivity extends MyBaseActivity {
     private void stopTime() {
         isCodeSended = false;
         i = 60;
-        btnSend.setText("重新发送");
+        btnSend.setText("向密保手机发送验证码");
         timer.cancel();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(layoutCode.getVisibility() != View.VISIBLE){
+                finish();
+            } else {
+                layoutCode.setVisibility(View.GONE);
+            }
+        }
+        return false;
     }
 
 }

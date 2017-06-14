@@ -159,17 +159,17 @@ public class ShipmentsCancleActivity extends MyBaseActivity {
 
     private void setView() {
 
-        txtName.setText(model.getReceiver());
-        txtPhone.setText(model.getMobile());
-        txtAddress.setText(model.getReAddress());
-        txtExplain.setText(model.getApplyNote());
-
-        for (int i = 0; i < model.getProductOrderList().size(); i++) {
-            TextView view = new TextView(this);
-            view.setText(model.getProductOrderList().get(i).getProduct().getName() + " X " + model.getProductOrderList().get(i).getQuantity());
-            view.setTextColor(getResources().getColor(R.color.fontColor_gray));
-            layoutProduct.addView(view);
-        }
+        //        txtName.setText(model.getReceiver());
+        //        txtPhone.setText(model.getMobile());
+        //        txtAddress.setText(model.getReAddress());
+        //        txtExplain.setText(model.getApplyNote());
+        //
+        //        for (int i = 0; i < model.getProductOrderList().size(); i++) {
+        //            TextView view = new TextView(this);
+        //            view.setText(model.getProductOrderList().get(i).getProduct().getName() + " X " + model.getProductOrderList().get(i).getQuantity());
+        //            view.setTextColor(getResources().getColor(R.color.fontColor_gray));
+        //            layoutProduct.addView(view);
+        //        }
 
     }
 

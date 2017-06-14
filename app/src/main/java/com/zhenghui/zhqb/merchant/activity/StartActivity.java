@@ -8,9 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.util.Xutil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,6 +23,8 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 
 public class StartActivity extends Activity {
 
@@ -87,15 +94,58 @@ public class StartActivity extends Activity {
 
     private void startApp() {
         if(userInfoSp.getString("userId",null) != null){
-            startActivity(new Intent(StartActivity.this,MainActivity.class));
+            getStroe();
         }else {
             startActivity(new Intent(StartActivity.this,LoginActivity.class));
-        }
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
-        stopTime();
-        finish();
+            stopTime();
+            finish();
+        }
+
     }
 
+    private void getStroe() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("userId", userInfoSp.getString("userId", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_808219, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.length() != 0) {
+                        startActivity(new Intent(StartActivity.this,Main2Activity.class));
+                    } else {
+                        startActivity(new Intent(StartActivity.this,StoreContract2Activity.class));
+                    }
+
+                    overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+
+                    stopTime();
+                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(StartActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(StartActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

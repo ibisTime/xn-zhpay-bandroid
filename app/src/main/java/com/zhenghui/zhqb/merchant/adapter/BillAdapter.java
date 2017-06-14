@@ -5,12 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.zhenghui.zhqb.merchant.model.BillModel;
 import com.zhenghui.zhqb.merchant.R;
-import com.zhenghui.zhqb.merchant.util.BillUtil;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
+import com.zhenghui.zhqb.merchant.model.BillModel;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +52,7 @@ public class BillAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_bill, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_bill2, null);
             holder = new ViewHolder(view);
             view.setTag(holder);
         } else {
@@ -66,26 +66,38 @@ public class BillAdapter extends BaseAdapter {
 
     private void setView(int position) {
 
-        holder.txtTitle.setText(BillUtil.getBillType(list.get(position).getBizType()));
-        holder.txtPrice.setText("¥"+ MoneyUtil.moneyFormatDouble(list.get(position).getTransAmount()));
+        if(list.get(position).getTransAmount() > 0){
+            holder.txtPrice.setTextColor(context.getResources().getColor(R.color.fontColor_orange));
+            holder.imgType.setImageResource(R.mipmap.bill_get);
+            holder.txtPrice.setText("+"+ NumberUtil.doubleFormatMoney(list.get(position).getTransAmount()));
+        }else {
+            holder.txtPrice.setTextColor(context.getResources().getColor(R.color.fontColor_blue));
+            holder.imgType.setImageResource(R.mipmap.bill_pay);
+            holder.txtPrice.setText(NumberUtil.doubleFormatMoney(list.get(position).getTransAmount()));
+        }
+
         holder.txtInfo.setText(list.get(position).getBizNote());
 
-        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date d5 = new Date(list.get(position).getCreateDatetime());
-        holder.txtTime.setText(s.format(d5));
+        SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd日");
+        Date date = new Date(list.get(position).getCreateDatetime());
+        holder.txtDate.setText(dateFormat.format(date));
+        holder.txtTime.setText(timeFormat.format(date));
 
 
     }
 
     static class ViewHolder {
-        @BindView(R.id.txt_title)
-        TextView txtTitle;
+        @BindView(R.id.txt_date)
+        TextView txtDate;
+        @BindView(R.id.txt_time)
+        TextView txtTime;
+        @BindView(R.id.img_type)
+        ImageView imgType;
         @BindView(R.id.txt_price)
         TextView txtPrice;
         @BindView(R.id.txt_info)
         TextView txtInfo;
-        @BindView(R.id.txt_time)
-        TextView txtTime;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

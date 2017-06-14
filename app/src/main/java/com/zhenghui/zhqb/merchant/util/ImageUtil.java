@@ -1,11 +1,29 @@
 package com.zhenghui.zhqb.merchant.util;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.zhenghui.zhqb.merchant.R;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by dell1 on 2016/12/17.
@@ -86,6 +104,69 @@ public class ImageUtil {
 
         }
 
+    }
+
+    /**
+     * 调用系统相册的操作,在onActivityResult中调用
+     *
+     * @param data onActivityResult中的Intent
+     */
+    public static String album(Context context,Intent data) {
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(selectedImage,
+                filePathColumn, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+        Log.d("picturePath", picturePath);
+        BitmapFactory.decodeFile(picturePath);
+        return picturePath;
+    }
+
+    /**
+     * 调用系统相机,在onActivityResult中调用，拍照后保存到sdcard卡中
+     *
+     * @param data onActivityResult中的Intent
+     * @return
+     */
+    public static String camara(Context context,Intent data) {
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+            Log.i("TestFile", "SD card is not avaiable/writeable right now.");
+            Toast.makeText(context,
+                    "SD card is not avaiable/writeable right now.",
+                    Toast.LENGTH_LONG).show();
+            return null;
+        }
+        String name = new DateFormat().format("yyyyMMdd_hhmmss",
+                Calendar.getInstance(Locale.CHINA))
+                + ".jpg";
+        Bundle bundle = data.getExtras();
+        String fileName = "";
+        if (bundle != null) {
+            Bitmap bitmap = (Bitmap) bundle.get("data");
+            FileOutputStream b = null;
+            File file = new File("sdcard/DCIM/Camera/");
+            file.mkdirs();// 创建文件夹
+            fileName = "sdcard/DCIM/Camera/" + name;
+            try {
+                b = new FileOutputStream(fileName);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    b.flush();
+                    b.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return fileName;
     }
 
 }

@@ -193,18 +193,16 @@ public class ShipmentsActivity extends MyBaseActivity {
         txtAddress.setText(model.getReAddress());
         txtExplain.setText(model.getApplyNote());
         if (input) {
-            edtNumber.setText(model.getLogisticsCode());
-            edtExpress.setText(model.getLogisticsCompany());
+//            edtNumber.setText(model.getLogisticsCode());
+//            edtExpress.setText(model.getLogisticsCompany());
 
             edtNumber.setFocusable(false);
             edtExpress.setFocusable(false);
         }
-        for (int i = 0; i < model.getProductOrderList().size(); i++) {
-            TextView view = new TextView(this);
-            view.setText(model.getProductOrderList().get(i).getProduct().getName() + " X " + model.getProductOrderList().get(i).getQuantity());
-            view.setTextColor(getResources().getColor(R.color.fontColor_gray));
-            layoutProduct.addView(view);
-        }
+        TextView view = new TextView(this);
+        view.setText(model.getProduct().getName() + " X " + model.getQuantity());
+        view.setTextColor(getResources().getColor(R.color.fontColor_gray));
+        layoutProduct.addView(view);
 
     }
 

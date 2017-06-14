@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.model.RightsListModel;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -64,7 +64,7 @@ public class RightsListAdapter extends BaseAdapter {
     }
 
     private void setView(int position) {
-        holder.txtPrice.setText(MoneyUtil.moneyFormatDouble(list.get(position).getToAmount()) + setAssets(position));
+        holder.txtPrice.setText(NumberUtil.doubleFormatMoney(list.get(position).getToAmount()) + setAssets(position));
 
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date d5 = new Date(list.get(position).getCreateDatetime());

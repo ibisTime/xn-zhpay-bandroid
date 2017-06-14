@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-w820dp-v13\\values-w820dp-v13.xml",
+        "outputFile": "C:\\Users\\dell1\\Desktop\\chengdai\\zhPay\\320\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-w820dp-v13\\values-w820dp-v13.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 108
                 },
                 "from": {
-                    "file": "E:\\AndroidStudio\\Zhenghui\\ZhenghuiqianbaoMerchant\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\bundles\\debug\\res\\values-w820dp-v13\\values-w820dp-v13.xml",
+                    "file": "C:\\Users\\dell1\\Desktop\\chengdai\\zhPay\\320\\ZhenghuiqianbaoMerchant\\easeUI\\build\\intermediates\\bundles\\debug\\res\\values-w820dp-v13\\values-w820dp-v13.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,

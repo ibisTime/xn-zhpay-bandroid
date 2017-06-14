@@ -1,5 +1,6 @@
 package com.zhenghui.zhqb.merchant.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -22,7 +23,9 @@ import com.zhenghui.zhqb.merchant.util.Xutil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,17 +40,25 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
     ListView listRights;
     @BindView(R.id.swipe_container)
     RefreshLayout swipeContainer;
+    @BindView(R.id.txt_history)
+    TextView txtHistory;
 
     List<RightsListModel> list;
     RightsListAdapter adapter;
 
     private String code;
+    private String date;
+    private String received;
+    private String unclaimed;
 
-    private int page;
-    private int pageSize;
+    private int page = 1;
+    private int pageSize = 10;
 
     private View headView;
     private TextView txtCode;
+    private TextView txtReceived;
+    private TextView txtUnclaimed;
+    private TextView txtDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +77,30 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
     private void inits() {
         list = new ArrayList<>();
         adapter = new RightsListAdapter(this, list);
+
         code = getIntent().getStringExtra("code");
+        date = getIntent().getStringExtra("date");
+        received = getIntent().getStringExtra("received");
+        unclaimed = getIntent().getStringExtra("unclaimed");
 
     }
 
     private void initHeadView() {
-        headView = LayoutInflater.from(this).inflate(R.layout.head_rights,null);
+        headView = LayoutInflater.from(this).inflate(R.layout.head_rights_list, null);
         txtCode = (TextView) headView.findViewById(R.id.txt_code);
-        txtCode.setText(code.substring(code.length()-6,code.length()));
+        txtReceived = (TextView) headView.findViewById(R.id.txt_received);
+        txtUnclaimed = (TextView) headView.findViewById(R.id.txt_unclaimed);
+        txtDate = (TextView) headView.findViewById(R.id.txt_date);
+
+        txtCode.setText("FHQID" + code.substring(code.length() - 6, code.length()));
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (date != null) {
+            Date d5 = new Date(date);
+            txtDate.setText(s.format(d5));
+        }
+
+        txtReceived.setText(received);
+        txtUnclaimed.setText(unclaimed);
     }
 
     private void initsListView() {
@@ -92,13 +119,21 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
         swipeContainer.setOnRefreshListener(this);
     }
 
-    @OnClick(R.id.layout_back)
-    public void onClick() {
-        finish();
+    @OnClick({R.id.layout_back, R.id.txt_history})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.layout_back:
+                finish();
+                break;
+
+            case R.id.txt_history:
+                startActivity(new Intent(RightsListActivity.this,RightsHistoryActivity.class).putExtra("code",code));
+                break;
+        }
     }
 
-
     private void getData() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         JSONObject object = new JSONObject();
         try {
@@ -106,12 +141,14 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
             object.put("fundCode", "");
             object.put("stockCode", code);
             object.put("toUser", "");
-            object.put("companyCode", appConfigSp.getString("systemCode", null));
-            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("dateStart", format.format(new Date()));
+            object.put("dateEnd", format.format(new Date()));
             object.put("start", page);
             object.put("limit", pageSize);
             object.put("orderColumn", "");
             object.put("orderDir", "");
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -180,4 +217,5 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     }
+
 }

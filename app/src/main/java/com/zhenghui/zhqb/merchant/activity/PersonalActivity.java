@@ -202,12 +202,14 @@ public class PersonalActivity extends MyBaseActivity {
                 startActivity(new Intent(PersonalActivity.this, AccountActivity.class));
                 break;
 
-            case R.id.layout_about:
-                startActivity(new Intent(PersonalActivity.this, AboutActivity.class));
-                break;
+
 
             case R.id.txt_logout:
                 logout();
+                break;
+
+            case R.id.layout_about:
+                startActivity(new Intent(PersonalActivity.this, AboutActivity.class));
                 break;
 
             case R.id.layout_cache:

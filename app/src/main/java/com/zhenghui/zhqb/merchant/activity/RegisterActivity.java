@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -16,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
@@ -32,6 +29,8 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 
 public class RegisterActivity extends MyBaseActivity {
 
@@ -255,11 +254,12 @@ public class RegisterActivity extends MyBaseActivity {
                     editor.putString("userId",jsonObject.getString("userId"));
                     editor.putString("token",jsonObject.getString("token"));
                     editor.commit();
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                signin();
+                getStroe();
 
             }
 
@@ -275,26 +275,45 @@ public class RegisterActivity extends MyBaseActivity {
         });
     }
 
-    private void signin(){
-        EMClient.getInstance().login(userInfoSp.getString("userId",null), "888888", new EMCallBack() {
+
+    private void getStroe() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("userId", userInfoSp.getString("userId", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_808219, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
-            public void onSuccess() {
-                finish();
-                startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.length() != 0) {
+                        startActivity(new Intent(RegisterActivity.this,Main2Activity.class));
+                    } else {
+                        startActivity(new Intent(RegisterActivity.this,StoreContract2Activity.class));
+                    }
+                    finish();
+                    if(LoginActivity.instance != null){
+                        LoginActivity.instance.finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
 
             }
 
             @Override
-            public void onError(int i, String s) {
-                Message message = EBhandler.obtainMessage();
-                message.obj = "登录失败: " + i + ", " + s;
-                EBhandler.sendMessage(message);
-                Log.i("Qian","登录失败 " + i + ", " + s);
+            public void onTip(String tip) {
+                Toast.makeText(RegisterActivity.this, tip, Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onProgress(int i, String s) {
-
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(RegisterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
             }
         });
     }

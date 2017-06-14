@@ -3,6 +3,7 @@ package com.zhenghui.zhqb.merchant.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +23,14 @@ import butterknife.OnClick;
 
 public class RichTextActivity extends MyBaseActivity {
 
-
     @BindView(R.id.layout_back)
     LinearLayout layoutBack;
     @BindView(R.id.txt_about)
     TextView txtAbout;
+    @BindView(R.id.txt_title)
+    TextView txtTitle;
+    @BindView(R.id.img_back)
+    ImageView imgBack;
 
     private SharedPreferences appConfigSp;
     private SharedPreferences userInfoSp;
@@ -41,6 +45,7 @@ public class RichTextActivity extends MyBaseActivity {
         MyApplication.getInstance().addActivity(this);
 
         inits();
+        setTitle();
         getDatas();
     }
 
@@ -51,6 +56,31 @@ public class RichTextActivity extends MyBaseActivity {
         appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
     }
 
+    private void setTitle() {
+
+        switch (cKey) {
+
+            case "aboutus":
+                txtTitle.setText("关于我们");
+                break;
+
+            case "reg_protocol":
+                txtTitle.setText("注册协议");
+                break;
+
+            case "store_sign_statement":
+                txtTitle.setText("商家使用说明及签约协议");
+                imgBack.setBackgroundResource(R.mipmap.back_pink);
+                txtTitle.setTextColor(getResources().getColor(R.color.pink));
+                break;
+
+            case "new_start":
+                txtTitle.setText("新手入门");
+                break;
+
+        }
+
+    }
 
     @OnClick(R.id.layout_back)
     public void onClick() {

@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.model.AssetsModel;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
 import org.json.JSONArray;
@@ -93,7 +93,7 @@ public class EarningsActivity extends MyBaseActivity {
             public void onSuccess(String result) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    txtLimit.setText(MoneyUtil.moneyFormatDouble(500000 - jsonObject.getDouble("costAmount")));
+                    txtLimit.setText(NumberUtil.doubleFormatMoney(500000 - jsonObject.getDouble("costAmount")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -135,7 +135,7 @@ public class EarningsActivity extends MyBaseActivity {
                     JSONObject jsonObject = new JSONObject(result);
 
                     txtFhq.setText(jsonObject.getString("stockCount"));
-                    txtEarnings.setText(MoneyUtil.moneyFormatDouble(jsonObject.getDouble("todayProfitAmount")));
+                    txtEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("todayProfitAmount")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -201,7 +201,7 @@ public class EarningsActivity extends MyBaseActivity {
         for (AssetsModel model : list) {
             if (model.getCurrency().equals("FRB")) {
 
-                txtFund.setText("¥" + MoneyUtil.moneyFormatDouble(model.getAmount()) + "");
+                txtFund.setText("¥" + NumberUtil.doubleFormatMoney(model.getAmount()) + "");
 
             }
         }

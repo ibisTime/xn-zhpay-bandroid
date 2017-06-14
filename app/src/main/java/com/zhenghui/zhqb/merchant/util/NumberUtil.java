@@ -1,0 +1,23 @@
+package com.zhenghui.zhqb.merchant.util;
+
+import java.text.DecimalFormat;
+
+/**
+ * Created by dell1 on 2016/12/20.
+ */
+
+public class NumberUtil {
+
+    public static String doubleFormatMoney(double money){
+        DecimalFormat df = new DecimalFormat("#######0.000");
+        String showMoney = df.format((money/1000));
+        return showMoney.substring(0,showMoney.length()-1);
+    }
+
+    public static String doubleFormatGps(double d){
+        DecimalFormat df = new DecimalFormat("#######0.000");
+        String showMoney = df.format(d);
+        return showMoney.substring(0,showMoney.length()-1);
+    }
+
+}

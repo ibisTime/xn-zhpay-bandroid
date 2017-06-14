@@ -4,25 +4,25 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:layout_marginLeft="20dp"
-        android:layout_width="73dp"
-        android:layout_height="73dp">
+        android:layout_marginLeft="15dp"
+        android:layout_width="88dp"
+        android:layout_height="88dp">
 
         <ImageView
             android:id="@+id/img_photo"
             android:scaleType="centerCrop"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_width="65dp"
-            android:layout_height="65dp" />
+            android:layout_marginTop="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_width="77dp"
+            android:layout_height="77dp" />
 
         <ImageView
             android:id="@+id/img_delete"
             android:layout_gravity="right"
             android:background="@mipmap/delete"
             android:scaleType="centerCrop"
-            android:layout_width="16dp"
-            android:layout_height="16dp" />
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
 
     </FrameLayout>
 

@@ -142,7 +142,7 @@ public class StoreManageActivity extends MyBaseActivity implements SwipeRefreshL
                     Toast.makeText(this, "店铺还未通过审核，不能添加折扣券", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                startActivity(new Intent(StoreManageActivity.this, DiscountManageActivity.class).putExtra("storeCode", list.get(0).getStore().getCode()));
+                startActivity(new Intent(StoreManageActivity.this, DiscountManageActivity.class).putExtra("storeCode", list.get(0).getCode()));
                 break;
 
             case R.id.layout_store:
@@ -183,8 +183,8 @@ public class StoreManageActivity extends MyBaseActivity implements SwipeRefreshL
                     }.getType());
                     list.clear();
                     list.addAll(lists);
-                    editor.putString("storeCode", list.get(0).getStore().getCode());
-                    editor.putString("level", list.get(0).getStore().getLevel());
+                    editor.putString("storeCode", list.get(0).getCode());
+                    editor.putString("level", list.get(0).getLevel());
                     editor.commit();
 
                 } catch (JSONException e) {
@@ -211,7 +211,7 @@ public class StoreManageActivity extends MyBaseActivity implements SwipeRefreshL
         JSONObject object = new JSONObject();
         try {
             object.put("token", userInfoSp.getString("token", null));
-            object.put("code", list.get(0).getStore().getCode());
+            object.put("code", list.get(0).getCode());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -235,25 +235,25 @@ public class StoreManageActivity extends MyBaseActivity implements SwipeRefreshL
     }
 
     private void setView() {
-        ImageUtil.glide(list.get(0).getStore().getAdvPic(), imgCover, this);
-        txtName.setText(list.get(0).getStore().getName());
+        ImageUtil.glide(list.get(0).getAdvPic(), imgCover, this);
+        txtName.setText(list.get(0).getName());
 
-        System.out.println("list.get(0).getStore().getStatus()=" + list.get(0).getStore().getStatus());
+        System.out.println("list.get(0).getStatus()=" + list.get(0).getStatus());
 
-        if (list.get(0).getStore().getStatus().equals("0")) {
+        if (list.get(0).getStatus().equals("0")) {
             txtStatus.setText("待审核");
-        } else if (list.get(0).getStore().getStatus().equals("1")) {
+        } else if (list.get(0).getStatus().equals("1")) {
             txtStatus.setText("审核通过待上架");
             switchButton.setChecked(false);
-        } else if (list.get(0).getStore().getStatus().equals("2")) {
+        } else if (list.get(0).getStatus().equals("2")) {
             txtStatus.setText("已上架，开店");
             switchButton.setChecked(true);
-        } else if (list.get(0).getStore().getStatus().equals("3")) {
+        } else if (list.get(0).getStatus().equals("3")) {
             txtStatus.setText("已上架，关店");
-        } else if (list.get(0).getStore().getStatus().equals("4")) {
+        } else if (list.get(0).getStatus().equals("4")) {
             txtStatus.setText("已下架");
-        } else if (list.get(0).getStore().getStatus().equals("91")) {
-            txtStatus.setText("审核不通过: " + list.get(0).getStore().getRemark());
+        } else if (list.get(0).getStatus().equals("91")) {
+            txtStatus.setText("审核不通过: " + list.get(0).getRemark());
         }
 //        txtStatus.setText(txtStatus.getText()+",");
     }

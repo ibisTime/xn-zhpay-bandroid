@@ -1,9 +1,13 @@
 package com.zhenghui.zhqb.merchant.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,7 +25,9 @@ import com.zhenghui.zhqb.merchant.util.Xutil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -80,6 +86,12 @@ public class SystemMessageActivity extends MyBaseActivity implements SwipeRefres
 
     private void initListView() {
         listMessage.setAdapter(adapter);
+        listMessage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                tip(i);
+            }
+        });
     }
 
     private void initRefreshLayout() {
@@ -144,6 +156,20 @@ public class SystemMessageActivity extends MyBaseActivity implements SwipeRefres
                 Toast.makeText(SystemMessageActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void tip(int position) {
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d5 = new Date(list.get(position).getPushedDatetime());
+
+        new AlertDialog.Builder(this).setTitle("消息")
+                .setMessage(list.get(position).getSmsContent() + "\n" +"\n发生时间:"+s.format(d5))
+                .setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).show();
     }
 
     @Override

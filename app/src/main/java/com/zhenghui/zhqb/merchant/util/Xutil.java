@@ -1,6 +1,12 @@
 package com.zhenghui.zhqb.merchant.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.zhenghui.zhqb.merchant.MyApplication;
+import com.zhenghui.zhqb.merchant.activity.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,13 +22,25 @@ import org.xutils.x;
 public class Xutil {
 
 //    public static String URL = "http://121.43.101.148:8901/forward-service/api";
+//    public static String LOGOUT = "http://121.43.101.148:8901/forward-service/user/logOut";
+
+//    public static String URL = "http://106.15.49.68:5601/forward-service/api";
+//    public static String LOGOUT = "http://106.15.49.68:5601/forward-service/user/logOut";
 
     // 正汇正试环境
     public static String URL = "http://139.224.200.54:5601/forward-service/api";
+    public static String LOGOUT = "http://139.224.200.54:5601/forward-service/user/logOut";
+
 //    public static String URL = "http://118.178.124.16:5601/forward-service/api";
+//    public static String LOGOUT = "http://118.178.124.16:5601/forward-service/user/logOut";
+
+    SharedPreferences userInfoSp;
 
     public void post(final String code, String json, final XUtils3CallBackPost backPost){
+        userInfoSp = MyApplication.applicationContext.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+
         RequestParams params = new RequestParams(URL);
+        params.setConnectTimeout(1000*60);
         params.addBodyParameter("code", code);
         params.addBodyParameter("json", json);
 
@@ -50,7 +68,18 @@ public class Xutil {
                         System.out.println("code="+code+",onTip="+result);
                         backPost.onTip(object.getString("errorInfo"));
 
-                    }else{
+                    } else if(object.getString("errorCode").equals("4")){
+
+                        SharedPreferences.Editor editor = userInfoSp.edit();
+                        editor.putString("userId", null);
+                        editor.commit();
+
+                        MyApplication.applicationContext.startActivity(new Intent(MyApplication.applicationContext, LoginActivity.class));
+
+                        System.out.println("code="+code+",onTip="+result);
+                        backPost.onTip("登录验证已失效，请重新登录");
+
+                    } else{
 //                        backPost.onTip("errorCode="+object.getString("errorCode")+",errorInfo:"+object.getString("errorInfo"));
                         System.out.println("code="+code+"请求失败，errorCode="+object.getString("errorCode")+",errorInfo:"+object.getString("errorInfo"));
                     }
@@ -88,6 +117,7 @@ public class Xutil {
 
     public void get(String url, final XUtils3CallBackGet backGet){
         RequestParams params = new RequestParams(URL + url);
+        params.setConnectTimeout(1000*60);
         x.http().get(params, new Callback.CacheCallback<String>() {
             @Override
             public boolean onCache(String result) {

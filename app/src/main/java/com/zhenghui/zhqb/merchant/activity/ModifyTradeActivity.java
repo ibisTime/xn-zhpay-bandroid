@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,20 +34,20 @@ public class ModifyTradeActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)
     LinearLayout layoutBack;
-    @BindView(R.id.edt_phone)
-    EditText edtPhone;
-    @BindView(R.id.edt_code)
-    EditText edtCode;
-    @BindView(R.id.btn_send)
-    TextView btnSend;
+    @BindView(R.id.txt_phone)
+    TextView txtPhone;
     @BindView(R.id.edt_password)
     EditText edtPassword;
-    @BindView(R.id.edt_repassword)
-    EditText edtRepassword;
+    @BindView(R.id.btn_send)
+    Button btnSend;
+    @BindView(R.id.txt_tip)
+    TextView txtTip;
+    @BindView(R.id.edt_code)
+    EditText edtCode;
     @BindView(R.id.btn_confirm)
     Button btnConfirm;
-    @BindView(R.id.txt_title)
-    TextView txtTitle;
+    @BindView(R.id.layout_code)
+    RelativeLayout layoutCode;
 
     private SharedPreferences preferences;
     private SharedPreferences userInfoSp;
@@ -90,20 +92,20 @@ public class ModifyTradeActivity extends MyBaseActivity {
     }
 
     private void inits() {
-        edtPhone.setText(getIntent().getStringExtra("phone"));
+        txtPhone.setText(getIntent().getStringExtra("phone"));
         isModify = getIntent().getBooleanExtra("isModify", false);
 
-        if (isModify) {
-            txtTitle.setText("修改支付密码");
-        }else{
-            txtTitle.setText("设置支付密码");
-        }
+//        if (isModify) {
+//            txtTitle.setText("修改支付密码");
+//        }else{
+//        txtTitle.setText("设置支付密码");
+//        }
 
         userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         preferences = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
     }
 
-    @OnClick({R.id.layout_back, R.id.btn_send, R.id.btn_confirm})
+    @OnClick({R.id.layout_back, R.id.btn_send, R.id.btn_confirm, R.id.layout_code})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
@@ -111,47 +113,40 @@ public class ModifyTradeActivity extends MyBaseActivity {
                 break;
 
             case R.id.btn_send:
-                if (edtPhone.getText().length() == 11) {
                     if (isCodeSended) {
-                        Toast.makeText(ModifyTradeActivity.this, "验证码每60秒发送发送一次", Toast.LENGTH_SHORT).show();
+                        layoutCode.setVisibility(View.VISIBLE);
+                        //                    Toast.makeText(ModifyPasswordActivity.this, "验证码每60秒发送发送一次", Toast.LENGTH_SHORT).show();
                     } else {
-                        sendCode();
+                        if (edtPassword.getText().toString().trim().length() < 6) {
+                            Toast.makeText(ModifyTradeActivity.this, "请填写正确的支付密码", Toast.LENGTH_SHORT).show();
+                        }else {
+                            sendCode();
+                        }
                     }
-                } else {
-                    Toast.makeText(ModifyTradeActivity.this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
-                }
 
                 break;
 
             case R.id.btn_confirm:
 
-                if (edtPhone.getText().length() != 11) {
-                    Toast.makeText(ModifyTradeActivity.this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 if (edtCode.getText().toString().trim().length() != 4) {
                     Toast.makeText(ModifyTradeActivity.this, "请填写正确的验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                if (edtPassword.getText().toString().trim().length() != 6) {
-//                    Toast.makeText(ModifyTradeActivity.this, "请填写6位的原支付密码", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-                if (edtRepassword.getText().toString().trim().length() != 6) {
-                    Toast.makeText(ModifyTradeActivity.this, "请填写6位的新支付密码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 set();
 
                 break;
+
+            case R.id.layout_code:
+                if (layoutCode.getVisibility() == View.VISIBLE) {
+//                    layoutCode.setVisibility(View.GONE);
+                }
         }
     }
 
     private void sendCode() {
         JSONObject object = new JSONObject();
         try {
-            object.put("mobile", edtPhone.getText().toString().trim());
+            object.put("mobile", txtPhone.getText().toString().trim());
             if (isModify) {
                 object.put("bizType", "805057");
             } else {
@@ -168,6 +163,7 @@ public class ModifyTradeActivity extends MyBaseActivity {
             public void onSuccess(String result) {
                 isCodeSended = true;
                 startTime();
+                layoutCode.setVisibility(View.VISIBLE);
                 Toast.makeText(ModifyTradeActivity.this, "短信已发送，请注意查收", Toast.LENGTH_SHORT).show();
             }
 
@@ -189,9 +185,9 @@ public class ModifyTradeActivity extends MyBaseActivity {
             object.put("userId", userInfoSp.getString("userId", null));
             object.put("token", userInfoSp.getString("token", null));
             if (isModify) {
-                object.put("newTradePwd", edtRepassword.getText().toString().trim());
+                object.put("newTradePwd", edtPassword.getText().toString().trim());
             } else {
-                object.put("tradePwd", edtRepassword.getText().toString().trim());
+                object.put("tradePwd", edtPassword.getText().toString().trim());
             }
 
             object.put("smsCaptcha", edtCode.getText().toString().toString());
@@ -210,11 +206,15 @@ public class ModifyTradeActivity extends MyBaseActivity {
         new Xutil().post(code, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
-                if (isModify) {
-                    Toast.makeText(ModifyTradeActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ModifyTradeActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
-                }
+//                if (isModify) {
+//                    Toast.makeText(ModifyTradeActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+//                } else {
+                Toast.makeText(ModifyTradeActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
+//                }
+
+                SharedPreferences.Editor editor = userInfoSp.edit();
+                editor.putString("tradepwdFlag","1");
+                editor.commit();
 
                 finish();
             }
@@ -222,11 +222,13 @@ public class ModifyTradeActivity extends MyBaseActivity {
             @Override
             public void onTip(String tip) {
                 Toast.makeText(ModifyTradeActivity.this, tip, Toast.LENGTH_SHORT).show();
+                layoutCode.setVisibility(View.GONE);
             }
 
             @Override
             public void onError(String error, boolean isOnCallback) {
                 Toast.makeText(ModifyTradeActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+                layoutCode.setVisibility(View.GONE);
             }
         });
 
@@ -254,7 +256,19 @@ public class ModifyTradeActivity extends MyBaseActivity {
     private void stopTime() {
         isCodeSended = false;
         i = 60;
-        btnSend.setText("重新发送");
+        btnSend.setText("向密保手机发送验证码");
         timer.cancel();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(layoutCode.getVisibility() != View.VISIBLE){
+                finish();
+            } else {
+                layoutCode.setVisibility(View.GONE);
+            }
+        }
+        return false;
     }
 }

@@ -72,7 +72,7 @@ public class ProductFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_product, null);
+        view = inflater.inflate(R.layout.fragment_sell, null);
         ButterKnife.bind(this, view);
 
         inis();

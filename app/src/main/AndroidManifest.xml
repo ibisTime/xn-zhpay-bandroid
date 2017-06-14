@@ -192,8 +192,9 @@
         <activity android:name=".activity.DiscountManageActivity" />
         <activity android:name=".activity.WithdrawalsActivity" />
         <activity android:name=".activity.DiscountAddActivity" />
-        <activity android:name=".activity.BankCardChangeActivity" />
-        <activity android:name=".activity.ProductActivity" />
+        <activity
+            android:name=".activity.ProductActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.SystemMessageActivity" />
         <activity android:name=".activity.ManageActivity" />
         <activity android:name=".activity.BillActivity" />
@@ -242,7 +243,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.ParameterActivity"></activity>
+        <activity android:name=".activity.ParameterActivity" />
 
         <service
             android:name=".services.UpdateService"
@@ -252,13 +253,25 @@
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.zhenghui.zhqb.merchant.fileprovider"
-            android:grantUriPermissions="true"
             android:exported="false"
-            >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".activity.Main2Activity" />
+        <activity android:name=".activity.StoreManage2Activity" />
+        <activity android:name=".activity.StoreLevelUpActivity" />
+        <activity android:name=".activity.StoreActivity" />
+        <activity android:name=".activity.GoodOrderActivity" />
+        <activity android:name=".activity.OrderDetailActivity" />
+        <activity android:name=".activity.ProductManageActivity" />
+        <activity android:name=".activity.StoreRecordActivity" />
+        <activity android:name=".activity.BillHistoryActivity" />
+        <activity android:name=".activity.BillDetailActivity" />
+        <activity android:name=".activity.RightsHistoryActivity" />
+        <activity android:name=".activity.StoreContract2Activity"></activity>
     </application>
 
 </manifest>

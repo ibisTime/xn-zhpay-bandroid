@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.model.RightsModel;
-import com.zhenghui.zhqb.merchant.util.MoneyUtil;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,26 +65,28 @@ public class RightsAdapter extends BaseAdapter {
     }
 
     public void setView(int i) {
-        if (list.get(i).getStatus().equals("3")) {
-            holder.txtStatus.setText("生效中");
-            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_orange));
-        }
-        if (list.get(i).getStatus().equals("2")) {
-            holder.txtStatus.setText("待生效");
-            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_brown));
-        }
-        if (list.get(i).getStatus().equals("4")) {
-            holder.txtStatus.setText("已生效");
-            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_support));
-        }
+//        if (list.get(i).getStatus().equals("3")) {
+//            holder.txtStatus.setText("生效中");
+//            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_orange));
+//        }
+//        if (list.get(i).getStatus().equals("2")) {
+//            holder.txtStatus.setText("待生效");
+//            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_brown));
+//        }
+//        if (list.get(i).getStatus().equals("4")) {
+//            holder.txtStatus.setText("已生效");
+//            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_support));
+//        }
+//        holder.txtToday.setText(NumberUtil.doubleFormatMoney(list.get(i).getTodayAmount()));
+//        holder.txtTotal.setText(NumberUtil.doubleFormatMoney(list.get(i).getProfitAmount()));
+//        holder.txtCondition.setText(NumberUtil.doubleFormatMoney(list.get(i).getCostAmount()) + "交易额");
 
-        holder.txtCode.setText(list.get(i).getCode().substring(list.get(i).getCode().length()-6,list.get(i).getCode().length()));
-        holder.txtToday.setText(MoneyUtil.moneyFormatDouble(list.get(i).getTodayAmount()));
-        holder.txtTotal.setText(MoneyUtil.moneyFormatDouble(list.get(i).getProfitAmount()));
-        holder.txtHas.setText(MoneyUtil.moneyFormatDouble(list.get(i).getBackAmount()));
-        holder.txtCondition.setText(MoneyUtil.moneyFormatDouble(list.get(i).getCostAmount()) + "交易额");
-        if (list.get(i).getCreateDatetime() != null){
-            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+        holder.txtUnclaimed.setText(NumberUtil.doubleFormatMoney(list.get(i).getProfitAmount() - list.get(i).getBackAmount()));
+        holder.txtReceived.setText(NumberUtil.doubleFormatMoney(list.get(i).getBackAmount()));
+        holder.txtCode.setText("FHQID"+list.get(i).getCode().substring(list.get(i).getCode().length() - 6, list.get(i).getCode().length()));
+//        holder.txtCode.setText(list.get(i).getCode().substring(0,12));
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (list.get(i).getCreateDatetime() != null) {
             Date d5 = new Date(list.get(i).getCreateDatetime());
             holder.txtDate.setText(s.format(d5));
         }
@@ -92,20 +94,14 @@ public class RightsAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        @BindView(R.id.txt_today)
-        TextView txtToday;
-        @BindView(R.id.txt_total)
-        TextView txtTotal;
-        @BindView(R.id.txt_condition)
-        TextView txtCondition;
-        @BindView(R.id.txt_status)
-        TextView txtStatus;
-        @BindView(R.id.txt_has)
-        TextView txtHas;
-        @BindView(R.id.txt_date)
-        TextView txtDate;
         @BindView(R.id.txt_code)
         TextView txtCode;
+        @BindView(R.id.txt_received)
+        TextView txtReceived;
+        @BindView(R.id.txt_unclaimed)
+        TextView txtUnclaimed;
+        @BindView(R.id.txt_date)
+        TextView txtDate;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

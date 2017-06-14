@@ -1,11 +1,13 @@
 package com.zhenghui.zhqb.merchant.activity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -15,13 +17,16 @@ import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.adapter.BillAdapter;
 import com.zhenghui.zhqb.merchant.model.BillModel;
+import com.zhenghui.zhqb.merchant.util.NumberUtil;
 import com.zhenghui.zhqb.merchant.util.RefreshLayout;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,12 +47,17 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
     ListView listBill;
     @BindView(R.id.swipe_container)
     RefreshLayout swipeContainer;
+    @BindView(R.id.txt_balance)
+    TextView txtBalance;
+    @BindView(R.id.txt_withdrawal)
+    TextView txtWithdrawal;
+    @BindView(R.id.txt_history)
+    TextView txtHistory;
+
     private List<BillModel> list;
     private BillAdapter adapter;
 
-    private SharedPreferences userInfoSp;
-    private SharedPreferences appConfigSp;
-
+    private double accountAmount;
     private String accountNumber;
 
     private int page = 1;
@@ -69,6 +79,7 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
     @Override
     protected void onResume() {
         super.onResume();
+        page = 1;
         getData();
     }
 
@@ -83,14 +94,20 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
         adapter = new BillAdapter(this, list);
 
         accountNumber = getIntent().getStringExtra("code");
+        accountAmount = getIntent().getDoubleExtra("accountAmount", 0.0);
 
-        userInfoSp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        appConfigSp = getSharedPreferences("appConfig", Context.MODE_PRIVATE);
-
+        txtBalance.setText(NumberUtil.doubleFormatMoney(accountAmount) + "");
     }
 
     private void initListView() {
         listBill.setAdapter(adapter);
+        listBill.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                startActivity(new Intent(BillActivity.this, BillDetailActivity.class)
+                        .putExtra("code", list.get(i).getCode()));
+            }
+        });
     }
 
     private void initRefreshLayout() {
@@ -99,21 +116,51 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        swipeContainer.setOnRefreshListener(this);
         swipeContainer.setOnLoadListener(this);
+        swipeContainer.setOnRefreshListener(this);
     }
 
-    @OnClick(R.id.layout_back)
-    public void onClick() {
-        finish();
+    @OnClick({R.id.layout_back, R.id.txt_withdrawal, R.id.txt_history})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.layout_back:
+                finish();
+                break;
+
+            case R.id.txt_withdrawal:
+                if (userInfoSp.getString("tradepwdFlag", null).equals("1")) { // tradepwdFlag 支付密码标示 1有 0 无
+
+                    startActivity(new Intent(BillActivity.this, WithdrawalsActivity.class)
+                            .putExtra("balance", accountAmount)
+                            .putExtra("accountNumber", accountNumber));
+
+                } else {
+
+                    Toast.makeText(this, "请先设置支付密码", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(BillActivity.this, ModifyTradeActivity.class)
+                            .putExtra("phone", userInfoSp.getString("mobile", ""))
+                            .putExtra("isModify", false));
+
+                }
+                break;
+
+            case R.id.txt_history:
+                startActivity(new Intent(BillActivity.this, BillHistoryActivity.class)
+                        .putExtra("code", accountNumber));
+                break;
+        }
     }
 
     private void getData() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
         JSONObject object = new JSONObject();
         try {
             object.put("token", userInfoSp.getString("token", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("accountNumber", accountNumber);
+            object.put("dateStart", format.format(new Date()));
+            object.put("dateEnd", format.format(new Date()));
             object.put("start", page);
             object.put("limit", pageSize);
         } catch (JSONException e) {
@@ -129,6 +176,10 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
                     Gson gson = new Gson();
                     List<BillModel> lists = gson.fromJson(jsonObject.getJSONArray("list").toString(), new TypeToken<ArrayList<BillModel>>() {
                     }.getType());
+
+                    if(page == 1){
+                        list.clear();
+                    }
 
                     list.addAll(lists);
                     adapter.notifyDataSetChanged();
@@ -179,4 +230,6 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
             }
         }, 1500);
     }
+
+
 }

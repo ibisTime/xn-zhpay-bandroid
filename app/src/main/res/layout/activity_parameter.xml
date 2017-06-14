@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/orange" >
+        android:background="@color/fontColor_white" >
 
         <LinearLayout
             android:id="@+id/layout_back"
@@ -21,7 +21,7 @@
             android:orientation="horizontal" >
 
             <ImageButton
-                android:background="@mipmap/back_white"
+                android:background="@mipmap/back_rose"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
@@ -35,50 +35,289 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="商品参数"
-            android:textColor="@color/fontColor_white"
+            android:text="编辑规格"
+            android:textColor="@color/fontColor_rose"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/txt_add"
-            android:gravity="center"
+            android:id="@+id/txt_delete"
+            android:text="删除"
+            android:textSize="14sp"
+            android:textColor="@color/fontColor_rose"
             android:paddingRight="15dp"
             android:paddingLeft="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:text="添加"
-            android:textColor="@color/fontColor_white"
-            android:textSize="18sp" />
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
 
     </RelativeLayout>
 
-    <TextView
-        android:textSize="15sp"
-        android:text="商品参数"
-        android:textColor="@color/fontColor_gray"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ListView
-        android:id="@+id/list_parameter"
-        android:layout_weight="1"
+    <View
+        android:background="@color/lineColor"
         android:layout_width="match_parent"
-        android:layout_height="0dp"></ListView>
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="规格描述"
+            android:textColor="@color/fontColor_rose"
+            android:layout_marginLeft="15dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/edt_describe"
+            android:hint="类别规格的描述"
+            android:textSize="14sp"
+            android:background="@null"
+            android:textColorHint="@color/fontColor_support"
+            android:textColor="@color/fontColor_gray"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lineColor_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="库存(件) "
+            android:textColor="@color/fontColor_rose"
+            android:layout_marginLeft="15dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/edt_number"
+            android:hint="数量"
+            android:textSize="14sp"
+            android:background="@null"
+            android:inputType="number"
+            android:textColorHint="@color/fontColor_support"
+            android:textColor="@color/fontColor_gray"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lineColor_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="发货地"
+            android:textColor="@color/fontColor_rose"
+            android:layout_marginLeft="15dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/corners_address"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="75dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txt_province"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/fontColor_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_address"
+            android:gravity="center"
+            android:layout_width="20dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/corners_select"
+            android:layout_marginBottom="10dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:background="@mipmap/select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lineColor_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:gravity="center"
+            android:text="单件货物重量(kg)"
+            android:textColor="@color/fontColor_rose"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/edt_weight"
+            android:hint="重量"
+            android:textSize="14sp"
+            android:background="@null"
+            android:inputType="numberDecimal"
+            android:textColorHint="@color/fontColor_support"
+            android:textColor="@color/fontColor_gray"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lineColor_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="人民币"
+            android:textColor="@color/fontColor_rose"
+            android:layout_marginLeft="15dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/edt_rmb"
+            android:layout_weight="1"
+            android:textColorHint="@color/fontColor_support"
+            android:textColor="@color/fontColor_gray"
+            android:textSize="15sp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:inputType="numberDecimal"
+            android:hint="请输入金额"
+            android:layout_width="0dp"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lineColor_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="钱包币"
+            android:textColor="@color/fontColor_rose"
+            android:layout_marginLeft="15dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/edt_qbb"
+            android:layout_weight="1"
+            android:textColorHint="@color/fontColor_support"
+            android:textColor="@color/fontColor_gray"
+            android:textSize="15sp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:inputType="numberDecimal"
+            android:hint="请输入金额"
+            android:layout_width="0dp"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lineColor_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="购物币"
+            android:textColor="@color/fontColor_rose"
+            android:layout_marginLeft="15dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/edt_gwb"
+            android:layout_weight="1"
+            android:textColorHint="@color/fontColor_support"
+            android:textColor="@color/fontColor_gray"
+            android:textSize="15sp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:inputType="numberDecimal"
+            android:hint="请输入金额"
+            android:layout_width="0dp"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/lineColor_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
 
     <Button
         android:id="@+id/btn_confirm"
         android:textColor="@color/white"
-        android:text="确定"
-        android:textSize="18sp"
+        android:text="完成编辑"
+        android:textSize="16sp"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="15dp"
-        android:background="@drawable/corners_orange"
+        android:background="@drawable/corners_btn_rose"
         android:layout_width="match_parent"
         android:layout_height="45dp" />
 

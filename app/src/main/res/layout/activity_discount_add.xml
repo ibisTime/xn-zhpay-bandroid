@@ -1,15 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/lineColor"
+    android:background="@color/intervalColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.zhenghui.zhqb.merchant.activity.WithdrawalsActivity">
 
     <RelativeLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/orange" >
+        >
 
         <LinearLayout
             android:id="@+id/layout_back"
@@ -20,7 +21,7 @@
             android:orientation="horizontal" >
 
             <ImageButton
-                android:background="@mipmap/back_white"
+                android:background="@mipmap/back_pink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
@@ -29,27 +30,13 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/txt_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="新增折扣券"
-            android:textColor="@color/fontColor_white"
+            android:textColor="@color/fontColor_pink"
+            android:text="添加折扣券"
             android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/txt_commit"
-            android:text="保存"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp"
-            android:textColor="@color/fontColor_white"
-            android:textSize="17sp" />
 
     </RelativeLayout>
 
@@ -78,9 +65,9 @@
                 <TextView
                     android:layout_marginLeft="15dp"
                     android:text="折扣券名称"
-                    android:textColor="@color/fontColor_gray"
+                    android:textColor="@color/fontColor_pink"
                     android:textSize="15sp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content" />
 
                 <EditText
@@ -115,26 +102,19 @@
                     android:text="折扣方式"
                     android:textSize="14sp"
                     android:layout_marginLeft="15dp"
-                    android:textColor="@color/fontColor_gray"
-                    android:layout_width="wrap_content"
+                    android:textColor="@color/fontColor_pink"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/txt_type"
                     android:gravity="right"
-                    android:text="满减"
+                    android:layout_marginRight="15dp"
+                    android:text="消费满n元,抵扣n元"
                     android:textSize="15sp"
-                    android:layout_marginLeft="50dp"
-                    android:textColor="#333333"
+                    android:textColor="@color/fontColor_gray"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    android:visibility="invisible"
-                    android:layout_marginRight="15dp"
-                    android:background="@mipmap/more_down"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
@@ -154,17 +134,17 @@
                 <TextView
                     android:layout_marginLeft="15dp"
                     android:text="使用条件"
-                    android:textColor="@color/fontColor_gray"
+                    android:textColor="@color/fontColor_pink"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <EditText
                     android:id="@+id/edt_key1"
-                    android:hint="请输入最低使用门槛"
+                    android:hint="请输入最低使用门槛金额"
                     android:textSize="14sp"
                     android:background="@null"
-                    android:layout_marginRight="2dp"
+                    android:layout_marginRight="5dp"
                     android:inputType="number"
                     android:gravity="center_vertical|right"
                     android:textColorHint="@color/fontColor_support"
@@ -175,7 +155,7 @@
 
                 <TextView
                     android:text="元"
-                    android:textColor="@color/fontColor_gray"
+                    android:textColor="@color/fontColor_pink"
                     android:textSize="15sp"
                     android:layout_marginRight="15dp"
                     android:layout_width="wrap_content"
@@ -198,7 +178,7 @@
                 <TextView
                     android:layout_marginLeft="15dp"
                     android:text="满减金额"
-                    android:textColor="@color/fontColor_gray"
+                    android:textColor="@color/fontColor_pink"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -206,7 +186,7 @@
                 <EditText
                     android:id="@+id/edt_key2"
                     android:hint="请输入满减金额"
-                    android:layout_marginRight="2dp"
+                    android:layout_marginRight="5dp"
                     android:textSize="14sp"
                     android:background="@null"
                     android:inputType="number"
@@ -219,7 +199,7 @@
 
                 <TextView
                     android:text="元"
-                    android:textColor="@color/fontColor_gray"
+                    android:textColor="@color/fontColor_pink"
                     android:textSize="15sp"
                     android:layout_marginRight="15dp"
                     android:layout_width="wrap_content"
@@ -242,7 +222,7 @@
                 <TextView
                     android:layout_marginLeft="15dp"
                     android:text="起始时间"
-                    android:textColor="@color/fontColor_gray"
+                    android:textColor="@color/fontColor_pink"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -283,7 +263,7 @@
                 <TextView
                     android:layout_marginLeft="15dp"
                     android:text="有效期至"
-                    android:textColor="@color/fontColor_gray"
+                    android:textColor="@color/fontColor_pink"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -310,9 +290,9 @@
             </LinearLayout>
 
             <View
-                android:layout_marginLeft="15dp"
+                android:background="@color/intervalColor"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"/>
+                android:layout_height="10dp"/>
 
             <LinearLayout
                 android:background="@color/white"
@@ -322,8 +302,8 @@
 
                 <TextView
                     android:textSize="15sp"
-                    android:text="使用详情"
-                    android:textColor="@color/fontColor_gray"
+                    android:text="折扣券使用情况"
+                    android:textColor="@color/fontColor_pink"
                     android:layout_marginTop="18dp"
                     android:layout_marginLeft="15dp"
                     android:layout_width="wrap_content"
@@ -331,7 +311,7 @@
 
                 <EditText
                     android:id="@+id/edt_detail"
-                    android:hint="请输入"
+                    android:hint="请输入使用情况，请谨慎描述"
                     android:textSize="13sp"
                     android:textColorHint="@color/fontColor_support"
                     android:textColor="#333333"
@@ -347,6 +327,21 @@
 
             </LinearLayout>
 
+
+            <TextView
+                android:id="@+id/txt_commit"
+                android:gravity="center"
+                android:text="保存"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="45dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/corners_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" />
+
             <TextView
                 android:id="@+id/txt_confirm"
                 android:visibility="gone"
@@ -361,7 +356,6 @@
                 android:background="@drawable/corners_orange"
                 android:layout_width="match_parent"
                 android:layout_height="45dp" />
-
 
         </LinearLayout>
 

@@ -6,9 +6,10 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/fontColor_orange" >
+        >
 
         <LinearLayout
             android:id="@+id/layout_back"
@@ -19,7 +20,7 @@
             android:orientation="horizontal" >
 
             <ImageButton
-                android:background="@mipmap/back_white"
+                android:background="@mipmap/back_pink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
@@ -32,23 +33,23 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:textColor="@color/fontColor_pink"
             android:text="分红权详情"
-            android:textColor="@color/fontColor_white"
-            android:textSize="17sp" />
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
     <View
-        android:background="@color/lineColor"
+        android:background="@color/lineColor_gray"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="1dp"/>
 
     <com.zhenghui.zhqb.merchant.util.RefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        
         <ListView
             android:id="@+id/list_rights"
             android:background="@color/intervalColor"

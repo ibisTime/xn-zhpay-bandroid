@@ -74,7 +74,39 @@ public class BillUtil {
             return "正汇O2O支付";
         }else if(bizType.equals("-ZH2")){
             return "正汇分红权分红";
+        }else if(bizType.equals("206")){
+            return "C端用户间转账";
         }
+        return "";
+    }
+
+
+    public static String getCurrency(String currency){
+
+        switch (currency) {
+            case "CNY": // 人名币
+                return "人名币";
+
+            case "FRB": // 分润
+                return "分润";
+
+            case "GXJL": // 贡献奖励
+                return "贡献奖励";
+
+            case "GWB": // 购物币
+                return "购物币";
+
+            case "QBB": // 钱包币
+                return "钱包币";
+
+            case "HBB": // 红包
+                return "红包";
+
+            case "HBYJ": // 红包业绩
+                return "红包业绩";
+
+        }
+
         return "";
     }
 }
