@@ -151,10 +151,10 @@ public class WithdrawalsActivity extends MyBaseActivity {
                         if (txtBankCard.getText().toString().equals("选择银行卡")) {
                             Toast.makeText(WithdrawalsActivity.this, "请先选择银行卡", Toast.LENGTH_SHORT).show();
                         } else {
-                            if (edtRepassword.getText().toString().length() == 6) {
-                                withdrawal();
+                            if (edtRepassword.getText().toString().length() < 6) {
+                                Toast.makeText(WithdrawalsActivity.this, "请填写正确格式的支付密码", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(WithdrawalsActivity.this, "请输入6位支付密码", Toast.LENGTH_SHORT).show();
+                                withdrawal();
                             }
                         }
                     }
@@ -212,8 +212,6 @@ public class WithdrawalsActivity extends MyBaseActivity {
 
                     bankCardList.addAll(lists);
                     if (bankCardList.size() > 0) {
-                        System.out.println("bankCardList.get(0).getBankName()=" + bankCardList.get(0).getBankName());
-                        System.out.println("bankCardList.get(0).getBankCode()=" + bankCardList.get(0).getBankCode());
 
                         bankName = bankCardList.get(0).getBankName();
                         bankcardNumber = bankCardList.get(0).getBankcardNumber();

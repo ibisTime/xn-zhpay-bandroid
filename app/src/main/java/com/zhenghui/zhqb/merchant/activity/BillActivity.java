@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -159,8 +158,6 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
             object.put("token", userInfoSp.getString("token", null));
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("accountNumber", accountNumber);
-            object.put("dateStart", format.format(new Date()));
-            object.put("dateEnd", format.format(new Date()));
             object.put("start", page);
             object.put("limit", pageSize);
         } catch (JSONException e) {
@@ -180,7 +177,6 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
                     if(page == 1){
                         list.clear();
                     }
-
                     list.addAll(lists);
                     adapter.notifyDataSetChanged();
 

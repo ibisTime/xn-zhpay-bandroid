@@ -198,10 +198,10 @@
             android:textSize="14sp"
             android:maxLength="6"
             android:background="@null"
-            android:inputType="numberPassword"
+            android:inputType="textPassword"
             android:textColor="@color/fontColor_gray"
             android:textColorHint="@color/fontColor_hint"
-            android:hint="请输入6位支付密码"
+            android:hint="请输入支付密码"
             android:layout_height="match_parent" />
 
 

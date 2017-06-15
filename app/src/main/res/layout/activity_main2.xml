@@ -198,7 +198,7 @@
 
                                 <TextView
                                     android:id="@+id/txt_turnover"
-                                    android:textSize="13sp"
+                                    android:textSize="11sp"
                                     android:text="累计营业额  "
                                     android:textColor="@color/fontColor_white"
                                     android:layout_weight="1"
@@ -208,6 +208,7 @@
                                 <TextView
                                     android:id="@+id/txt_already"
                                     android:text="已提现  "
+                                    android:textSize="11sp"
                                     android:layout_marginLeft="30dp"
                                     android:textColor="@color/fontColor_white"
                                     android:layout_weight="1"
@@ -231,7 +232,7 @@
 
                                 <TextView
                                     android:id="@+id/txt_earnings"
-                                    android:textSize="13sp"
+                                    android:textSize="11sp"
                                     android:text="累计分红收益  "
                                     android:textColor="@color/fontColor_white"
                                     android:layout_weight="1"
@@ -241,6 +242,7 @@
                                 <TextView
                                     android:id="@+id/txt_fhq"
                                     android:text="分红权  "
+                                    android:textSize="11sp"
                                     android:layout_marginLeft="30dp"
                                     android:textColor="@color/fontColor_white"
                                     android:layout_weight="1"
@@ -337,7 +339,7 @@
                             <TextView
                                 android:id="@+id/txt_store_status"
                                 android:text="营业中"
-                                android:textSize="12sp"
+                                android:textSize="11sp"
                                 android:textColor="@color/white"
                                 android:layout_marginLeft="15dp"
                                 android:layout_weight="1"
@@ -348,7 +350,7 @@
                                 android:id="@+id/txt_store_record"
                                 android:text="消费记录"
                                 android:gravity="center"
-                                android:textSize="12sp"
+                                android:textSize="11sp"
                                 android:textColor="@color/white"
                                 android:layout_weight="1"
                                 android:layout_width="0dp"
@@ -357,7 +359,7 @@
                             <TextView
                                 android:id="@+id/txt_store_type"
                                 android:text="公益型商家"
-                                android:textSize="12sp"
+                                android:textSize="11sp"
                                 android:gravity="right"
                                 android:textColor="@color/white"
                                 android:layout_marginRight="15dp"
@@ -422,7 +424,7 @@
                                 <TextView
                                     android:id="@+id/txt_good_total"
                                     android:text="所有商品  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_marginLeft="15dp"
                                     android:layout_weight="1"
@@ -433,7 +435,7 @@
                                     android:id="@+id/txt_good_sale"
                                     android:gravity="center"
                                     android:text="在售商品  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_weight="1"
                                     android:layout_width="0dp"
@@ -442,7 +444,7 @@
                                 <TextView
                                     android:id="@+id/txt_good_out"
                                     android:text="下架商品  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:gravity="right"
                                     android:textColor="@color/white"
                                     android:layout_marginRight="15dp"
@@ -509,7 +511,7 @@
                                 <TextView
                                     android:id="@+id/txt_order_total"
                                     android:text="所有订单  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_marginLeft="15dp"
                                     android:layout_weight="1"
@@ -520,7 +522,7 @@
                                     android:id="@+id/txt_order_send"
                                     android:gravity="center"
                                     android:text="待发货  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_weight="1"
                                     android:layout_width="0dp"
@@ -529,7 +531,7 @@
                                 <TextView
                                     android:id="@+id/txt_order_get"
                                     android:text="待收货  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:gravity="right"
                                     android:textColor="@color/white"
                                     android:layout_marginRight="15dp"
@@ -596,7 +598,7 @@
                                 <TextView
                                     android:id="@+id/txt_order_income"
                                     android:text="今日收入  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_marginLeft="15dp"
                                     android:layout_weight="1"
@@ -607,7 +609,7 @@
                                     android:id="@+id/txt_order_withdraw"
                                     android:gravity="center"
                                     android:text="今日提现  0"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_weight="1"
                                     android:layout_width="0dp"
@@ -616,7 +618,7 @@
                                 <TextView
                                     android:id="@+id/txt_bill_status"
                                     android:text="处理中"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:gravity="right"
                                     android:textColor="@color/white"
                                     android:layout_marginRight="15dp"
@@ -686,7 +688,7 @@
                                 <TextView
                                     android:id="@+id/txt_account_safe"
                                     android:text="账户安全"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_marginLeft="15dp"
                                     android:layout_weight="1"
@@ -697,7 +699,7 @@
                                     android:id="@+id/txt_account_card"
                                     android:gravity="center"
                                     android:text="提现银行卡"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:textColor="@color/white"
                                     android:layout_weight="1"
                                     android:layout_width="0dp"
@@ -706,7 +708,7 @@
                                 <TextView
                                     android:id="@+id/txt_account_logout"
                                     android:text="切换账号"
-                                    android:textSize="12sp"
+                                    android:textSize="11sp"
                                     android:gravity="right"
                                     android:textColor="@color/white"
                                     android:layout_marginRight="15dp"

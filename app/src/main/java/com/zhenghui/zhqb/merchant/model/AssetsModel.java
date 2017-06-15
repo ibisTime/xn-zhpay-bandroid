@@ -32,11 +32,11 @@ public class AssetsModel {
     private String status;
     private String currency;
     private double amount;
-    private int frozenAmount;
+    private double frozenAmount;
     private String md5;
-    private int addAmount;
-    private int inAmount;
-    private int outAmount;
+    private double addAmount;
+    private double inAmount;
+    private double outAmount;
     private String createDatetime;
     private String lastOrder;
     private String systemCode;
@@ -98,11 +98,11 @@ public class AssetsModel {
         this.amount = amount;
     }
 
-    public int getFrozenAmount() {
+    public double getFrozenAmount() {
         return frozenAmount;
     }
 
-    public void setFrozenAmount(int frozenAmount) {
+    public void setFrozenAmount(double frozenAmount) {
         this.frozenAmount = frozenAmount;
     }
 
@@ -114,27 +114,27 @@ public class AssetsModel {
         this.md5 = md5;
     }
 
-    public int getAddAmount() {
+    public double getAddAmount() {
         return addAmount;
     }
 
-    public void setAddAmount(int addAmount) {
+    public void setAddAmount(double addAmount) {
         this.addAmount = addAmount;
     }
 
-    public int getInAmount() {
+    public double getInAmount() {
         return inAmount;
     }
 
-    public void setInAmount(int inAmount) {
+    public void setInAmount(double inAmount) {
         this.inAmount = inAmount;
     }
 
-    public int getOutAmount() {
+    public double getOutAmount() {
         return outAmount;
     }
 
-    public void setOutAmount(int outAmount) {
+    public void setOutAmount(double outAmount) {
         this.outAmount = outAmount;
     }
 

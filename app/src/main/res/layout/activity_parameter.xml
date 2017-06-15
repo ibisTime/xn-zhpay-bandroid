@@ -76,6 +76,7 @@
             android:hint="类别规格的描述"
             android:textSize="14sp"
             android:background="@null"
+            android:maxLength="20"
             android:textColorHint="@color/fontColor_support"
             android:textColor="@color/fontColor_gray"
             android:layout_marginLeft="15dp"

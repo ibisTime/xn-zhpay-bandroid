@@ -82,9 +82,6 @@ public class MyBankCardAdapter extends BaseAdapter {
                 holder.layoutBankBg.setBackgroundResource(backId);
             }
 
-
-
-
         }
 
     }

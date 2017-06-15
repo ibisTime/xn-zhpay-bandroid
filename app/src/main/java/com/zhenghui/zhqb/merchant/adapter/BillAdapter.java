@@ -78,7 +78,7 @@ public class BillAdapter extends BaseAdapter {
 
         holder.txtInfo.setText(list.get(position).getBizNote());
 
-        SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd日");
         Date date = new Date(list.get(position).getCreateDatetime());
         holder.txtDate.setText(dateFormat.format(date));

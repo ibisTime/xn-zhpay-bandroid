@@ -66,6 +66,7 @@ public class RightsHistoryActivity extends MyBaseActivity implements SwipeRefres
         setContentView(R.layout.activity_rights_history);
         ButterKnife.bind(this);
         inits();
+        initDate();
         initsListView();
         initRefreshLayout();
 
@@ -81,6 +82,20 @@ public class RightsHistoryActivity extends MyBaseActivity implements SwipeRefres
 
         code = getIntent().getStringExtra("code");
 
+    }
+
+    private void initDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.roll(Calendar.DATE, -7);
+        txtStart.setText(sdf.format(startCalendar.getTime()));
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.roll(Calendar.DATE, -1);
+        txtEnd.setText(sdf.format(endCalendar.getTime()));
+
+        getData();
     }
 
     private void initsListView() {
@@ -283,7 +298,7 @@ public class RightsHistoryActivity extends MyBaseActivity implements SwipeRefres
             @Override
             public void run() {
                 swipeContainer.setRefreshing(false);
-//                page = 1;
+                page = 1;
                 getData();
             }
         }, 1500);
@@ -296,7 +311,7 @@ public class RightsHistoryActivity extends MyBaseActivity implements SwipeRefres
             @Override
             public void run() {
                 swipeContainer.setLoading(false);
-//                page = page + 1;
+                page = page + 1;
                 getData();
 
 

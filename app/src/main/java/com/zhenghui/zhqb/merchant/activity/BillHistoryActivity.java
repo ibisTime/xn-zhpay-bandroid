@@ -73,6 +73,7 @@ public class BillHistoryActivity extends MyBaseActivity implements SwipeRefreshL
         ButterKnife.bind(this);
 
         inits();
+        initDate();
         initListView();
         initRefreshLayout();
 
@@ -99,6 +100,20 @@ public class BillHistoryActivity extends MyBaseActivity implements SwipeRefreshL
 
         accountNumber = getIntent().getStringExtra("code");
 
+    }
+
+    private void initDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.roll(Calendar.DATE, -7);
+        txtStart.setText(sdf.format(startCalendar.getTime()));
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.roll(Calendar.DATE, -1);
+        txtEnd.setText(sdf.format(endCalendar.getTime()));
+
+        getData();
     }
 
     private void initListView() {

@@ -133,7 +133,6 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
     }
 
     private void getData() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         JSONObject object = new JSONObject();
         try {
@@ -141,8 +140,6 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
             object.put("fundCode", "");
             object.put("stockCode", code);
             object.put("toUser", "");
-            object.put("dateStart", format.format(new Date()));
-            object.put("dateEnd", format.format(new Date()));
             object.put("start", page);
             object.put("limit", pageSize);
             object.put("orderColumn", "");
