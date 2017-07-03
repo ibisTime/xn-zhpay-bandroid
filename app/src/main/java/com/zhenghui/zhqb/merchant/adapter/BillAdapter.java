@@ -19,10 +19,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by dell1 on 2016/12/18.
- */
-
 public class BillAdapter extends BaseAdapter {
 
     private List<BillModel> list;

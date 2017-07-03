@@ -116,6 +116,8 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     RefreshLayout layoutRefresh;
     @BindView(R.id.txt_store_record)
     TextView txtStoreRecord;
+    @BindView(R.id.txt_record)
+    TextView txtRecord;
 
     private boolean storeFlag = false;
 
@@ -141,13 +143,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         initRefreshLayout();
 
         getVersion();
-
-        getStore();
-        getMoney();
-        getProperty();
-        getNotice();
-        getProduct();
-        getData();
+        getNotice(true);
     }
 
     @Override
@@ -158,7 +154,6 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         getStore();
         getMoney();
         getProperty();
-        getNotice();
         getProduct();
     }
 
@@ -184,7 +179,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
     @OnClick({R.id.layout_store, R.id.layout_good, R.id.layout_bill, R.id.layout_order, R.id.txt_notice,
             R.id.layout_account, R.id.txt_withdrawal, R.id.layout_fhq, R.id.txt_introduce,
-            R.id.txt_account_logout, R.id.txt_store_record, R.id.txt_account_card})
+            R.id.txt_account_logout, R.id.txt_store_record, R.id.txt_account_card, R.id.txt_record})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_fhq:
@@ -237,7 +232,6 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
             case R.id.txt_introduce:
                 startActivity(new Intent(Main2Activity.this, RichTextActivity.class).putExtra("ckey", "new_start"));
-//                startActivity(new Intent(MainActivity.this, ParameterActivity.class));
                 break;
 
             case R.id.txt_account_logout:
@@ -258,6 +252,10 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                     startActivity(new Intent(Main2Activity.this, BankCardActivity.class));
                 }
 
+                break;
+
+            case R.id.txt_record:
+                startActivity(new Intent(Main2Activity.this, RecordActivity.class));
                 break;
         }
     }
@@ -318,10 +316,13 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     private void setView() {
         txtName.setText(list.get(0).getName());
         if (list.get(0).getLevel().equals("2")) {
-            txtType.setText("类型：公益型");
-            txtStoreType.setText("公益型商家");
+//            txtType.setText("类型：公益型");
+//            txtStoreType.setText("公益型商家");
+
+            txtType.setText("类型：普通型");
+            txtStoreType.setText("普通型商家");
         } else {
-            txtStatus.setText("类型：普通型");
+            txtType.setText("类型：普通型");
             txtStoreType.setText("普通型商家");
         }
 
@@ -442,7 +443,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         });
     }
 
-    private void getNotice() {
+    private void getNotice(final boolean isShow) {
 
         JSONObject object = new JSONObject();
         try {
@@ -473,6 +474,9 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
                     if (lists.size() > 0) {
                         txtNotice.setText("公告:  " + lists.get(0).getSmsTitle());
+                        if(isShow){
+                            showNotice(lists.get(0).getSmsTitle(),lists.get(0).getSmsContent());
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -491,6 +495,12 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                 Toast.makeText(Main2Activity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showNotice(String title,String content) {
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(content)
+                .setPositiveButton("确定", null).show();
     }
 
     private void getBill() {
@@ -739,8 +749,8 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         startService(new Intent(Main2Activity.this, UpdateService.class)
-                                .putExtra("appname", "zhqb-release")
-                                .putExtra("appurl", "http://m.zhenghuijituan.com/app/zhqb-release.apk"));
+                                .putExtra("appname", "zhsj-release")
+                                .putExtra("appurl", "http://m.zhenghuijituan.com/app/zhsj-release.apk"));
 
                     }
                 }).setNegativeButton("取消", null).show();
@@ -756,7 +766,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                 getStore();
                 getMoney();
                 getProperty();
-                getNotice();
+                getNotice(false);
                 getProduct();
             }
         }, 1500);

@@ -21,13 +21,11 @@ import org.xutils.x;
 
 public class Xutil {
 
-//    public static String URL = "http://121.43.101.148:8901/forward-service/api";
-//    public static String LOGOUT = "http://121.43.101.148:8901/forward-service/user/logOut";
 
 //    public static String URL = "http://106.15.49.68:5601/forward-service/api";
 //    public static String LOGOUT = "http://106.15.49.68:5601/forward-service/user/logOut";
 
-    // 正汇正试环境
+    // 正汇线上环境
     public static String URL = "http://139.224.200.54:5601/forward-service/api";
     public static String LOGOUT = "http://139.224.200.54:5601/forward-service/user/logOut";
 

@@ -18,11 +18,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-/**
- * Created by LeiQ on 2017/3/15.
- */
-
 public class RightsAdapter extends BaseAdapter {
 
     private List<RightsModel> list;

@@ -25,11 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Leiq on 2016/12/26.
- * 取消发货
- */
-
 public class ShipmentsCancleActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)

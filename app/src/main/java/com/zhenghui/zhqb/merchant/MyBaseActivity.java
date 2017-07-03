@@ -11,8 +11,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -23,22 +21,8 @@ import java.util.List;
 
 public class MyBaseActivity extends FragmentActivity {
 
-    public static String SERVICE_ID= "androidkefu";
-
     public SharedPreferences userInfoSp;
     public SharedPreferences appConfigSp;
-
-    private Handler handler = new Handler(){
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            switch (msg.what) {
-
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

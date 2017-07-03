@@ -1,29 +1,7 @@
 package com.zhenghui.zhqb.merchant.model;
 
-/**
- * Created by LeiQ on 2017/1/7.
- */
-
 public class AssetsModel {
 
-    /**
-     * accountNumber : A2017040718104733758
-     * userId : U2017040718104693069
-     * realName : 18984955240
-     * type : B
-     * status : 0
-     * currency : FRB
-     * amount : 5321380
-     * frozenAmount : 20000
-     * md5 : f36ca52888cd7babad750138f29f3f19
-     * addAmount : 7051810
-     * inAmount : 10000
-     * outAmount : 12000
-     * createDatetime : Apr 7, 2017 6:10:47 PM
-     * lastOrder : AJ2017052900000031753
-     * systemCode : CD-CZH000001
-     * companyCode : CD-CZH000001
-     */
 
     private String accountNumber;
     private String userId;

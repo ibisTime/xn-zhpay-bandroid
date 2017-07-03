@@ -1,28 +1,6 @@
 package com.zhenghui.zhqb.merchant.model;
 
-/**
- * Created by LeiQ on 2016/12/30.
- */
-
 public class DiscountModel {
-
-
-    /**
-     * code : ZKQ201612182138594649
-     * name : 双update
-     * type : 1
-     * key1 : 30000
-     * key2 : 5000
-     * description : 使用详情
-     * price : 500
-     * currency : CNY
-     * validateStart : May 3, 2016 12:00:00 AM
-     * validateEnd : May 4, 2016 12:00:00 AM
-     * createDatetime : Dec 18, 2016 9:38:59 PM
-     * status : 0
-     * storeCode : 店铺编号
-     * systemCode : 系统编号
-     */
 
     private String code;
     private String name;

@@ -2,28 +2,8 @@ package com.zhenghui.zhqb.merchant.model;
 
 import java.io.Serializable;
 
-/**
- * Created by LeiQ on 2017/4/20.
- */
-
 public class ParameterModel implements Serializable {
 
-
-    /**
-     * code : PS201706062244320112782
-     * name : 土豪金
-     * productCode : CP2017060618304790037168
-     * price1 : 1000
-     * price2 : 1000
-     * price3 : 1000
-     * status : 1
-     * quantity : 1
-     * province : 浙江
-     * weight : 1
-     * orderNo : 1
-     * companyCode : U201706041609037734313
-     * systemCode : CD-CZH000001
-     */
 
     private String code;
     private String name;

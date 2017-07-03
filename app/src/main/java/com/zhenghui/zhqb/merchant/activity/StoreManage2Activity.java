@@ -219,7 +219,8 @@ public class StoreManage2Activity extends MyBaseActivity {
     private void setView() {
         if (list.get(0).getLevel().equals("2")) {
             txtLevelUp.setVisibility(View.GONE);
-            txtType.setText("您已经是公益型商家");
+//            txtType.setText("您已经是公益型商家");
+            txtType.setText("您已经是普通型商家");
             textView2.setText("店铺已升级");
         }
 

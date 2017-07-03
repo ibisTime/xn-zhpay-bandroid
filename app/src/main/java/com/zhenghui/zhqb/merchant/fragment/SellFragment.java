@@ -32,10 +32,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by LeiQ on 2017/6/6.
- */
-
 public class SellFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.grid_product)

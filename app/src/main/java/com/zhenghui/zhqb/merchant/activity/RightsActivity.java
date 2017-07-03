@@ -294,10 +294,12 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        startActivity(new Intent(RightsActivity.this, RightsListActivity.class)
-                .putExtra("received", NumberUtil.doubleFormatMoney(list.get(i-1).getBackAmount()))
-                .putExtra("unclaimed", NumberUtil.doubleFormatMoney(list.get(i-1).getProfitAmount() - list.get(i-1).getBackAmount()))
-                .putExtra("date",list.get(i-1).getCreateDatetime())
-                .putExtra("code",list.get(i-1).getCode()));
+        if(i > 0){
+            startActivity(new Intent(RightsActivity.this, RightsListActivity.class)
+                    .putExtra("received", NumberUtil.doubleFormatMoney(list.get(i-1).getBackAmount()))
+                    .putExtra("unclaimed", NumberUtil.doubleFormatMoney(list.get(i-1).getProfitAmount() - list.get(i-1).getBackAmount()))
+                    .putExtra("date",list.get(i-1).getCreateDatetime())
+                    .putExtra("code",list.get(i-1).getCode()));
+        }
     }
 }

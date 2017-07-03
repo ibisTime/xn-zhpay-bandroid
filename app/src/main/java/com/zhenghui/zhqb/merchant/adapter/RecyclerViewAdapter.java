@@ -12,11 +12,6 @@ import com.zhenghui.zhqb.merchant.util.ImageUtil;
 
 import java.util.List;
 
-
-/**
- * Created by dell1 on 2016/12/20.
- */
-
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private Context context;

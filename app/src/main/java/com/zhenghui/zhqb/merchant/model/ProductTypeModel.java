@@ -1,20 +1,7 @@
 package com.zhenghui.zhqb.merchant.model;
 
-/**
- * Created by dell1 on 2016/12/17.
- */
-
 public class ProductTypeModel {
 
-
-    /**
-     * code : 1
-     * parentCode : 0
-     * type : 1
-     * name : 一元夺宝
-     * orderNo : 3
-     * systemCode : CD-CZH000001
-     */
 
     private String code;
     private String parentCode;

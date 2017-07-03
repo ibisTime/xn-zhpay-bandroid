@@ -18,15 +18,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by LeiQ on 2016/12/30.
- */
-
 public class RecordAdapter extends BaseAdapter {
 
+    private List<RecordModel> list;
     private Context context;
     private ViewHolder holder;
-    private List<RecordModel> list;
+    private int view;
 
     public RecordAdapter(Context context, List<RecordModel> list) {
         this.list = list;
@@ -51,7 +48,7 @@ public class RecordAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_record, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_bill, null);
             holder = new ViewHolder(view);
             view.setTag(holder);
         } else {
@@ -64,41 +61,22 @@ public class RecordAdapter extends BaseAdapter {
     }
 
     public void setView(int position) {
-        holder.txtName.setText("消费者: " + list.get(position).getUser().getMobile());
-        holder.txtPrice.setText("消费金额: " + NumberUtil.doubleFormatMoney(list.get(position).getPrice()));
-        holder.txtType.setText("支付方式: " + payType(list.get(position).getPayType()));
+        holder.txtTitle.setText(list.get(position).getRemark());
+        holder.txtPrice.setText(NumberUtil.doubleFormatMoney(list.get(position).getPrice())+"人民币");
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date d5 = new Date(list.get(position).getPayDatetime());
-        holder.txtTime.setText("下单时间: " + s.format(d5));
-    }
-
-    public String payType(String payType){
-
-        switch (payType){
-            case "1":
-                return "余额";
-
-            case "2":
-                return "微信";
-
-            case "3":
-                return "支付宝";
-
-            default:
-                return "";
-        }
-
+        Date d5 = new Date(list.get(position).getCreateDatetime());
+        holder.txtTime.setText(s.format(d5));
     }
 
     static class ViewHolder {
-        @BindView(R.id.txt_name)
-        TextView txtName;
-        @BindView(R.id.txt_price)
-        TextView txtPrice;
-        @BindView(R.id.txt_type)
-        TextView txtType;
+        @BindView(R.id.txt_title)
+        TextView txtTitle;
         @BindView(R.id.txt_time)
         TextView txtTime;
+        @BindView(R.id.txt_price)
+        TextView txtPrice;
+        @BindView(R.id.txt_info)
+        TextView txtInfo;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

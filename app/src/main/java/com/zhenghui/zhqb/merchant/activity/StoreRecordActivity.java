@@ -10,8 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
-import com.zhenghui.zhqb.merchant.adapter.RecordAdapter;
-import com.zhenghui.zhqb.merchant.model.RecordModel;
+import com.zhenghui.zhqb.merchant.adapter.StoreRecordAdapter;
+import com.zhenghui.zhqb.merchant.model.StoreRecordModel;
 import com.zhenghui.zhqb.merchant.util.RefreshLayout;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
@@ -37,10 +37,8 @@ public class StoreRecordActivity extends MyBaseActivity implements SwipeRefreshL
     private int page = 1;
     private int pageSize = 10;
 
-    private String storeCode;
-
-    private List<RecordModel> list;
-    private RecordAdapter adapter;
+    private List<StoreRecordModel> list;
+    private StoreRecordAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +55,7 @@ public class StoreRecordActivity extends MyBaseActivity implements SwipeRefreshL
 
     private void inits() {
         list = new ArrayList<>();
-        adapter = new RecordAdapter(this,list);
+        adapter = new StoreRecordAdapter(this,list);
     }
 
     private void initListView() {
@@ -103,7 +101,7 @@ public class StoreRecordActivity extends MyBaseActivity implements SwipeRefreshL
                     JSONObject jsonObject = new JSONObject(result);
 
                     Gson gson = new Gson();
-                    ArrayList<RecordModel> lists = gson.fromJson(jsonObject.getJSONArray("list").toString(), new TypeToken<ArrayList<RecordModel>>() {
+                    ArrayList<StoreRecordModel> lists = gson.fromJson(jsonObject.getJSONArray("list").toString(), new TypeToken<ArrayList<StoreRecordModel>>() {
                     }.getType());
 
                     if(page == 1){

@@ -150,32 +150,6 @@
         <!-- 定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService" />
 
-        <!-- 设置环信应用的AppKey -->
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="1139170317178872#zhpay" />
-        <!-- 声明SDK所需的service SDK核心功能 -->
-        <service
-            android:name="com.hyphenate.chat.EMChatService"
-            android:exported="true" />
-        <service
-            android:name="com.hyphenate.chat.EMJobService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <!-- 声明SDK所需的receiver -->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-            <!-- 可选filter -->
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
-
         <activity android:name=".activity.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -184,21 +158,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyBaseActivity" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".activity.StoreManageActivity" />
-        <activity android:name=".activity.StoreContractActivity" />
-        <activity android:name=".activity.DiscountManageActivity" />
         <activity android:name=".activity.WithdrawalsActivity" />
-        <activity android:name=".activity.DiscountAddActivity" />
         <activity
             android:name=".activity.ProductActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.SystemMessageActivity" />
         <activity android:name=".activity.ManageActivity" />
         <activity android:name=".activity.BillActivity" />
-        <activity android:name=".activity.PersonalActivity" />
         <activity android:name=".activity.ShipmentsActivity" />
         <activity android:name=".activity.ShipmentsCancleActivity" />
         <activity
@@ -207,7 +173,6 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.ModifyPhoneActivity" />
         <activity android:name=".activity.ModifyPasswordActivity" />
-        <activity android:name=".activity.ServiceActivity" />
         <activity android:name=".activity.BankCardActivity" />
         <activity android:name=".activity.AccountActivity" />
         <activity android:name=".activity.MapActivity" />
@@ -232,9 +197,7 @@
         </activity>
         <activity android:name=".activity.AboutActivity" />
         <activity android:name=".activity.RichTextActivity" />
-        <activity android:name=".activity.EarningsActivity" />
         <activity android:name=".activity.RightsActivity" />
-        <activity android:name=".activity.EarningsPayActivity" />
         <activity android:name=".activity.RightsListActivity" />
 
         <receiver android:name=".receiver.LogoutReceiver">
@@ -262,7 +225,6 @@
 
         <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.StoreManage2Activity" />
-        <activity android:name=".activity.StoreLevelUpActivity" />
         <activity android:name=".activity.StoreActivity" />
         <activity android:name=".activity.GoodOrderActivity" />
         <activity android:name=".activity.OrderDetailActivity" />
@@ -271,7 +233,8 @@
         <activity android:name=".activity.BillHistoryActivity" />
         <activity android:name=".activity.BillDetailActivity" />
         <activity android:name=".activity.RightsHistoryActivity" />
-        <activity android:name=".activity.StoreContract2Activity"></activity>
+        <activity android:name=".activity.StoreContract2Activity" />
+        <activity android:name=".activity.RecordActivity" />
     </application>
 
 </manifest>

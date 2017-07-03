@@ -257,7 +257,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:text="收益池金额"
+                    android:text="补贴额度"
                     android:textSize="12sp"
                     android:layout_marginTop="14dp"
                     android:textColor="@color/fontColor_gray"

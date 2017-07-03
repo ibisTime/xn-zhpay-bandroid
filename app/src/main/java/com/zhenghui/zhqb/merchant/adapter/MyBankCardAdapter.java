@@ -17,10 +17,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by LeiQ on 2016/12/24.
- */
-
 public class MyBankCardAdapter extends BaseAdapter {
 
     private Context context;

@@ -20,10 +20,6 @@ import butterknife.ButterKnife;
 
 import static com.zhenghui.zhqb.merchant.R.id.txt_recipients;
 
-/**
- * Created by LeiQ on 2016/12/30.
- */
-
 public class OrderAdapter extends BaseAdapter {
 
     private Context context;

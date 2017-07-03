@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDex;
 
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.easeui.controller.EaseUI;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 
 import org.xutils.BuildConfig;
 import org.xutils.x;
@@ -16,10 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
-
-/**
- * Created by leiQ on 2016/12/12.
- */
 
 public class MyApplication extends Application {
 
@@ -38,9 +34,8 @@ public class MyApplication extends Application {
         initAppConfig();
 
         initXUtil();
-        initEaseUI();
-        initEMChat_kefu();
         initJpush();
+        initIFlytek();
 
     }
 
@@ -67,25 +62,6 @@ public class MyApplication extends Application {
         x.Ext.setDebug(BuildConfig.DEBUG);
     }
 
-    private void initEaseUI() {
-        EaseUI.getInstance().init(this,null);
-        EMClient.getInstance().setDebugMode(true);
-    }
-
-    private void initEMChat_kefu() {
-//        ChatClient.Options options = new ChatClient.Options();
-//        options.setAppkey("tianleios#zh-dev");//appkey获取地址：kefu.easemob.com，“管理员模式 > 渠道管理 > 手机APP”页面的关联的“AppKey”
-//        options.setTenantId("32920");//tenantId获取地址：kefu.easemob.com，“管理员模式 > 设置 > 企业信息”页面的“租户ID”
-//
-//        // Kefu SDK 初始化
-//        if (!ChatClient.getInstance().init(this, options)){
-//            return;
-//        }
-//        // Kefu EaseUI的初始化
-//        UIProvider.getInstance().init(this);
-//        //后面可以设置其他属性
-    }
-
     /**
      * 初始化极光
      */
@@ -93,6 +69,13 @@ public class MyApplication extends Application {
         JPushInterface.init(applicationContext);
         JPushInterface.setDebugMode(true);
         JPushInterface.setLatestNotificationNumber(this, 3);
+    }
+
+    /**
+     * 初始化讯飞
+     */
+    private void initIFlytek() {
+        SpeechUtility.createUtility(applicationContext, SpeechConstant.APPID +"=5795aaee");
     }
 
     // 单例模式中获取唯一的MyApplication实例

@@ -161,7 +161,9 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
                     ArrayList<RightsListModel> lists = gson.fromJson(jsonObject.getJSONArray("list").toString(), new TypeToken<ArrayList<RightsListModel>>() {
                     }.getType());
 
-                    list.clear();
+                    if(page == 1){
+                        list.clear();
+                    }
                     list.addAll(lists);
                     adapter.notifyDataSetChanged();
 
@@ -190,7 +192,7 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
             @Override
             public void run() {
                 swipeContainer.setRefreshing(false);
-//                page = 1;
+                page = 1;
                 getData();
             }
         }, 1500);
@@ -203,9 +205,8 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
             @Override
             public void run() {
                 swipeContainer.setLoading(false);
-//                page = page + 1;
+                page = page + 1;
                 getData();
-
 
             }
         }, 1500);

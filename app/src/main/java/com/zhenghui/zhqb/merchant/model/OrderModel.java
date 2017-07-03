@@ -1,53 +1,6 @@
 package com.zhenghui.zhqb.merchant.model;
 
-/**
- * Created by dell1 on 2016/12/17.
- */
-
 public class OrderModel {
-
-
-    /**
-     * code : DD2017060721534625250243
-     * receiver : 雷黔
-     * reMobile : 18984955240
-     * reAddress : 浙江省 杭州市 余杭区 梦想小镇
-     * applyUser : U201706071406231322783
-     * applyNote :
-     * applyDatetime : Jun 7, 2017 9:53:46 PM
-     * productCode : CP2017060713200159669783
-     * productName : 你的良心不会痛吗？
-     * productSpecsCode : PS2017060713200160334405
-     * productSpecsName : 土豪金
-     * quantity : 1
-     * price1 : 10000
-     * price2 : 30000
-     * price3 : 20000
-     * amount1 : 10000
-     * amount2 : 30000
-     * amount3 : 20000
-     * yunfei : 0
-     * status : 2
-     * payType : 1
-     * payDatetime : Jun 7, 2017 10:33:13 PM
-     * payAmount1 : 0
-     * payAmount11 : 10000
-     * payAmount2 : 30000
-     * payAmount3 : 20000
-     * promptTimes : 0
-     * deliverer : U201706041609037734313
-     * deliveryDatetime : Jun 8, 2017 2:12:27 PM
-     * logisticsCode : 123456789
-     * logisticsCompany : 顺丰快递
-     * updater : U201706071406231322783
-     * updateDatetime : Jun 8, 2017 2:48:32 PM
-     * remark : 确认收货
-     * companyCode : U201706041609037734313
-     * systemCode : CD-CZH000001
-     * user : {"userId":"U201706071406231322783","kind":"f1","loginName":"18984955240","nickname":"31322783","mobile":"18984955240","identityFlag":"0","userReferee":"U2017010713451027748"}
-     * store : {"code":"SJ2017060416155036789952","name":"安卓店铺","level":"1","type":"1","slogan":"广告语","advPic":"ANDROID_1496564031759_580_580.jpg","pic":"ANDROID_1496564058384_580_580.jpg||ANDROID_1496564063708_580_580.jpg||ANDROID_1496564073059_580_580.jpg","description":"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈不哈哈哈哈哈哈哈哈哈那就是就是就是计算机技术就","province":"浙江省","city":"杭州市","area":"余杭区","address":"梦想小镇","longitude":"119.998089","latitude":"30.38812","bookMobile":"1234567","smsMobile":"18984955240","uiLocation":"1","uiOrder":"1","legalPersonName":"雷黔","userReferee":"U2017010713451027748","isDefault":"1","status":"2","updater":"xman","updateDatetime":"Jun 5, 2017 10:20:10 AM","createDatetime":"Jun 4, 2017 4:15:50 PM","onUser":"xman","onDatetime":"Jun 5, 2017 10:23:13 AM","offUser":"xman","offDatetime":"Jun 5, 2017 10:22:56 AM","owner":"U201706041609037734313","companyCode":"CD-CZH000001","systemCode":"CD-CZH000001"}
-     * product : {"code":"CP2017060713200159669783","category":"FL201700000000000001","type":"FL201700000000000003","name":"你的良心不会痛吗？","slogan":"痛不痛？","advPic":"ANDROID_1496812712323_580_580.jpg","pic":"ANDROID_1496812724492_580_580.jpg","description":"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈","status":"3","updater":"U201706041609037734313","updateDatetime":"Jun 7, 2017 1:20:01 PM","boughtCount":0,"companyCode":"U201706041609037734313","systemCode":"CD-CZH000001"}
-     */
 
     private String code;
     private String receiver;
@@ -85,69 +38,10 @@ public class OrderModel {
     private String remark;
     private String companyCode;
     private String systemCode;
-    /**
-     * userId : U201706071406231322783
-     * kind : f1
-     * loginName : 18984955240
-     * nickname : 31322783
-     * mobile : 18984955240
-     * identityFlag : 0
-     * userReferee : U2017010713451027748
-     */
 
     private UserBean user;
-    /**
-     * code : SJ2017060416155036789952
-     * name : 安卓店铺
-     * level : 1
-     * type : 1
-     * slogan : 广告语
-     * advPic : ANDROID_1496564031759_580_580.jpg
-     * pic : ANDROID_1496564058384_580_580.jpg||ANDROID_1496564063708_580_580.jpg||ANDROID_1496564073059_580_580.jpg
-     * description : 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈不哈哈哈哈哈哈哈哈哈那就是就是就是计算机技术就
-     * province : 浙江省
-     * city : 杭州市
-     * area : 余杭区
-     * address : 梦想小镇
-     * longitude : 119.998089
-     * latitude : 30.38812
-     * bookMobile : 1234567
-     * smsMobile : 18984955240
-     * uiLocation : 1
-     * uiOrder : 1
-     * legalPersonName : 雷黔
-     * userReferee : U2017010713451027748
-     * isDefault : 1
-     * status : 2
-     * updater : xman
-     * updateDatetime : Jun 5, 2017 10:20:10 AM
-     * createDatetime : Jun 4, 2017 4:15:50 PM
-     * onUser : xman
-     * onDatetime : Jun 5, 2017 10:23:13 AM
-     * offUser : xman
-     * offDatetime : Jun 5, 2017 10:22:56 AM
-     * owner : U201706041609037734313
-     * companyCode : CD-CZH000001
-     * systemCode : CD-CZH000001
-     */
 
     private StoreBean store;
-    /**
-     * code : CP2017060713200159669783
-     * category : FL201700000000000001
-     * type : FL201700000000000003
-     * name : 你的良心不会痛吗？
-     * slogan : 痛不痛？
-     * advPic : ANDROID_1496812712323_580_580.jpg
-     * pic : ANDROID_1496812724492_580_580.jpg
-     * description : 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
-     * status : 3
-     * updater : U201706041609037734313
-     * updateDatetime : Jun 7, 2017 1:20:01 PM
-     * boughtCount : 0
-     * companyCode : U201706041609037734313
-     * systemCode : CD-CZH000001
-     */
 
     private ProductBean product;
 

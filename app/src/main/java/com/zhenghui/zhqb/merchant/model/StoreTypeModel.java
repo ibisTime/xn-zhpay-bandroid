@@ -1,24 +1,7 @@
 package com.zhenghui.zhqb.merchant.model;
 
-/**
- * Created by LeiQ on 2017/3/27.
- */
-
 public class StoreTypeModel {
 
-
-    /**
-     * code : FL201703271811461464
-     * type : 2
-     * parentCode : FL201703271810184035
-     * name : 超市
-     * pic : timg (7)_1490609512415.jpg
-     * orderNo : 2
-     * status : 1
-     * companyCode : CD-CCG000007
-     * systemCode : CD-CCG000007
-     * parentName : 百货类
-     */
 
     private String code;
     private String type;

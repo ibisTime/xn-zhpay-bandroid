@@ -54,11 +54,6 @@ import static com.zhenghui.zhqb.merchant.util.ImageUtil.RESULT_CAMARA_IMAGE;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.album;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.camara;
 
-/**
- * Created by Leiq on 2016/12/26.
- * 添加商品
- */
-
 public class ProductActivity extends MyBaseActivity {
 
 

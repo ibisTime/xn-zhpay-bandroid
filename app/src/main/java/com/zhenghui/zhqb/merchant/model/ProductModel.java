@@ -3,31 +3,7 @@ package com.zhenghui.zhqb.merchant.model;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by dell1 on 2016/12/15.
- */
-
 public class ProductModel implements Serializable {
-
-
-    /**
-     * code : CP2017060618304790037168
-     * category : FL201700000000000001
-     * type : FL201700000000000003
-     * name : 商品名称
-     * slogan : 广告标语
-     * advPic : ANDROID_1496745007051_580_580.jpg
-     * pic : ANDROID_1496745044165_580_580.jpg
-     * description : 但是继续继续开心呢你喜欢不到那点难道你就你那血继限界想你想就像你性交姿势困死了手机少年计算机三级独家星劫你下午你在哪小
-     * status : 0
-     * updater : U201706041609037734313
-     * updateDatetime : Jun 6, 2017 6:30:47 PM
-     * boughtCount : 0
-     * companyCode : U201706041609037734313
-     * systemCode : CD-CZH000001
-     * store : {"code":"SJ2017060416155036789952","name":"安卓店铺","level":"1","type":"1","slogan":"广告语","advPic":"ANDROID_1496564031759_580_580.jpg","pic":"ANDROID_1496564058384_580_580.jpg||ANDROID_1496564063708_580_580.jpg||ANDROID_1496564073059_580_580.jpg","description":"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈不哈哈哈哈哈哈哈哈哈那就是就是就是计算机技术就","province":"浙江省","city":"杭州市","area":"余杭区","address":"梦想小镇","longitude":"119.998089","latitude":"30.38812","bookMobile":"1234567","smsMobile":"18984955240","uiLocation":"1","uiOrder":"1","legalPersonName":"雷黔","userReferee":"U2017010713451027748","isDefault":"1","status":"2","updater":"xman","updateDatetime":"Jun 5, 2017 10:20:10 AM","createDatetime":"Jun 4, 2017 4:15:50 PM","onUser":"xman","onDatetime":"Jun 5, 2017 10:23:13 AM","offUser":"xman","offDatetime":"Jun 5, 2017 10:22:56 AM","owner":"U201706041609037734313","companyCode":"CD-CZH000001","systemCode":"CD-CZH000001"}
-     * productSpecsList : [{"code":"PS2017060618304790675484","name":"","productCode":"CP2017060618304790037168","price1":1000,"price2":1000,"price3":1000,"quantity":1,"province":"浙江","weight":1,"orderNo":1,"companyCode":"U201706041609037734313","systemCode":"CD-CZH000001"}]
-     */
 
     private String code;
     private boolean isAdd = false;
@@ -44,56 +20,8 @@ public class ProductModel implements Serializable {
     private int boughtCount;
     private String companyCode;
     private String systemCode;
-    /**
-     * code : SJ2017060416155036789952
-     * name : 安卓店铺
-     * level : 1
-     * type : 1
-     * slogan : 广告语
-     * advPic : ANDROID_1496564031759_580_580.jpg
-     * pic : ANDROID_1496564058384_580_580.jpg||ANDROID_1496564063708_580_580.jpg||ANDROID_1496564073059_580_580.jpg
-     * description : 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈不哈哈哈哈哈哈哈哈哈那就是就是就是计算机技术就
-     * province : 浙江省
-     * city : 杭州市
-     * area : 余杭区
-     * address : 梦想小镇
-     * longitude : 119.998089
-     * latitude : 30.38812
-     * bookMobile : 1234567
-     * smsMobile : 18984955240
-     * uiLocation : 1
-     * uiOrder : 1
-     * legalPersonName :
-     * userReferee : U2017010713451027748
-     * isDefault : 1
-     * status : 2
-     * updater : xman
-     * updateDatetime : Jun 5, 2017 10:20:10 AM
-     * createDatetime : Jun 4, 2017 4:15:50 PM
-     * onUser : xman
-     * onDatetime : Jun 5, 2017 10:23:13 AM
-     * offUser : xman
-     * offDatetime : Jun 5, 2017 10:22:56 AM
-     * owner : U201706041609037734313
-     * companyCode : CD-CZH000001
-     * systemCode : CD-CZH000001
-     */
 
     private StoreBean store;
-    /**
-     * code : PS2017060618304790675484
-     * name :
-     * productCode : CP2017060618304790037168
-     * price1 : 1000
-     * price2 : 1000
-     * price3 : 1000
-     * quantity : 1
-     * province : 浙江
-     * weight : 1
-     * orderNo : 1
-     * companyCode : U201706041609037734313
-     * systemCode : CD-CZH000001
-     */
 
     private List<ProductSpecsListBean> productSpecsList;
 

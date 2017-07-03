@@ -34,11 +34,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Leiq on 2016/12/26.
- * 系统消息
- */
-
 public class SystemMessageActivity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener {
 
     @BindView(R.id.layout_back)

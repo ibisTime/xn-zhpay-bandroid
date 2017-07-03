@@ -17,10 +17,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by LeiQ on 2017/6/6.
- */
-
 public class SaleAdapter extends BaseAdapter {
 
     private Context context;

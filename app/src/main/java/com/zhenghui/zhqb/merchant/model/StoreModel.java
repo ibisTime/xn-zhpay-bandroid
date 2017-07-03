@@ -2,49 +2,7 @@ package com.zhenghui.zhqb.merchant.model;
 
 import java.util.List;
 
-/**
- * Created by LeiQ on 2017/3/29.
- */
-
 public class StoreModel {
-
-
-    /**
-     * code : SJ201703291508138235
-     * name : 没事店铺
-     * level : 1
-     * type : 1
-     * slogan : 广告语
-     * advPic : ANDROID_1490771200292_459_816.jpg
-     * pic : ANDROID_1490771288280_459_816.jpg||ANDROID_1490771292969_459_816.jpg||ANDROID_1490771298721_459_816.jpg
-     * description : 店铺描述需要20个字，店铺描述需要20个字，店铺描述需要20个字，店铺描述需要20个字，
-     * province : 浙江省
-     * city : 杭州市
-     * area : 余杭区
-     * address : 梦想小镇天使村
-     * longitude : 120.00154450535774
-     * latitude : 30.288354960019443
-     * bookMobile : 18984955240
-     * smsMobile : 18984955240
-     * pdf :
-     * legalPersonName : 法人姓名
-     * userReferee : U2017010713451027748
-     * rate1 : 0.01
-     * rate2 : 0.01
-     * status : 1
-     * updater : U201600000000000000
-     * updateDatetime : Mar 29, 2017 3:25:00 PM
-     * owner : U2017032914155538289
-     * contractNo : ZHS-201703291525005168
-     * totalRmbNum : 0
-     * totalJfNum : 0
-     * totalDzNum : 0
-     * totalScNum : 0
-     * companyCode : CD-CZH000001
-     * systemCode : CD-CZH000001
-     * refereeMobile : 13958092437
-     * storeTickets : []
-     */
 
     private String code;
     private String name;

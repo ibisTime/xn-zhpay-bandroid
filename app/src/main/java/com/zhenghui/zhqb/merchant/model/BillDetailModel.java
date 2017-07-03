@@ -1,33 +1,7 @@
 package com.zhenghui.zhqb.merchant.model;
 
-/**
- * Created by LeiQ on 2017/6/10.
- */
-
 public class BillDetailModel {
 
-
-    /**
-     * code : AJ2017061016253864759511
-     * refNo : XF2017061016253791414890
-     * accountNumber : A2017060416090393747269
-     * transAmount : -140
-     * userId : U201706041609037734313
-     * realName : 18984955240
-     * type : B
-     * currency : FRB
-     * bizType : -ZH1
-     * bizNote : 正汇O2O贡献值部分分成
-     * preAmount : 10751140
-     * postAmount : 10751000
-     * status : 1
-     * remark : 记得对账哦
-     * createDatetime : Jun 10, 2017 4:25:38 PM
-     * workDate : 20170610
-     * channelType : 0
-     * systemCode : CD-CZH000001
-     * companyCode : CD-CZH000001
-     */
 
     private String code;
     private String refNo;
