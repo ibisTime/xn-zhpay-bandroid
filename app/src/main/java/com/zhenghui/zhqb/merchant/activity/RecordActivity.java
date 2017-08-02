@@ -32,6 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808249;
+
 public class RecordActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)
@@ -124,7 +126,7 @@ public class RecordActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808249", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808249, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

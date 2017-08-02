@@ -2,10 +2,6 @@ package com.zhenghui.zhqb.merchant.util;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by dell1 on 2016/12/20.
- */
-
 public class NumberUtil {
 
     public static String doubleFormatMoney(double money){

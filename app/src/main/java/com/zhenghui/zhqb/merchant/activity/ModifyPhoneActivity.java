@@ -29,6 +29,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805047;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805904;
+
 public class ModifyPhoneActivity extends MyBaseActivity {
 
 
@@ -146,14 +149,14 @@ public class ModifyPhoneActivity extends MyBaseActivity {
         JSONObject object = new JSONObject();
         try {
             object.put("mobile", phone);
-            object.put("bizType", "805047");
+            object.put("bizType", CODE_805047);
             object.put("kind", "f2");
             object.put("systemCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("805904", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805904, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 isCodeSended = true;
@@ -187,7 +190,7 @@ public class ModifyPhoneActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("805047", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805047, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(ModifyPhoneActivity.this, "修改成功", Toast.LENGTH_SHORT).show();

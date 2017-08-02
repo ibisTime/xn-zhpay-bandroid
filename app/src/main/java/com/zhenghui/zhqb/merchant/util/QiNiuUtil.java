@@ -22,9 +22,7 @@ import java.util.List;
 
 import id.zelory.compressor.Compressor;
 
-/**
- * Created by LeiQ on 2016/12/29.
- */
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_807900;
 
 public class QiNiuUtil {
 
@@ -122,7 +120,7 @@ public class QiNiuUtil {
         }
 
 
-        new Xutil().post("807900", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_807900, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {

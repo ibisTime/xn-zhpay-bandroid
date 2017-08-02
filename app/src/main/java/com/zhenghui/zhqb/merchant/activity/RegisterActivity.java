@@ -15,9 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.model.UserModel;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
 import org.json.JSONException;
@@ -30,6 +33,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805041;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805043;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805056;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 
 public class RegisterActivity extends MyBaseActivity {
@@ -181,7 +187,7 @@ public class RegisterActivity extends MyBaseActivity {
 
         System.out.println("object.toString()=" + object.toString());
 
-        new Xutil().post("805041", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805041, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(RegisterActivity.this, "注册成功,为您自动登录", Toast.LENGTH_SHORT).show();
@@ -205,7 +211,7 @@ public class RegisterActivity extends MyBaseActivity {
         JSONObject object = new JSONObject();
         try {
             object.put("mobile", edtPhone.getText().toString().trim());
-            object.put("bizType", "805041");
+            object.put("bizType", CODE_805041);
             object.put("kind", "f1");
             object.put("systemCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
@@ -244,7 +250,7 @@ public class RegisterActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("805043",object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805043,object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 SharedPreferences.Editor editor = userInfoSp.edit();
@@ -259,7 +265,7 @@ public class RegisterActivity extends MyBaseActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                getStroe();
+                getData();
 
             }
 
@@ -303,6 +309,51 @@ public class RegisterActivity extends MyBaseActivity {
                     e.printStackTrace();
                 }
 
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(RegisterActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(RegisterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 获取用户详情
+     */
+    private void getData() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("userId", userInfoSp.getString("userId", null));
+            object.put("token", userInfoSp.getString("token", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_805056, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    Gson gson = new Gson();
+                    UserModel model = gson.fromJson(jsonObject.toString(), new TypeToken<UserModel>() {
+                    }.getType());
+
+                    if (model.getIdentityFlag().equals("1")) {
+                        getStroe();
+                    }else {
+                        startActivity(new Intent(RegisterActivity.this, AuthenticateActivity.class));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
 

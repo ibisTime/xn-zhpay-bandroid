@@ -15,22 +15,19 @@ import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-/**
- * Created by dell1 on 2016/12/15.
- */
-
 public class Xutil {
 
+    // 研发环境
+//    public static String URL = "http://106.15.49.68:5501/forward-service/api";
+//    public static String LOGOUT = "http://106.15.49.68:5501/forward-service/user/logOut";
 
+    // 测试环境
 //    public static String URL = "http://106.15.49.68:5601/forward-service/api";
 //    public static String LOGOUT = "http://106.15.49.68:5601/forward-service/user/logOut";
 
     // 正汇线上环境
     public static String URL = "http://139.224.200.54:5601/forward-service/api";
     public static String LOGOUT = "http://139.224.200.54:5601/forward-service/user/logOut";
-
-//    public static String URL = "http://118.178.124.16:5601/forward-service/api";
-//    public static String LOGOUT = "http://118.178.124.16:5601/forward-service/user/logOut";
 
     SharedPreferences userInfoSp;
 
@@ -42,8 +39,8 @@ public class Xutil {
         params.addBodyParameter("code", code);
         params.addBodyParameter("json", json);
 
-        Log.i("lei_http",code);
-        Log.i("lei_http",json);
+        Log.i("ZH_http",code);
+        Log.i("ZH_http",json);
 
         x.http().post(params, new Callback.CacheCallback<String>() {
             @Override

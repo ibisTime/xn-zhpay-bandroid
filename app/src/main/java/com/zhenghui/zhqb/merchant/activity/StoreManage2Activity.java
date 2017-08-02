@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802502;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808275;
 
 public class StoreManage2Activity extends MyBaseActivity {
@@ -179,7 +180,7 @@ public class StoreManage2Activity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808219", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808219, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 SharedPreferences.Editor editor = userInfoSp.edit();

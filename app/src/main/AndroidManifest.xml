@@ -176,7 +176,6 @@
         <activity android:name=".activity.BankCardActivity" />
         <activity android:name=".activity.AccountActivity" />
         <activity android:name=".activity.MapActivity" />
-        <activity android:name=".activity.DuobaoAddActivity" />
         <activity android:name=".activity.BindBankCardActivity" />
         <activity android:name=".activity.ModifyTradeActivity" />
         <activity
@@ -192,7 +191,7 @@
 
                 <data
                     android:host="certi.back"
-                    android:scheme="zhqb" />
+                    android:scheme="zhsj" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.AboutActivity" />

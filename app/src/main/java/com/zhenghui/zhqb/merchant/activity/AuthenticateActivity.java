@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805191;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805192;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
+
 public class AuthenticateActivity extends MyBaseActivity {
 
 
@@ -52,6 +57,8 @@ public class AuthenticateActivity extends MyBaseActivity {
     private String code = "";
     private double price = 0.00;
 
+    private boolean canBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,15 +72,15 @@ public class AuthenticateActivity extends MyBaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.e("LQ", "scheme:" + intent.getScheme());
+        Log.e("ZHQB", "scheme: " + intent.getScheme());
         Uri uri = intent.getData();
         if (uri != null) {
-            Log.e("LQ", "scheme: " + uri.getScheme());
-            Log.e("LQ", "host: " + uri.getHost());
-            Log.e("LQ", "port: " + uri.getPort());
-            Log.e("LQ", "path: " + uri.getPath());
-            Log.e("LQ", "queryString: " + uri.getQuery());
-            Log.e("LQ", "queryParameter: " + uri.getQueryParameter("biz_content"));
+            Log.e("ZHQB", "scheme: " + uri.getScheme());
+            Log.e("ZHQB", "host: " + uri.getHost());
+            Log.e("ZHQB", "port: " + uri.getPort());
+            Log.e("ZHQB", "path: " + uri.getPath());
+            Log.e("ZHQB", "queryString: " + uri.getQuery());
+            Log.e("ZHQB", "queryParameter: " + uri.getQueryParameter("biz_content"));
 
             if (null != uri.getQueryParameter("biz_content")) {
                 try {
@@ -96,6 +103,10 @@ public class AuthenticateActivity extends MyBaseActivity {
     }
 
     private void inits() {
+        canBack = getIntent().getBooleanExtra("canBack",false);
+        if (canBack == true){
+            layoutBack.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.layout_back, R.id.btn_confirm, R.id.btn_send})
@@ -116,19 +127,8 @@ public class AuthenticateActivity extends MyBaseActivity {
                     Toast.makeText(this, "请填写正确的身份证号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                if (edtCardId.getText().toString().length() < 16 || edtCardId.getText().toString().length() > 19) {
-//                    Toast.makeText(this, "请填写正确的银行卡号", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if (edtPhone.getText().toString().length() != 11) {
-//                    Toast.makeText(this, "请填写正确的手机号码", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if (edtTrade.getText().toString().length() < 6) {
-//                    Toast.makeText(this, "请设置6位交易密码", Toast.LENGTH_SHORT).show();
-//                }
+
                 authenticate();
-//                authentication();
                 break;
         }
     }
@@ -141,6 +141,7 @@ public class AuthenticateActivity extends MyBaseActivity {
 
         JSONObject object = new JSONObject();
         try {
+            object.put("returnUrl", "zhsj://certi.back");
             object.put("userId", userInfoSp.getString("userId", null));
             object.put("realName", edtName.getText().toString().trim());
             object.put("idKind", "1");
@@ -151,7 +152,7 @@ public class AuthenticateActivity extends MyBaseActivity {
         }
 
 
-        new Xutil().post("805191", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805191, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -160,7 +161,11 @@ public class AuthenticateActivity extends MyBaseActivity {
 
                     if (jsonObject.getBoolean("isSuccess")) {
                         Toast.makeText(AuthenticateActivity.this, "您已通过实名认证", Toast.LENGTH_SHORT).show();
-                        finish();
+                        if (canBack == true){
+                            finish();
+                        }else {
+                            getStore();
+                        }
                     } else {
                         doVerify(jsonObject.getString("url"));
                     }
@@ -198,7 +203,7 @@ public class AuthenticateActivity extends MyBaseActivity {
         }
 
 
-        new Xutil().post("805192", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805192, object.toString(), new Xutil.XUtils3CallBackPost() {
 
             @Override
             public void onSuccess(String result) {
@@ -212,9 +217,13 @@ public class AuthenticateActivity extends MyBaseActivity {
                         editor.commit();
 
                         Toast.makeText(AuthenticateActivity.this, "认证成功", Toast.LENGTH_SHORT).show();
-                        finish();
+                        if (canBack == true){
+                            finish();
+                        }else {
+                            getStore();
+                        }
                     } else {
-                        Toast.makeText(AuthenticateActivity.this, "认证失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AuthenticateActivity.this, "认证失败,请重试", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -236,6 +245,45 @@ public class AuthenticateActivity extends MyBaseActivity {
 
         });
 
+    }
+
+    private void getStore() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("userId", userInfoSp.getString("userId", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_808219, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.length() != 0) {
+                        startActivity(new Intent(AuthenticateActivity.this,Main2Activity.class));
+                    } else {
+                        startActivity(new Intent(AuthenticateActivity.this,StoreContract2Activity.class));
+                    }
+                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(AuthenticateActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(AuthenticateActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -283,6 +331,34 @@ public class AuthenticateActivity extends MyBaseActivity {
         action.setData(Uri.parse("alipays://"));
         List<ResolveInfo> list = manager.queryIntentActivities(action, PackageManager.GET_RESOLVED_FILTER);
         return list != null && list.size() > 0;
+    }
+
+    /**
+     * 菜单、返回键响应
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(canBack == true){
+                finish();
+            }else {
+                tip();
+            }
+        }
+        return false;
+    }
+
+    private void tip() {
+        new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage("您确定要退出正汇商家吗?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                        System.exit(0);
+                    }
+                }).setNegativeButton("取消", null).show();
     }
 
 }

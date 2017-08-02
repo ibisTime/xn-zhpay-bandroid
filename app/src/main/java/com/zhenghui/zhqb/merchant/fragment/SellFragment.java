@@ -20,6 +20,7 @@ import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.activity.ProductActivity;
 import com.zhenghui.zhqb.merchant.adapter.SaleAdapter;
 import com.zhenghui.zhqb.merchant.model.ProductModel;
+import com.zhenghui.zhqb.merchant.util.Constant;
 import com.zhenghui.zhqb.merchant.util.RefreshLayout;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
@@ -43,7 +44,7 @@ public class SellFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private View view;
 
     private int page = 1;
-    private int pageSize = 10;
+    private int pageSize = 100;
 
     private List<ProductModel> list;
     private SaleAdapter adapter;
@@ -99,8 +100,8 @@ public class SellFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        layoutRefresh.setOnRefreshListener(this);
         layoutRefresh.setOnLoadListener(this);
+        layoutRefresh.setOnRefreshListener(this);
 
     }
 
@@ -135,7 +136,7 @@ public class SellFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
 
-        new Xutil().post("808025", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(Constant.CODE_808025, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -180,6 +181,7 @@ public class SellFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void run() {
                 layoutRefresh.setRefreshing(false);
+                page = 1;
                 getProduct();
                 // 更新数据
                 // 更新完后调用该方法结束刷新
@@ -194,6 +196,7 @@ public class SellFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void run() {
                 layoutRefresh.setLoading(false);
+                page = page + 1;
                 getProduct();
             }
         }, 1500);

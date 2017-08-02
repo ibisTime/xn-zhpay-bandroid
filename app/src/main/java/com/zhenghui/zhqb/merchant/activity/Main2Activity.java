@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,8 +41,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802503;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802901;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_804040;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805056;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_807717;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808275;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808276;
 
 public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -357,7 +364,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
             e.printStackTrace();
         }
 
-        new Xutil().post("802503", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802503, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 JSONObject jsonObject = null;
@@ -461,7 +468,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
             e.printStackTrace();
         }
 
-        new Xutil().post("804040", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_804040, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -516,7 +523,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
             e.printStackTrace();
         }
 
-        new Xutil().post("802901", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802901, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -556,7 +563,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
             e.printStackTrace();
         }
 
-        new Xutil().post("808276", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808276, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -664,7 +671,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         }
 
 
-        new Xutil().post("805056", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805056, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -704,7 +711,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     private void getVersion() {
         JSONObject object = new JSONObject();
         try {
-            object.put("key", "bVersionCode");
+            object.put("ckey", "bVersionCode");
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("companyCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
@@ -712,7 +719,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         }
 
 
-        new Xutil().post("615917", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_807717, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -770,5 +777,29 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                 getProduct();
             }
         }, 1500);
+    }
+
+    /**
+     * 菜单、返回键响应
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            tip();
+        }
+        return false;
+    }
+
+    private void tip() {
+        new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage("您确定要退出正汇商家吗?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                        System.exit(0);
+                    }
+                }).setNegativeButton("取消", null).show();
     }
 }

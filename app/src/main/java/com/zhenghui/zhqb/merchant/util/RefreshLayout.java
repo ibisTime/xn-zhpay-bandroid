@@ -218,9 +218,9 @@ public class RefreshLayout extends SwipeRefreshLayout implements
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// 滚动时到了最底部也可以加载更多
-		/*if (canLoad()) {
+		if (canLoad()) {
 			loadData();
-		}*/
+		}
 	} 
 	
 	/**

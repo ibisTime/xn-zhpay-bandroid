@@ -20,6 +20,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_807717;
+
 public class AboutActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)
@@ -67,7 +69,7 @@ public class AboutActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("807717", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_807717, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -93,10 +95,6 @@ public class AboutActivity extends MyBaseActivity {
                 Toast.makeText(AboutActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
             }
         });
-
-    }
-
-    private void setView() {
 
     }
 }

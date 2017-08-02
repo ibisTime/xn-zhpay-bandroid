@@ -34,6 +34,8 @@ import butterknife.OnClick;
 
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802502;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808275;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808417;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808418;
 
 public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener,AdapterView.OnItemClickListener {
 
@@ -195,7 +197,7 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
             e.printStackTrace();
         }
 
-        new Xutil().post("808418", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808418, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -231,7 +233,7 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
             e.printStackTrace();
         }
 
-        new Xutil().post("808417", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808417, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {

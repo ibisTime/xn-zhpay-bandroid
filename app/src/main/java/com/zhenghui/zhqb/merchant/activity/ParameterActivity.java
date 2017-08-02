@@ -23,10 +23,6 @@ import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.adapter.ParameterAdapter;
 import com.zhenghui.zhqb.merchant.model.ParameterModel;
 import com.zhenghui.zhqb.merchant.util.NumberUtil;
-import com.zhenghui.zhqb.merchant.util.Xutil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -324,109 +320,109 @@ public class ParameterActivity extends MyBaseActivity {
 
     };
 
-    private void deleteParameter() {
+//    private void deleteParameter() {
+//
+//        JSONObject object = new JSONObject();
+//        try {
+//            object.put("code", model.getCode());
+//            object.put("token", userInfoSp.getString("token", null));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        new Xutil().post(CODE_808031, object.toString(), new Xutil.XUtils3CallBackPost() {
+//            @Override
+//            public void onSuccess(String result) {
+//                finish();
+//                Toast.makeText(ParameterActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onTip(String tip) {
+//                Toast.makeText(ParameterActivity.this, tip, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onError(String error, boolean isOnCallback) {
+//                Toast.makeText(ParameterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//    }
 
-        JSONObject object = new JSONObject();
-        try {
-            object.put("code", model.getCode());
-            object.put("token", userInfoSp.getString("token", null));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//    private void modifyParameter() {
+//
+//        JSONObject object = new JSONObject();
+//        try {
+//            object.put("code", model.getCode());
+//            object.put("token", userInfoSp.getString("token", null));
+//            object.put("name", edtDescribe.getText().toString().trim());
+//            object.put("price1", rmb * 1000);
+//            object.put("price2", gwb * 1000);
+//            object.put("price3", qbb * 1000);
+//            object.put("quantity", Integer.parseInt(edtNumber.getText().toString().trim()));
+//            object.put("province", txtProvince.getText().toString().trim());
+//            object.put("weight", Double.parseDouble(edtWeight.getText().toString().trim()));
+//            object.put("orderNo", model.getOrderNo());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        new Xutil().post(CODE_808032, object.toString(), new Xutil.XUtils3CallBackPost() {
+//            @Override
+//            public void onSuccess(String result) {
+//                finish();
+//            }
+//
+//            @Override
+//            public void onTip(String tip) {
+//                Toast.makeText(ParameterActivity.this, tip, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onError(String error, boolean isOnCallback) {
+//                Toast.makeText(ParameterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//    }
 
-        new Xutil().post("808031", object.toString(), new Xutil.XUtils3CallBackPost() {
-            @Override
-            public void onSuccess(String result) {
-                finish();
-                Toast.makeText(ParameterActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onTip(String tip) {
-                Toast.makeText(ParameterActivity.this, tip, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(String error, boolean isOnCallback) {
-                Toast.makeText(ParameterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void modifyParameter() {
-
-        JSONObject object = new JSONObject();
-        try {
-            object.put("code", model.getCode());
-            object.put("token", userInfoSp.getString("token", null));
-            object.put("name", edtDescribe.getText().toString().trim());
-            object.put("price1", rmb * 1000);
-            object.put("price2", gwb * 1000);
-            object.put("price3", qbb * 1000);
-            object.put("quantity", Integer.parseInt(edtNumber.getText().toString().trim()));
-            object.put("province", txtProvince.getText().toString().trim());
-            object.put("weight", Double.parseDouble(edtWeight.getText().toString().trim()));
-            object.put("orderNo", model.getOrderNo());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        new Xutil().post("808032", object.toString(), new Xutil.XUtils3CallBackPost() {
-            @Override
-            public void onSuccess(String result) {
-                finish();
-            }
-
-            @Override
-            public void onTip(String tip) {
-                Toast.makeText(ParameterActivity.this, tip, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(String error, boolean isOnCallback) {
-                Toast.makeText(ParameterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void addParameter() {
-
-        JSONObject object = new JSONObject();
-        try {
-            object.put("productCode", productCode);
-            object.put("token", userInfoSp.getString("token", null));
-            object.put("name", edtDescribe.getText().toString().trim());
-            object.put("price1", rmb * 1000);
-            object.put("price2", gwb * 1000);
-            object.put("price3", qbb * 1000);
-            object.put("quantity", Integer.parseInt(edtNumber.getText().toString().trim()));
-            object.put("province", txtProvince.getText().toString().trim());
-            object.put("weight", Double.parseDouble(edtWeight.getText().toString().trim()));
-            object.put("orderNo", orderNo);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        new Xutil().post("808030", object.toString(), new Xutil.XUtils3CallBackPost() {
-            @Override
-            public void onSuccess(String result) {
-                finish();
-            }
-
-            @Override
-            public void onTip(String tip) {
-                Toast.makeText(ParameterActivity.this, tip, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(String error, boolean isOnCallback) {
-                Toast.makeText(ParameterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
+//    private void addParameter() {
+//
+//        JSONObject object = new JSONObject();
+//        try {
+//            object.put("productCode", productCode);
+//            object.put("token", userInfoSp.getString("token", null));
+//            object.put("name", edtDescribe.getText().toString().trim());
+//            object.put("price1", rmb * 1000);
+//            object.put("price2", gwb * 1000);
+//            object.put("price3", qbb * 1000);
+//            object.put("quantity", Integer.parseInt(edtNumber.getText().toString().trim()));
+//            object.put("province", txtProvince.getText().toString().trim());
+//            object.put("weight", Double.parseDouble(edtWeight.getText().toString().trim()));
+//            object.put("orderNo", orderNo);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        new Xutil().post(CODE_808030, object.toString(), new Xutil.XUtils3CallBackPost() {
+//            @Override
+//            public void onSuccess(String result) {
+//                finish();
+//            }
+//
+//            @Override
+//            public void onTip(String tip) {
+//                Toast.makeText(ParameterActivity.this, tip, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onError(String error, boolean isOnCallback) {
+//                Toast.makeText(ParameterActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//    }
 
     private void tip() {
         new AlertDialog.Builder(this).setTitle("提示")

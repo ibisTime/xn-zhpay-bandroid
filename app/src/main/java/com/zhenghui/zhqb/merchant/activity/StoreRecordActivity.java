@@ -25,6 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808248;
+
 public class StoreRecordActivity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener {
 
     @BindView(R.id.layout_back)
@@ -93,7 +95,7 @@ public class StoreRecordActivity extends MyBaseActivity implements SwipeRefreshL
             e.printStackTrace();
         }
 
-        new Xutil().post("808248", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808248, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

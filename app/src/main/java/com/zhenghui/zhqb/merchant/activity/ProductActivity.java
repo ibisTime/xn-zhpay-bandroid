@@ -3,6 +3,7 @@ package com.zhenghui.zhqb.merchant.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +36,7 @@ import com.zhenghui.zhqb.merchant.adapter.RecyclerViewAdapter;
 import com.zhenghui.zhqb.merchant.model.ParameterModel;
 import com.zhenghui.zhqb.merchant.model.ProductModel;
 import com.zhenghui.zhqb.merchant.model.ProductTypeModel;
+import com.zhenghui.zhqb.merchant.model.UserModel;
 import com.zhenghui.zhqb.merchant.util.ImageUtil;
 import com.zhenghui.zhqb.merchant.util.QiNiuUtil;
 import com.zhenghui.zhqb.merchant.util.Xutil;
@@ -50,6 +52,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805056;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808007;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808010;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808012;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808013;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808014;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808026;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808037;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.RESULT_CAMARA_IMAGE;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.album;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.camara;
@@ -141,6 +151,7 @@ public class ProductActivity extends MyBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getData();
     }
 
     @Override
@@ -243,12 +254,18 @@ public class ProductActivity extends MyBaseActivity {
             @Override
             public void onClick(View view) {
                 if (checkData()) {
-
-                    if (isModifi) {
-                        modifi();
-                    } else {
-                        commit();
+                    if ("1".equals(userInfoSp.getString("identityFlag",null))) {
+                        if (isModifi) {
+                            modifi();
+                        } else {
+                            commit();
+                        }
+                    }else {
+                        startActivity(new Intent(ProductActivity.this, AuthenticateActivity.class)
+                                .putExtra("canBack",true));
                     }
+
+
                 }
             }
         });
@@ -309,7 +326,13 @@ public class ProductActivity extends MyBaseActivity {
                         break;
 
                     case "上架":
-                        putAway();
+                        if ("1".equals(userInfoSp.getString("identityFlag",null))) {
+                            putAway();
+                        }else {
+                            startActivity(new Intent(ProductActivity.this, AuthenticateActivity.class)
+                                    .putExtra("canBack",true));
+                        }
+
                         break;
                 }
                 break;
@@ -498,7 +521,7 @@ public class ProductActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808007", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808007, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -553,7 +576,8 @@ public class ProductActivity extends MyBaseActivity {
 //                bigType[0] = big.getName();
                 for (ProductTypeModel small : smallTypeList) {
                     if (small.getParentCode().equals(big.getCode())) {
-                        smallList1.add(small);
+                        if (!small.getCode().equals("FL201700000000000101"))
+                            smallList1.add(small);
                     }
                 }
             }
@@ -688,7 +712,7 @@ public class ProductActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808012", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808012, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(ProductActivity.this, "修改商品成功", Toast.LENGTH_LONG).show();
@@ -751,7 +775,7 @@ public class ProductActivity extends MyBaseActivity {
         }
 
 
-        new Xutil().post("808010", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808010, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(ProductActivity.this, "添加商品成功", Toast.LENGTH_SHORT).show();
@@ -783,7 +807,7 @@ public class ProductActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808026", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808026, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -826,7 +850,7 @@ public class ProductActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808037", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808037, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -993,7 +1017,7 @@ public class ProductActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808013", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808013, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(ProductActivity.this, "上架成功", Toast.LENGTH_SHORT).show();
@@ -1026,7 +1050,7 @@ public class ProductActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808014", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808014, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(ProductActivity.this, "下架成功", Toast.LENGTH_SHORT).show();
@@ -1044,6 +1068,52 @@ public class ProductActivity extends MyBaseActivity {
             }
         });
 
+    }
+
+    /**
+     * 获取用户详情
+     */
+    private void getData() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("userId", userInfoSp.getString("userId", null));
+            object.put("token", userInfoSp.getString("token", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        new Xutil().post(CODE_805056, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    Gson gson = new Gson();
+                    UserModel model = gson.fromJson(jsonObject.toString(), new TypeToken<UserModel>() {
+                    }.getType());
+
+                    SharedPreferences.Editor editor = userInfoSp.edit();
+                    editor.putString("identityFlag", model.getIdentityFlag());
+
+                    editor.commit();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(ProductActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(ProductActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

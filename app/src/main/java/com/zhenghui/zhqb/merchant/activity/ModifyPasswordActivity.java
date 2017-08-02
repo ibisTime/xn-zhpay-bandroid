@@ -29,6 +29,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805048;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805904;
+
 public class ModifyPasswordActivity extends MyBaseActivity {
 
 
@@ -166,7 +169,7 @@ public class ModifyPasswordActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("805048", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805048, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 Toast.makeText(ModifyPasswordActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
@@ -195,14 +198,14 @@ public class ModifyPasswordActivity extends MyBaseActivity {
         JSONObject object = new JSONObject();
         try {
             object.put("mobile", edtPhone.getText().toString().trim());
-            object.put("bizType", "805048");
+            object.put("bizType", CODE_805048);
             object.put("kind", "f2");
             object.put("systemCode", preferences.getString("systemCode", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        new Xutil().post("805904", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805904, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 isCodeSended = true;

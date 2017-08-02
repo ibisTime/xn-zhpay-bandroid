@@ -18,9 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.model.UserModel;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
 import org.json.JSONException;
@@ -30,6 +33,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805043;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805056;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 
 public class LoginActivity extends MyBaseActivity {
@@ -160,7 +165,7 @@ public class LoginActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("805043",object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805043,object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -188,7 +193,7 @@ public class LoginActivity extends MyBaseActivity {
                 }
 
 //                finish();
-                getStroe();
+                getData();
             }
 
             @Override
@@ -227,6 +232,53 @@ public class LoginActivity extends MyBaseActivity {
                     e.printStackTrace();
                 }
 
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(LoginActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(LoginActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 获取用户详情
+     */
+    private void getData() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("userId", userInfoSp.getString("userId", null));
+            object.put("token", userInfoSp.getString("token", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        new Xutil().post(CODE_805056, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    Gson gson = new Gson();
+                    UserModel model = gson.fromJson(jsonObject.toString(), new TypeToken<UserModel>() {
+                    }.getType());
+
+                    if (model.getIdentityFlag().equals("1")) {
+                        getStroe();
+                    }else {
+                        startActivity(new Intent(LoginActivity.this, AuthenticateActivity.class));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
 

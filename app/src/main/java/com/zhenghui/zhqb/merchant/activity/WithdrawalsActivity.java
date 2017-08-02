@@ -34,6 +34,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802015;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802027;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802750;
+
 public class WithdrawalsActivity extends MyBaseActivity {
 
 
@@ -194,7 +198,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802015", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802015, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -248,7 +252,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802027", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802027, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -288,7 +292,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802027", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802027, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -328,7 +332,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802027", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802027, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -375,7 +379,7 @@ public class WithdrawalsActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802750", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802750, object.toString(), new Xutil.XUtils3CallBackPost() {
 
             @Override
             public void onSuccess(String result) {

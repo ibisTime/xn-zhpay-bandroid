@@ -28,6 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808065;
+
 public class GoodOrderActivity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener {
 
     @BindView(R.id.layout_back)
@@ -174,7 +176,7 @@ public class GoodOrderActivity extends MyBaseActivity implements SwipeRefreshLay
             e.printStackTrace();
         }
 
-        new Xutil().post("808065", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808065, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

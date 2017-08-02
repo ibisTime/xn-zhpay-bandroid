@@ -32,6 +32,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808025;
+
 public class SoldOutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.grid_product)
@@ -43,7 +45,7 @@ public class SoldOutFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private View view;
 
     private int page = 1;
-    private int pageSize = 10;
+    private int pageSize = 100;
 
     private List<ProductModel> list;
     private SoldOutAdapter adapter;
@@ -137,7 +139,7 @@ public class SoldOutFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
 
 
-        new Xutil().post("808025", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808025, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

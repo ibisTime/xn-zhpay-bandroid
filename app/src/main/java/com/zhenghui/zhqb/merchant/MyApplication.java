@@ -24,7 +24,7 @@ public class MyApplication extends Application {
 
     private SharedPreferences preferences;
 
-    private List<Activity> activityList = new LinkedList<Activity>();
+    private List<Activity> activityList = new LinkedList<>();
 
     @Override
     public void onCreate() {

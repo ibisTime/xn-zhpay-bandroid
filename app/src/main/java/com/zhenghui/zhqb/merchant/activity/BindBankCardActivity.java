@@ -35,6 +35,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802010;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802013;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802017;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802116;
+
 public class BindBankCardActivity extends MyBaseActivity {
 
 
@@ -151,7 +156,7 @@ public class BindBankCardActivity extends MyBaseActivity {
         }
 
 
-        new Xutil().post("802116", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802116, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -202,7 +207,7 @@ public class BindBankCardActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802017", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802017, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -247,7 +252,7 @@ public class BindBankCardActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802010", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802010, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 finish();
@@ -283,7 +288,7 @@ public class BindBankCardActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("802013", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802013, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 finish();

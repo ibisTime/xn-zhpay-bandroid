@@ -35,6 +35,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802011;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802015;
+
 public class BankCardActivity extends MyBaseActivity implements AdapterView.OnItemClickListener {
 
 
@@ -142,7 +145,7 @@ public class BankCardActivity extends MyBaseActivity implements AdapterView.OnIt
             e.printStackTrace();
         }
 
-        new Xutil().post("802015", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802015, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -283,7 +286,7 @@ public class BankCardActivity extends MyBaseActivity implements AdapterView.OnIt
             e.printStackTrace();
         }
 
-        new Xutil().post("802011", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_802011, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 getList();

@@ -24,6 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802522;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802532;
+
 public class BillDetailActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)
@@ -82,9 +85,9 @@ public class BillDetailActivity extends MyBaseActivity {
 
         String code = "";
         if (isHistory) {
-            code = "802532";
+            code = CODE_802532;
         } else {
-            code = "802522";
+            code = CODE_802522;
         }
 
         new Xutil().post(code, object.toString(), new Xutil.XUtils3CallBackPost() {

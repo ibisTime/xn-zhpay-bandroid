@@ -25,6 +25,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808056;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808066;
+
 public class ShipmentsCancleActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)
@@ -83,7 +86,7 @@ public class ShipmentsCancleActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808066", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808066, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -131,7 +134,7 @@ public class ShipmentsCancleActivity extends MyBaseActivity {
         }
 
 
-        new Xutil().post("808056", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808056, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

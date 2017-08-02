@@ -21,6 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_807717;
+
 public class RichTextActivity extends MyBaseActivity {
 
     @BindView(R.id.layout_back)
@@ -97,7 +99,7 @@ public class RichTextActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("807717", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_807717, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

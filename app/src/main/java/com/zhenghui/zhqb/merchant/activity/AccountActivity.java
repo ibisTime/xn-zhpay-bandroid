@@ -30,6 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805056;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_807717;
+
 public class AccountActivity extends MyBaseActivity {
 
 
@@ -184,7 +187,7 @@ public class AccountActivity extends MyBaseActivity {
         }
 
 
-        new Xutil().post("805056", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805056, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -244,7 +247,7 @@ public class AccountActivity extends MyBaseActivity {
     private void getVersion() {
         JSONObject object = new JSONObject();
         try {
-            object.put("key", "bVersionCode");
+            object.put("ckey", "bVersionCode");
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("companyCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
@@ -252,7 +255,7 @@ public class AccountActivity extends MyBaseActivity {
         }
 
 
-        new Xutil().post("615917", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_807717, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {

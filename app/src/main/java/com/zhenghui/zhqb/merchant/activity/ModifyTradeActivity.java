@@ -29,6 +29,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805045;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805057;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805904;
+
 public class ModifyTradeActivity extends MyBaseActivity {
 
 
@@ -148,9 +152,9 @@ public class ModifyTradeActivity extends MyBaseActivity {
         try {
             object.put("mobile", txtPhone.getText().toString().trim());
             if (isModify) {
-                object.put("bizType", "805057");
+                object.put("bizType", CODE_805057);
             } else {
-                object.put("bizType", "805045");
+                object.put("bizType", CODE_805045);
             }
             object.put("kind", "f2");
             object.put("systemCode", preferences.getString("systemCode", null));
@@ -158,7 +162,7 @@ public class ModifyTradeActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("805904", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_805904, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 isCodeSended = true;
@@ -198,9 +202,9 @@ public class ModifyTradeActivity extends MyBaseActivity {
 
         String code = "";
         if (isModify) {
-            code = "805057";
+            code = CODE_805057;
         } else {
-            code = "805045";
+            code = CODE_805045;
         }
 
         new Xutil().post(code, object.toString(), new Xutil.XUtils3CallBackPost() {

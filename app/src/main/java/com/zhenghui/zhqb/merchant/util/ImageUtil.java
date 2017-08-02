@@ -25,10 +25,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * Created by dell1 on 2016/12/17.
- */
-
 public class ImageUtil {
 
     public static String IMAGE = "http://omxvtiss6.bkt.clouddn.com/";

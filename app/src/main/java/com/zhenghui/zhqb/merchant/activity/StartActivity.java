@@ -10,8 +10,11 @@ import android.os.Message;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhenghui.zhqb.merchant.MyApplication;
 import com.zhenghui.zhqb.merchant.R;
+import com.zhenghui.zhqb.merchant.model.UserModel;
 import com.zhenghui.zhqb.merchant.util.Xutil;
 
 import org.json.JSONException;
@@ -24,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805056;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 
 public class StartActivity extends Activity {
@@ -94,7 +98,7 @@ public class StartActivity extends Activity {
 
     private void startApp() {
         if(userInfoSp.getString("userId",null) != null){
-            getStroe();
+            getData();
         }else {
             startActivity(new Intent(StartActivity.this,LoginActivity.class));
             overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
@@ -133,6 +137,58 @@ public class StartActivity extends Activity {
                     e.printStackTrace();
                 }
 
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(StartActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(StartActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 获取用户详情
+     */
+    private void getData() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("userId", userInfoSp.getString("userId", null));
+            object.put("token", userInfoSp.getString("token", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        new Xutil().post(CODE_805056, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    Gson gson = new Gson();
+                    UserModel model = gson.fromJson(jsonObject.toString(), new TypeToken<UserModel>() {
+                    }.getType());
+
+                    if (model.getIdentityFlag().equals("1")) {
+                        getStroe();
+                    }else {
+                        startActivity(new Intent(StartActivity.this, AuthenticateActivity.class));
+
+                        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+
+                        stopTime();
+                        finish();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
 

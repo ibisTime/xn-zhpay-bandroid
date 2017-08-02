@@ -50,6 +50,10 @@ import butterknife.OnClick;
 
 import static com.zhenghui.zhqb.merchant.R.id.edt_referrer;
 import static com.zhenghui.zhqb.merchant.R.id.layout_type;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808007;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808201;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808203;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808218;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.RESULT_CAMARA_IMAGE;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.album;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.camara;
@@ -229,7 +233,7 @@ public class StoreActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808007", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808007, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 
@@ -588,10 +592,10 @@ public class StoreActivity extends MyBaseActivity {
 
         String httCode = "";
         if (isModifi) {
-            httCode = "808203";
+            httCode = CODE_808203;
 
         } else {
-            httCode = "808201";
+            httCode = CODE_808201;
         }
 
         new Xutil().post(httCode, object.toString(), new Xutil.XUtils3CallBackPost() {
@@ -645,7 +649,7 @@ public class StoreActivity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post("808218", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808218, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
 

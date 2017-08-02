@@ -9,10 +9,6 @@ import android.view.WindowManager;
 
 import java.lang.reflect.Method;
 
-/**
- * Created by Leiq on 2016/12/26.
- */
-
 public class ScreenUtil {
 
     //获取屏幕原始尺寸高度，包括虚拟功能键高度

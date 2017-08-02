@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/zhpay_b.iml" filepath="$PROJECT_DIR$/zhpay_b.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xn-zhpay-bandroid.iml" filepath="$PROJECT_DIR$/xn-zhpay-bandroid.iml" />
     </modules>
   </component>
 </project>

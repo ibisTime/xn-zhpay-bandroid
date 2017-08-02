@@ -24,7 +24,6 @@ import com.zhenghui.zhqb.merchant.util.Xutil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,8 +145,6 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
     }
 
     private void getData() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
         JSONObject object = new JSONObject();
         try {
             object.put("token", userInfoSp.getString("token", null));

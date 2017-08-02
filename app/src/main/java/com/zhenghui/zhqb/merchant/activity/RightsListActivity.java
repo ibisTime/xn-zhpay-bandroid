@@ -32,6 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808425;
+
 public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.layout_back)
@@ -151,7 +153,7 @@ public class RightsListActivity extends MyBaseActivity implements SwipeRefreshLa
             e.printStackTrace();
         }
 
-        new Xutil().post("808425", object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808425, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
