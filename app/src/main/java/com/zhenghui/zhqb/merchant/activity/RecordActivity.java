@@ -1,9 +1,11 @@
 package com.zhenghui.zhqb.merchant.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +48,8 @@ public class RecordActivity extends MyBaseActivity {
     TextView txtGet;
     @BindView(R.id.txt_time)
     TextView txtTime;
+    @BindView(R.id.txt_bill)
+    TextView txtBill;
 
     private String code;
     private String time;
@@ -89,7 +93,7 @@ public class RecordActivity extends MyBaseActivity {
     protected void onPause() {
         super.onPause();
         stopTime();
-        if(null != mTts){
+        if (null != mTts) {
             mTts.stopSpeaking();
         }
     }
@@ -113,10 +117,6 @@ public class RecordActivity extends MyBaseActivity {
         code = userInfoSp.getString("recordCode", "");
     }
 
-    @OnClick(R.id.layout_back)
-    public void onClick() {
-        finish();
-    }
 
     private void getRecord() {
         JSONObject object = new JSONObject();
@@ -133,7 +133,7 @@ public class RecordActivity extends MyBaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
-                    if(!jsonObject.toString().equals("{}")){
+                    if (!jsonObject.toString().equals("{}")) {
                         Gson gson = new Gson();
                         RecordModel model = gson.fromJson(jsonObject.toString(), new TypeToken<RecordModel>() {
                         }.getType());
@@ -172,14 +172,14 @@ public class RecordActivity extends MyBaseActivity {
 //            editor.commit();
 
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = new Date(time);
-            txtTime.setText(format.format(date));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(time);
+        txtTime.setText(format.format(date));
 
-            txtName.setText("“" + nickName + "”");
-            txtGet.setText(NumberUtil.doubleFormatMoney(amount) + "人民币");
+        txtName.setText("“" + nickName + "”");
+        txtGet.setText(NumberUtil.doubleFormatMoney(amount) + "人民币");
 
-            speak();
+        speak();
 //        } else {
 //            startTime();
 //        }
@@ -276,5 +276,18 @@ public class RecordActivity extends MyBaseActivity {
         }
 
         return sb.toString();
+    }
+
+    @OnClick({R.id.layout_back, R.id.txt_bill})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.layout_back:
+                finish();
+                break;
+
+            case R.id.txt_bill:
+                startActivity(new Intent(RecordActivity.this, StoreRecordActivity.class));
+                break;
+        }
     }
 }

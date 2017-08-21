@@ -39,11 +39,6 @@
 
     </RelativeLayout>
 
-    <View
-        android:background="@color/indicator_color"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
     <com.zhenghui.zhqb.merchant.util.RefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layout_refresh"

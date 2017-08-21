@@ -21,6 +21,7 @@ public class StoreModel {
     private String bookMobile;
     private String smsMobile;
     private String pdf;
+    private String license;
     private String legalPersonName;
     private String userReferee;
     private double rate1;
@@ -39,6 +40,14 @@ public class StoreModel {
     private String systemCode;
     private String refereeMobile;
     private List<?> storeTickets;
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
 
     public String getRemark() {
         return remark;

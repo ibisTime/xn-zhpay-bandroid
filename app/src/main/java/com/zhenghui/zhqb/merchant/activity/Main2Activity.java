@@ -20,7 +20,6 @@ import com.zhenghui.zhqb.merchant.model.AssetsModel;
 import com.zhenghui.zhqb.merchant.model.MessageModel;
 import com.zhenghui.zhqb.merchant.model.MyStoreModel;
 import com.zhenghui.zhqb.merchant.model.UserModel;
-import com.zhenghui.zhqb.merchant.services.UpdateService;
 import com.zhenghui.zhqb.merchant.util.NumberUtil;
 import com.zhenghui.zhqb.merchant.util.RefreshLayout;
 import com.zhenghui.zhqb.merchant.util.Xutil;
@@ -45,10 +44,11 @@ import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802503;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802901;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_804040;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_805056;
-import static com.zhenghui.zhqb.merchant.util.Constant.CODE_807717;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_807718;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808275;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808276;
+import static com.zhenghui.zhqb.merchant.util.UpdateUtil.startWeb;
 
 public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -121,8 +121,6 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     LinearLayout layoutAccount;
     @BindView(R.id.layout_refresh)
     RefreshLayout layoutRefresh;
-    @BindView(R.id.txt_store_record)
-    TextView txtStoreRecord;
     @BindView(R.id.txt_record)
     TextView txtRecord;
 
@@ -186,7 +184,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
     @OnClick({R.id.layout_store, R.id.layout_good, R.id.layout_bill, R.id.layout_order, R.id.txt_notice,
             R.id.layout_account, R.id.txt_withdrawal, R.id.layout_fhq, R.id.txt_introduce,
-            R.id.txt_account_logout, R.id.txt_store_record, R.id.txt_account_card, R.id.txt_record})
+            R.id.txt_account_logout, R.id.txt_account_card, R.id.txt_record})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_fhq:
@@ -243,10 +241,6 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
             case R.id.txt_account_logout:
                 logOut();
-                break;
-
-            case R.id.txt_store_record:
-                startActivity(new Intent(Main2Activity.this, StoreRecordActivity.class));
                 break;
 
             case R.id.txt_account_card:
@@ -323,8 +317,6 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     private void setView() {
         txtName.setText(list.get(0).getName());
         if (list.get(0).getLevel().equals("2")) {
-//            txtType.setText("类型：公益型");
-//            txtStoreType.setText("公益型商家");
 
             txtType.setText("类型：普通型");
             txtStoreType.setText("普通型商家");
@@ -711,24 +703,26 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     private void getVersion() {
         JSONObject object = new JSONObject();
         try {
-            object.put("ckey", "bVersionCode");
+            object.put("type", "android_b");
             object.put("systemCode", appConfigSp.getString("systemCode", null));
             object.put("companyCode", appConfigSp.getString("systemCode", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-
-        new Xutil().post(CODE_807717, object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_807718, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
-                    int versionCode = Integer.parseInt(jsonObject.getString("cvalue"));
+                    String note = jsonObject.getString("note");
+                    String url = jsonObject.getString("downloadUrl");
+                    String force = jsonObject.getString("forceUpdate");
+                    int versionCode = Integer.parseInt(jsonObject.getString("version"));
 
                     if (versionCode > getVersionCode()) {
-                        update();
+                        update(note, url, force);
                     }
 
                 } catch (JSONException e) {
@@ -748,19 +742,29 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         });
     }
 
-    private void update() {
-        new AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("发现新版本请及时更新")
+    private void update(String msg, final String url, String force) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage(msg)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        startService(new Intent(Main2Activity.this, UpdateService.class)
-                                .putExtra("appname", "zhsj-release")
-                                .putExtra("appurl", "http://m.zhenghuijituan.com/app/zhsj-release.apk"));
+                        startWeb(Main2Activity.this,url);
+
+                        finish();
+                        System.exit(0);
 
                     }
-                }).setNegativeButton("取消", null).show();
+                })
+                .setCancelable(false);
+
+
+        if(force.equals("1")){ // 强制更新
+            builder.show();
+        }else {
+            builder.setNegativeButton("取消", null).show();
+        }
     }
 
     @Override

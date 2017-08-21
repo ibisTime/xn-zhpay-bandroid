@@ -14,11 +14,13 @@
             android:id="@+id/img_add"
             android:background="@mipmap/product_add"
             android:layout_marginTop="50dp"
+            android:layout_marginBottom="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btn_send"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:text="发布"
             android:textSize="18sp"

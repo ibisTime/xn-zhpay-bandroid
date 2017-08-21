@@ -32,10 +32,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zhenghui.zhqb.merchant.R.id.txt_get;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802502;
-import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808275;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808417;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808418;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808419;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808917;
 
 public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout.OnRefreshListener, RefreshLayout.OnLoadListener,AdapterView.OnItemClickListener {
 
@@ -47,9 +49,12 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
     RefreshLayout swipeContainer;
 
     TextView txtFhq;
+    TextView txtGet;
     TextView txtPool;
     TextView txtEarnings;
     TextView txtTurnover;
+    LinearLayout layoutGet;
+    LinearLayout layoutPool;
 
     List<RightsModel> list;
     RightsAdapter adapter;
@@ -73,6 +78,7 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         getData();
         getTotal();
         getLimit();
+        getIsShow();
         getProperty();
     }
 
@@ -85,9 +91,13 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         headView = LayoutInflater.from(this).inflate(R.layout.head_rights,null);
 
         txtFhq = (TextView) headView.findViewById(R.id.txt_fhq);
+        txtGet = (TextView) headView.findViewById(txt_get);
         txtPool = (TextView) headView.findViewById(R.id.txt_pool);
         txtEarnings = (TextView) headView.findViewById(R.id.txt_earnings);
         txtTurnover = (TextView) headView.findViewById(R.id.txt_turnover);
+
+        layoutGet = (LinearLayout) headView.findViewById(R.id.layout_get);
+        layoutPool = (LinearLayout) headView.findViewById(R.id.layout_pool);
     }
 
     private void initsListView() {
@@ -147,6 +157,51 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         });
     }
 
+
+    private void getIsShow() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("key", "POOL_VISUAL");
+            object.put("systemCode", appConfigSp.getString("systemCode", null));
+            object.put("companyCode", appConfigSp.getString("systemCode", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_808917, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+
+                    if(jsonObject.getString("cvalue").equals("1")){ // 1显示
+                        layoutGet.setVisibility(View.GONE);
+                        layoutPool.setVisibility(View.VISIBLE);
+                    }else {
+                        layoutPool.setVisibility(View.GONE);
+                        layoutGet.setVisibility(View.VISIBLE);
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(RightsActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(RightsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void getProperty() {
         JSONObject object = new JSONObject();
         try {
@@ -155,14 +210,15 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
             e.printStackTrace();
         }
 
-        new Xutil().post(CODE_808275, object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808419, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
-                    txtEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getInt("stockCount")*150000-jsonObject.getDouble("totalStockProfit")));
                     txtFhq.setText(jsonObject.getInt("stockCount")+"");
+                    txtGet.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("backProfitAmount")));
+                    txtEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("unbackProfitAmount")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -21,7 +21,7 @@ public class Xutil {
 //    public static String URL = "http://106.15.49.68:5501/forward-service/api";
 //    public static String LOGOUT = "http://106.15.49.68:5501/forward-service/user/logOut";
 
-    // 测试环境
+//    // 测试环境
 //    public static String URL = "http://106.15.49.68:5601/forward-service/api";
 //    public static String LOGOUT = "http://106.15.49.68:5601/forward-service/user/logOut";
 

@@ -110,6 +110,10 @@ public class Constant {
      */
     public static String CODE_807717 = "807717";
     /**
+     *  获取版本信息
+     */
+    public static String CODE_807718 = "807718";
+    /**
      *  
      */
     public static String CODE_807900 = "807900";
@@ -134,6 +138,14 @@ public class Constant {
      *  下架
      */
     public static String CODE_808014 = "808014";
+    /**
+     *  下架回收
+     */
+    public static String CODE_808016 = "808016";
+    /**
+     *  回收站还原
+     */
+    public static String CODE_808017 = "808017";
     /**
      *  分页查询产品
      */
@@ -218,6 +230,10 @@ public class Constant {
      *  分页查询历史分红权返利记录
      */
     public static String CODE_808428 = "808428";
+    /**
+     *  分红权是否显示
+     */
+    public static String CODE_808917 = "808917";
 
 
 }
