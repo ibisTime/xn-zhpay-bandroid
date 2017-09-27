@@ -286,20 +286,32 @@ public class ProductActivity extends MyBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                if (i == 0){
+                    return;
+                }
+
+                if (i == listParamter.size()+1){
+                    return;
+                }
+
                 if (isModifi) {
                     if(!model.getStatus().equals("9")){
-                        startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
-                                .putExtra("index", (i - 1))
-                                .putExtra("isModify", isModifi)
-                                .putExtra("model", listParamter.get(i - 1)), PARAMETER_DETAIL);
+                        if (listParamter.size() > 0){
+                            startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                                    .putExtra("index", (i - 1))
+                                    .putExtra("isModify", isModifi)
+                                    .putExtra("model", listParamter.get(i - 1)), PARAMETER_DETAIL);
+                        }
                     }else {
                         Toast.makeText(ProductActivity.this, "垃圾箱里的商品不可添加或修改规格", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
-                            .putExtra("index", (i - 1))
-                            .putExtra("isModify", isModifi)
-                            .putExtra("model", listParamter.get(i - 1)), PARAMETER_DETAIL);
+                    if (listParamter.size() > 0){
+                        startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                                .putExtra("index", (i - 1))
+                                .putExtra("isModify", isModifi)
+                                .putExtra("model", listParamter.get(i - 1)), PARAMETER_DETAIL);
+                    }
                 }
 
             }

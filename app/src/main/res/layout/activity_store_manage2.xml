@@ -255,7 +255,7 @@
         android:paddingLeft="15dp"
         android:paddingTop="15dp"
         android:paddingBottom="18dp"
-        android:text="我的收益"
+        android:text="我的补贴"
         android:textColor="@color/pink"
         android:textSize="14sp"
         android:layout_width="match_parent"
@@ -274,7 +274,6 @@
 
         <LinearLayout
             android:id="@+id/layout_show"
-            android:visibility="gone"
             android:background="@color/white"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -352,7 +351,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:text="分红权总数"
+                    android:text="补贴名额"
                     android:textSize="12sp"
                     android:layout_marginTop="14dp"
                     android:textColor="@color/fontColor_gray"
@@ -403,7 +402,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:text="您的分红权个数"
+                    android:text="您的补贴名额"
                     android:textSize="12sp"
                     android:layout_marginTop="14dp"
                     android:textColor="@color/fontColor_gray"
@@ -446,7 +445,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:text="您的分红权金额"
+                    android:text="您的补贴额度"
                     android:textSize="12sp"
                     android:layout_marginTop="14dp"
                     android:textColor="@color/fontColor_gray"

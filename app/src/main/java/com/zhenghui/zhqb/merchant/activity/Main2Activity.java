@@ -61,18 +61,16 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     TextView txtIntroduce;
     @BindView(R.id.txt_account)
     TextView txtAccount;
-    @BindView(R.id.txt_type)
-    TextView txtType;
+    @BindView(R.id.txt_turnover)
+    TextView txtTurnover;
     @BindView(R.id.txt_price)
     TextView txtPrice;
     @BindView(R.id.txt_withdrawal)
     TextView txtWithdrawal;
-    @BindView(R.id.txt_turnover)
-    TextView txtTurnover;
-    @BindView(R.id.txt_already)
-    TextView txtAlready;
-    @BindView(R.id.txt_earnings)
-    TextView txtEarnings;
+    @BindView(R.id.txt_price_bt)
+    TextView txtPriceBt;
+    @BindView(R.id.txt_withdrawal_bt)
+    TextView txtWithdrawalBt;
     @BindView(R.id.txt_fhq)
     TextView txtFhq;
     @BindView(R.id.layout_fhq)
@@ -81,6 +79,8 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     TextView txtNotice;
     @BindView(R.id.txt_store_status)
     TextView txtStoreStatus;
+    @BindView(R.id.txt_record)
+    TextView txtRecord;
     @BindView(R.id.txt_store_type)
     TextView txtStoreType;
     @BindView(R.id.layout_store)
@@ -121,9 +121,6 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     LinearLayout layoutAccount;
     @BindView(R.id.layout_refresh)
     RefreshLayout layoutRefresh;
-    @BindView(R.id.txt_record)
-    TextView txtRecord;
-
     private boolean storeFlag = false;
 
     private ArrayList<MyStoreModel> list;
@@ -131,6 +128,12 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     private ArrayList<AssetsModel> listAssets;
     private double accountAmount;
     private String accountNumber;
+
+    private double accountAmountBtb;
+    private String accountNumberBtb;
+
+    private double accountAmountFrb;
+    private String accountNumberFrb;
 
     private SharedPreferences.Editor editor;
 
@@ -183,12 +186,14 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
     }
 
     @OnClick({R.id.layout_store, R.id.layout_good, R.id.layout_bill, R.id.layout_order, R.id.txt_notice,
-            R.id.layout_account, R.id.txt_withdrawal, R.id.layout_fhq, R.id.txt_introduce,
+            R.id.layout_account, R.id.txt_withdrawal, R.id.txt_withdrawal_bt, R.id.txt_fhq, R.id.txt_introduce,
             R.id.txt_account_logout, R.id.txt_account_card, R.id.txt_record})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.layout_fhq:
-                startActivity(new Intent(this, RightsActivity.class));
+            case R.id.txt_fhq:
+                startActivity(new Intent(this, RightsActivity.class)
+                        .putExtra("accountAmount", accountAmountFrb)
+                        .putExtra("accountNumber", accountNumberFrb));
                 break;
 
             case R.id.txt_notice:
@@ -229,10 +234,25 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                 }
                 break;
 
+            case R.id.txt_withdrawal_bt:
+                if (userInfoSp.getString("tradepwdFlag", "").equals("1")) { // tradepwdFlag 支付密码标示 1有 0 无
+
+                    startActivity(new Intent(Main2Activity.this, WithdrawalsActivity.class)
+                            .putExtra("balance", accountAmountBtb)
+                            .putExtra("accountNumber", accountNumberBtb));
+
+                } else {
+
+                    Toast.makeText(this, "请先设置支付密码", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Main2Activity.this, ModifyTradeActivity.class)
+                            .putExtra("phone", userInfoSp.getString("mobile", ""))
+                            .putExtra("isModify", false));
+
+                }
+                break;
+
             case R.id.layout_bill:
-                startActivity(new Intent(Main2Activity.this, BillActivity.class)
-                        .putExtra("accountAmount", accountAmount)
-                        .putExtra("code", accountNumber));
+                startActivity(new Intent(Main2Activity.this, WalletActivity.class));
                 break;
 
             case R.id.txt_introduce:
@@ -318,10 +338,10 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         txtName.setText(list.get(0).getName());
         if (list.get(0).getLevel().equals("2")) {
 
-            txtType.setText("类型：普通型");
+//            txtType.setText("类型：普通型");
             txtStoreType.setText("普通型商家");
         } else {
-            txtType.setText("类型：普通型");
+//            txtType.setText("类型：普通型");
             txtStoreType.setText("普通型商家");
         }
 
@@ -394,13 +414,20 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
     private void setAssets() {
         for (AssetsModel model : listAssets) {
-            if (model.getCurrency().equals("FRB")) {
+            if (model.getCurrency().equals("HKB")) {
                 accountNumber = model.getAccountNumber();
                 accountAmount = model.getAmount();
 
-                txtPrice.setText(NumberUtil.doubleFormatMoney(accountAmount) + "");
-                txtAlready.setText("已提现  " + NumberUtil.doubleFormatMoney(model.getOutAmount()) + "");
+                txtPrice.setText(NumberUtil.doubleFormatMoney(model.getAmount()) + "");
 
+            }else if(model.getCurrency().equals("BTB")){
+                accountNumberBtb = model.getAccountNumber();
+                accountAmountBtb = model.getAmount();
+
+                txtPriceBt.setText(NumberUtil.doubleFormatMoney(model.getAmount()) + "");
+            }else if(model.getCurrency().equals("FRB")){
+                accountNumberFrb = model.getAccountNumber();
+                accountAmountFrb = model.getAmount();
             }
         }
     }
@@ -420,8 +447,8 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                     JSONObject jsonObject = new JSONObject(result);
 
                     txtTurnover.setText("累计营业额  " + NumberUtil.doubleFormatMoney(Double.parseDouble(jsonObject.getString("totalProfit"))));
-                    txtEarnings.setText("累计分红收益  " + NumberUtil.doubleFormatMoney(Double.parseDouble(jsonObject.getString("totalStockProfit"))));
-                    txtFhq.setText("分红权  " + jsonObject.getString("stockCount").split("\\.")[0] + "个");
+//                    txtEarnings.setText("累计分红收益  " + NumberUtil.doubleFormatMoney(Double.parseDouble(jsonObject.getString("totalStockProfit"))));
+//                    txtFhq.setText("分红权  " + jsonObject.getString("stockCount").split("\\.")[0] + "个");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -473,8 +500,8 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
                     if (lists.size() > 0) {
                         txtNotice.setText("公告:  " + lists.get(0).getSmsTitle());
-                        if(isShow){
-                            showNotice(lists.get(0).getSmsTitle(),lists.get(0).getSmsContent());
+                        if (isShow) {
+                            showNotice(lists.get(0).getSmsTitle(), lists.get(0).getSmsContent());
                         }
                     }
 
@@ -496,7 +523,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
         });
     }
 
-    private void showNotice(String title,String content) {
+    private void showNotice(String title, String content) {
         new AlertDialog.Builder(this).setTitle(title)
                 .setMessage(content)
                 .setPositiveButton("确定", null).show();
@@ -680,7 +707,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
                     editor.commit();
 
-                    txtAccount.setText("账号: " +model.getMobile());
+                    txtAccount.setText("账号: " + model.getMobile());
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -750,7 +777,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        startWeb(Main2Activity.this,url);
+                        startWeb(Main2Activity.this, url);
 
                         finish();
                         System.exit(0);
@@ -760,9 +787,9 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                 .setCancelable(false);
 
 
-        if(force.equals("1")){ // 强制更新
+        if (force.equals("1")) { // 强制更新
             builder.show();
-        }else {
+        } else {
             builder.setNegativeButton("取消", null).show();
         }
     }

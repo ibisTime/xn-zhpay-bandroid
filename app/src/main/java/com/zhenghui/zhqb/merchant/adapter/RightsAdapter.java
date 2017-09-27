@@ -60,26 +60,11 @@ public class RightsAdapter extends BaseAdapter {
     }
 
     public void setView(int i) {
-//        if (list.get(i).getStatus().equals("3")) {
-//            holder.txtStatus.setText("生效中");
-//            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_orange));
-//        }
-//        if (list.get(i).getStatus().equals("2")) {
-//            holder.txtStatus.setText("待生效");
-//            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_brown));
-//        }
-//        if (list.get(i).getStatus().equals("4")) {
-//            holder.txtStatus.setText("已生效");
-//            holder.txtStatus.setTextColor(context.getResources().getColor(R.color.fontColor_support));
-//        }
-//        holder.txtToday.setText(NumberUtil.doubleFormatMoney(list.get(i).getTodayAmount()));
-//        holder.txtTotal.setText(NumberUtil.doubleFormatMoney(list.get(i).getProfitAmount()));
-//        holder.txtCondition.setText(NumberUtil.doubleFormatMoney(list.get(i).getCostAmount()) + "交易额");
 
         holder.txtUnclaimed.setText(NumberUtil.doubleFormatMoney(list.get(i).getProfitAmount() - list.get(i).getBackAmount()));
         holder.txtReceived.setText(NumberUtil.doubleFormatMoney(list.get(i).getBackAmount()));
-        holder.txtCode.setText("FHQID"+list.get(i).getCode().substring(list.get(i).getCode().length() - 6, list.get(i).getCode().length()));
-//        holder.txtCode.setText(list.get(i).getCode().substring(0,12));
+        holder.txtCode.setText("ID"+list.get(i).getCode().substring(list.get(i).getCode().length() - 9, list.get(i).getCode().length()));
+
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (list.get(i).getCreateDatetime() != null) {
             Date d5 = new Date(list.get(i).getCreateDatetime());

@@ -51,6 +51,7 @@ public class RecordActivity extends MyBaseActivity {
     @BindView(R.id.txt_bill)
     TextView txtBill;
 
+    private String payType;
     private String code;
     private String time;
     private double amount;
@@ -139,6 +140,7 @@ public class RecordActivity extends MyBaseActivity {
                         }.getType());
 
                         if (model != null) {
+                            payType = model.getPayType();
                             amount = model.getStoreAmount();
                             time = model.getPayDatetime();
                             nickName = model.getUser().getMobile();
@@ -166,10 +168,6 @@ public class RecordActivity extends MyBaseActivity {
     }
 
     private void check(String recordCode) {
-//        if (!code.equals(recordCode)) {
-//            code = recordCode;
-//            editor.putString("recordCode", code);
-//            editor.commit();
 
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -177,7 +175,7 @@ public class RecordActivity extends MyBaseActivity {
         txtTime.setText(format.format(date));
 
         txtName.setText("“" + nickName + "”");
-        txtGet.setText(NumberUtil.doubleFormatMoney(amount) + "人民币");
+        txtGet.setText(NumberUtil.doubleFormatMoney(amount) + "货款");
 
         speak();
 //        } else {
@@ -217,7 +215,7 @@ public class RecordActivity extends MyBaseActivity {
 //        mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH, "./sdcard/iflytek.pcm");
 
         //3.开始合成
-        String voice = "您收到尾号" + numToChinese(nickName.substring(nickName.length() - 4, nickName.length())) + "支付的" + NumberUtil.doubleFormatMoney(amount) + "人民币";
+        String voice = "您收到尾号" + numToChinese(nickName.substring(nickName.length() - 4, nickName.length())) + "支付的" + NumberUtil.doubleFormatMoney(amount) + "货款";
         System.out.println("voice=" + voice);
         mTts.startSpeaking(voice, mSynListener);
 

@@ -62,8 +62,7 @@ public class ParameterAdapter extends BaseAdapter {
     public void setView(int i) {
         viewHolder.txtVersion.setText(list.get(i).getName());
         try {
-            viewHolder.txtTotal.setText(NumberUtil.doubleFormatMoney(list.get(i).getPrice1())+"人民币 / "
-                    + NumberUtil.doubleFormatMoney(list.get(i).getPrice3())+"钱包币");
+            viewHolder.txtTotal.setText(NumberUtil.doubleFormatMoney(list.get(i).getPrice1())+"人民币");
         }catch (Exception e){
             e.printStackTrace();
         }

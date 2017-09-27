@@ -80,6 +80,15 @@ public class StoreRecordAdapter extends BaseAdapter {
             case "3":
                 return "支付宝";
 
+            case "21":
+                return "联盟券";
+
+            case "22":
+                return "补贴";
+
+            case "23":
+                return "贡献值";
+
             default:
                 return "";
         }

@@ -32,8 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.zhenghui.zhqb.merchant.R.id.txt_get;
-import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802502;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808417;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808418;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808419;
@@ -51,8 +49,11 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
     TextView txtFhq;
     TextView txtGet;
     TextView txtPool;
+    TextView txtFenrun;
+    TextView txtWithdrawal;
     TextView txtEarnings;
     TextView txtTurnover;
+
     LinearLayout layoutGet;
     LinearLayout layoutPool;
 
@@ -61,8 +62,8 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
 
     private View headView;
 
-    private int page = 1;
-    private int pageSize = 10;
+    private double accountAmount;
+    private String accountNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,34 +77,68 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         initRefreshLayout();
 
         getData();
-        getTotal();
         getLimit();
-        getIsShow();
         getProperty();
+        getIsShow();
     }
 
     private void inits() {
         list = new ArrayList<>();
-        adapter = new RightsAdapter(this,list);
+        adapter = new RightsAdapter(this, list);
+
     }
 
     private void initHeadView() {
-        headView = LayoutInflater.from(this).inflate(R.layout.head_rights,null);
+        headView = LayoutInflater.from(this).inflate(R.layout.head_rights, null);
 
         txtFhq = (TextView) headView.findViewById(R.id.txt_fhq);
-        txtGet = (TextView) headView.findViewById(txt_get);
+        txtGet = (TextView) headView.findViewById(R.id.txt_get);
         txtPool = (TextView) headView.findViewById(R.id.txt_pool);
+        txtFenrun = (TextView) headView.findViewById(R.id.txt_fenrun);
+        txtWithdrawal = (TextView) headView.findViewById(R.id.txt_withdrawal);
         txtEarnings = (TextView) headView.findViewById(R.id.txt_earnings);
         txtTurnover = (TextView) headView.findViewById(R.id.txt_turnover);
 
         layoutGet = (LinearLayout) headView.findViewById(R.id.layout_get);
         layoutPool = (LinearLayout) headView.findViewById(R.id.layout_pool);
+
+        if (getIntent() != null) {
+            accountAmount = getIntent().getDoubleExtra("accountAmount", 0.0);
+            accountNumber = getIntent().getStringExtra("accountNumber");
+
+            txtFenrun.setText(NumberUtil.doubleFormatMoney(accountAmount));
+        }
     }
 
     private void initsListView() {
         listRights.addHeaderView(headView);
         listRights.setAdapter(adapter);
         listRights.setOnItemClickListener(this);
+
+        txtWithdrawal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userInfoSp.getString("identityFlag", null).equals("1")) { //identityFlag 实名认证标示 1有 0 无
+
+                    if (userInfoSp.getString("tradepwdFlag", null).equals("1")) { // tradepwdFlag 支付密码标示 1有 0 无
+
+                        startActivity(new Intent(RightsActivity.this, WithdrawalsActivity.class)
+                                .putExtra("balance", accountAmount)
+                                .putExtra("accountNumber", accountNumber));
+
+                    } else {
+
+                        Toast.makeText(RightsActivity.this, "请先设置支付密码", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(RightsActivity.this, ModifyTradeActivity.class).putExtra("isModify", false));
+
+                    }
+
+                } else {
+                    Toast.makeText(RightsActivity.this, "请先实名认证", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(RightsActivity.this, AuthenticateActivity.class));
+                }
+            }
+        });
     }
 
     private void initRefreshLayout() {
@@ -121,43 +156,6 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
         finish();
     }
 
-    private void getTotal() {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("accountNumber", "A2017100000000000002");
-            object.put("token", userInfoSp.getString("token",""));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        new Xutil().post(CODE_802502, object.toString(), new Xutil.XUtils3CallBackPost() {
-            @Override
-            public void onSuccess(String result) {
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-
-                    txtPool.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("amount")));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onTip(String tip) {
-                Toast.makeText(RightsActivity.this, tip, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(String error, boolean isOnCallback) {
-                Toast.makeText(RightsActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
     private void getIsShow() {
         JSONObject object = new JSONObject();
         try {
@@ -174,10 +172,10 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
-                    if(jsonObject.getString("cvalue").equals("1")){ // 1显示
+                    if (jsonObject.getString("cvalue").equals("1")) { // 1显示
                         layoutGet.setVisibility(View.GONE);
                         layoutPool.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         layoutPool.setVisibility(View.GONE);
                         layoutGet.setVisibility(View.VISIBLE);
                     }
@@ -216,8 +214,9 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
-                    txtFhq.setText(jsonObject.getInt("stockCount")+"");
+                    txtFhq.setText(jsonObject.getInt("stockCount") + "");
                     txtGet.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("backProfitAmount")));
+                    txtPool.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("poolAmount")));
                     txtEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("unbackProfitAmount")));
 
                 } catch (JSONException e) {
@@ -352,12 +351,13 @@ public class RightsActivity extends MyBaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if(i > 0){
+        if (i > 0) {
             startActivity(new Intent(RightsActivity.this, RightsListActivity.class)
-                    .putExtra("received", NumberUtil.doubleFormatMoney(list.get(i-1).getBackAmount()))
-                    .putExtra("unclaimed", NumberUtil.doubleFormatMoney(list.get(i-1).getProfitAmount() - list.get(i-1).getBackAmount()))
-                    .putExtra("date",list.get(i-1).getCreateDatetime())
-                    .putExtra("code",list.get(i-1).getCode()));
+                    .putExtra("received", NumberUtil.doubleFormatMoney(list.get(i - 1).getBackAmount()))
+                    .putExtra("unclaimed", NumberUtil.doubleFormatMoney(list.get(i - 1).getProfitAmount() - list.get(i - 1).getBackAmount()))
+                    .putExtra("date", list.get(i - 1).getCreateDatetime())
+                    .putExtra("code", list.get(i - 1).getCode())
+                    .putExtra("type","BTQ"));
         }
     }
 }

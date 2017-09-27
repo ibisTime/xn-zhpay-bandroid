@@ -27,9 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.zhenghui.zhqb.merchant.util.Constant.CODE_802502;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
-import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808275;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808459;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808917;
 
 public class StoreManage2Activity extends MyBaseActivity {
@@ -94,7 +93,6 @@ public class StoreManage2Activity extends MyBaseActivity {
         initEvent();
 
         getData();
-        getTotal();
         getProperty();
         getIsShow();
     }
@@ -133,7 +131,7 @@ public class StoreManage2Activity extends MyBaseActivity {
                 break;
 
             case R.id.layout_fhq:
-                startActivity(new Intent(this, RightsActivity.class));
+                startActivity(new Intent(this, SubsidyActivity.class));
                 break;
 
             case R.id.layout_deal:
@@ -144,42 +142,6 @@ public class StoreManage2Activity extends MyBaseActivity {
                 startActivity(new Intent(this, StoreActivity.class).putExtra("isModifi", true));
                 break;
         }
-    }
-
-    private void getTotal() {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("accountNumber", "A2017100000000000002");
-            object.put("token", userInfoSp.getString("token", ""));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        new Xutil().post(CODE_802502, object.toString(), new Xutil.XUtils3CallBackPost() {
-            @Override
-            public void onSuccess(String result) {
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-
-                    txtEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("amount")));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onTip(String tip) {
-                Toast.makeText(StoreManage2Activity.this, tip, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(String error, boolean isOnCallback) {
-                Toast.makeText(StoreManage2Activity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void getData() {
@@ -261,20 +223,20 @@ public class StoreManage2Activity extends MyBaseActivity {
             e.printStackTrace();
         }
 
-        new Xutil().post(CODE_808275, object.toString(), new Xutil.XUtils3CallBackPost() {
+        new Xutil().post(CODE_808459, object.toString(), new Xutil.XUtils3CallBackPost() {
             @Override
             public void onSuccess(String result) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
+                    txtFhq.setText(jsonObject.getInt("poolStockCount")+"");
                     txtMyFhq.setText(jsonObject.getInt("stockCount") + "");
-                    txtFhq.setText(jsonObject.getInt("totalStockCount") + "");
-                    txtMyEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("totalStockProfit")));
+                    txtEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("poolAmount")));
+                    txtMyEarnings.setText(NumberUtil.doubleFormatMoney(jsonObject.getDouble("totalProfitAmount")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
             }
 
@@ -338,7 +300,6 @@ public class StoreManage2Activity extends MyBaseActivity {
                     }else {
                         layoutShow.setVisibility(View.GONE);
                     }
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
