@@ -56,10 +56,19 @@ public class MyStoreModel {
     private String status;
     private String createDatetime;
     private String owner;
+    private String productCurrency;
     private String companyCode;
     private String systemCode;
     private String refereeMobile;
     private String remark;
+
+    public String getProductCurrency() {
+        return productCurrency;
+    }
+
+    public void setProductCurrency(String productCurrency) {
+        this.productCurrency = productCurrency;
+    }
 
     public String getCode() {
         return code;

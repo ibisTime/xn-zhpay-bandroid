@@ -1,6 +1,5 @@
 package com.zhenghui.zhqb.merchant.activity;
 
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,6 +59,8 @@ public class ParameterActivity extends MyBaseActivity {
     TextView txtDelete;
     @BindView(txt_title)
     TextView txtTitle;
+    @BindView(R.id.txt_payCurrency)
+    TextView txtPayCurrency;
 
     private List<ParameterModel> list;
     private ParameterAdapter adapter;
@@ -82,6 +83,8 @@ public class ParameterActivity extends MyBaseActivity {
     private boolean isModify;
     private String productCode;
 
+    private String payCurrency;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +96,7 @@ public class ParameterActivity extends MyBaseActivity {
     }
 
     private void inits() {
-        orderNo = getIntent().getIntExtra("orderNo",0);
+        orderNo = getIntent().getIntExtra("orderNo", 0);
         productCode = getIntent().getStringExtra("code");
         isModify = getIntent().getBooleanExtra("isModify", false);
 
@@ -101,16 +104,30 @@ public class ParameterActivity extends MyBaseActivity {
         index = getIntent().getIntExtra("index", 0);
         model = (ParameterModel) getIntent().getSerializableExtra("model");
 
-        if(model == null){
+        payCurrency = getIntent().getStringExtra("payCurrency");
+
+        if (model == null) {
             txtDelete.setVisibility(View.GONE);
-        }else {
+        } else {
             edtDescribe.setText(model.getName());
             txtProvince.setText(model.getProvince());
-            edtWeight.setText(model.getWeight()+"");
-            edtNumber.setText(model.getQuantity()+"");
+            edtWeight.setText(model.getWeight() + "");
+            edtNumber.setText(model.getQuantity() + "");
             edtRmb.setText(NumberUtil.doubleFormatMoney(model.getPrice1()));
             edtGwb.setText(NumberUtil.doubleFormatMoney(model.getPrice2()));
             edtQbb.setText(NumberUtil.doubleFormatMoney(model.getPrice3()));
+        }
+
+        if(payCurrency != null){
+            switch (payCurrency){
+                case "2":
+                    txtPayCurrency.setText("人民币");
+                    break;
+
+                case "4":
+                    txtPayCurrency.setText("钱包币");
+                    break;
+            }
         }
     }
 
@@ -225,7 +242,7 @@ public class ParameterActivity extends MyBaseActivity {
                     model.setPrice3(qbb * 1000);
 
                     if (model != null) {
-                        setResult(101, new Intent().putExtra("model", model).putExtra("index",index));
+                        setResult(101, new Intent().putExtra("model", model).putExtra("index", index));
                     } else {
                         setResult(0, new Intent().putExtra("model", model));
                     }
@@ -425,7 +442,7 @@ public class ParameterActivity extends MyBaseActivity {
 //    }
 
     private void tip() {
-        new AlertDialog.Builder(this).setTitle("提示")
+        new Builder(this).setTitle("提示")
                 .setMessage("您确定要删除该规格吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override

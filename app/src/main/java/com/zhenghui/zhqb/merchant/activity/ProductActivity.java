@@ -33,6 +33,7 @@ import com.zhenghui.zhqb.merchant.MyBaseActivity;
 import com.zhenghui.zhqb.merchant.R;
 import com.zhenghui.zhqb.merchant.adapter.ParameterAdapter;
 import com.zhenghui.zhqb.merchant.adapter.RecyclerViewAdapter;
+import com.zhenghui.zhqb.merchant.model.MyStoreModel;
 import com.zhenghui.zhqb.merchant.model.ParameterModel;
 import com.zhenghui.zhqb.merchant.model.ProductModel;
 import com.zhenghui.zhqb.merchant.model.ProductTypeModel;
@@ -62,6 +63,7 @@ import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808016;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808017;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808026;
 import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808037;
+import static com.zhenghui.zhqb.merchant.util.Constant.CODE_808219;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.RESULT_CAMARA_IMAGE;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.album;
 import static com.zhenghui.zhqb.merchant.util.ImageUtil.camara;
@@ -83,10 +85,12 @@ public class ProductActivity extends MyBaseActivity {
     EditText edtAdvertisement;
     ImageView imgAdd;
     ImageView imgPhoto;
+    TextView txtPayType;
     TextView txtBigType;
     TextView txtSmallType;
     FrameLayout layoutAdvPic;
     RecyclerView recyclerView;
+    LinearLayout layoutPayType;
     LinearLayout layoutBigType;
     LinearLayout layoutSmallType;
 
@@ -114,6 +118,13 @@ public class ProductActivity extends MyBaseActivity {
     private String[] smallType1;
     private String[] smallType2;
     private String[] smallType3;
+
+    private String[] payType = {"人民币","钱包币"};
+    private String[] pay = {"2","4"};
+    private String payCurrency = "2";
+    private boolean payFlag = false; // 币种是否可选
+    private String productCurrency = "";
+    private List<String> payCurrencyList;
 
     private String category;
     private String type;
@@ -153,6 +164,7 @@ public class ProductActivity extends MyBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getStore();
         getData();
     }
 
@@ -182,11 +194,17 @@ public class ProductActivity extends MyBaseActivity {
         listPicUrl = new ArrayList<>();
 
         listParamter = new ArrayList<>();
-        adapter = new ParameterAdapter(ProductActivity.this, listParamter);
+        payCurrencyList = new ArrayList<>();
+        payCurrencyList.add(payCurrency);
+        adapter = new ParameterAdapter(ProductActivity.this, listParamter, payCurrencyList);
+
     }
 
     private void initHeadView() {
         headerView = LayoutInflater.from(this).inflate(R.layout.head_product, null);
+
+        txtPayType = (TextView) headerView.findViewById(R.id.txt_payType);
+        layoutPayType = (LinearLayout) headerView.findViewById(R.id.layout_payType);
 
         txtBigType = (TextView) headerView.findViewById(R.id.txt_bigType);
         txtSmallType = (TextView) headerView.findViewById(R.id.txt_smallType);
@@ -203,6 +221,16 @@ public class ProductActivity extends MyBaseActivity {
         edtName = (EditText) headerView.findViewById(R.id.edt_name);
         edtDetail = (EditText) headerView.findViewById(R.id.edt_detail);
         edtAdvertisement = (EditText) headerView.findViewById(R.id.edt_advertisement);
+
+        layoutPayType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (payFlag){
+                    choosePayType();
+                }
+            }
+        });
 
         layoutBigType.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +269,7 @@ public class ProductActivity extends MyBaseActivity {
                 choosePhoto(view);
             }
         });
+
     }
 
     private void initFootView() {
@@ -254,6 +283,7 @@ public class ProductActivity extends MyBaseActivity {
                     if (isModifi) {
                         if(!model.getStatus().equals("9")){
                             startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                                    .putExtra("payCurrency", payCurrency)
                                     .putExtra("orderNo", listParamter.size() + 1)
                                     .putExtra("code", model.getCode())
                                     .putExtra("isModify", isModifi), PARAMETER_ADD);
@@ -261,7 +291,8 @@ public class ProductActivity extends MyBaseActivity {
                             Toast.makeText(ProductActivity.this, "垃圾箱里的商品不可添加或修改规格", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class), PARAMETER_ADD);
+                        startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                                .putExtra("payCurrency", payCurrency), PARAMETER_ADD);
                     }
 
             }
@@ -298,6 +329,7 @@ public class ProductActivity extends MyBaseActivity {
                     if(!model.getStatus().equals("9")){
                         if (listParamter.size() > 0){
                             startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                                    .putExtra("payCurrency", payCurrency)
                                     .putExtra("index", (i - 1))
                                     .putExtra("isModify", isModifi)
                                     .putExtra("model", listParamter.get(i - 1)), PARAMETER_DETAIL);
@@ -308,6 +340,7 @@ public class ProductActivity extends MyBaseActivity {
                 } else {
                     if (listParamter.size() > 0){
                         startActivityForResult(new Intent(ProductActivity.this, ParameterActivity.class)
+                                .putExtra("payCurrency", payCurrency)
                                 .putExtra("index", (i - 1))
                                 .putExtra("isModify", isModifi)
                                 .putExtra("model", listParamter.get(i - 1)), PARAMETER_DETAIL);
@@ -644,11 +677,23 @@ public class ProductActivity extends MyBaseActivity {
     }
 
 
+    private void choosePayType() {
+        new AlertDialog.Builder(this).setTitle("请选择支付币种").setSingleChoiceItems(
+                payType, -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                        txtBankCard.setText(list.get(which).getBankName());
+                        txtPayType.setText(payType[which]);
+                        payCurrency = pay[which] + "";
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton("取消", null).show();
+    }
+
     private void chooseBigType() {
         new AlertDialog.Builder(this).setTitle("请选择大类").setSingleChoiceItems(
                 bigType, -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-//                        txtBankCard.setText(list.get(which).getBankName());
                         txtBigType.setText(bigType[which]);
                         txtSmallType.setText("");
                         category = bigTypeList.get(which).getCode() + "";
@@ -721,6 +766,7 @@ public class ProductActivity extends MyBaseActivity {
             object.put("name", edtName.getText().toString().trim());
             object.put("slogan", edtAdvertisement.getText().toString().trim());
             object.put("advPic", cover);
+            object.put("payCurrency", payCurrency);
             object.put("pic", pic.substring(0, pic.length() - 2));
             object.put("description", edtDetail.getText().toString().trim());
             object.put("updater", userInfoSp.getString("userId", null));
@@ -783,6 +829,7 @@ public class ProductActivity extends MyBaseActivity {
             object.put("name", edtName.getText().toString().trim());
             object.put("slogan", edtAdvertisement.getText().toString().trim());
             object.put("advPic", cover);
+            object.put("payCurrency", payCurrency);
             object.put("pic", pic.substring(0, pic.length() - 2));
             object.put("description", edtDetail.getText().toString().trim());
             object.put("updater", userInfoSp.getString("userId", null));
@@ -1282,6 +1329,68 @@ public class ProductActivity extends MyBaseActivity {
             }
         });
 
+    }
+
+    private void getStore() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("token", userInfoSp.getString("token", null));
+            object.put("userId", userInfoSp.getString("userId", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Xutil().post(CODE_808219, object.toString(), new Xutil.XUtils3CallBackPost() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    Gson gson = new Gson();
+                    MyStoreModel model = gson.fromJson(jsonObject.toString(), new TypeToken<MyStoreModel>() {
+                    }.getType());
+
+                    switch (model.getProductCurrency()){
+                        case "RMB":
+                            payFlag = false;
+                            payCurrency = "2";
+                            txtPayType.setText("人民币");
+                            txtPayType.setBackgroundDrawable(getResources().getDrawable(R.drawable.corners_pay_type));
+                            layoutPayType.setVisibility(View.GONE);
+                            break;
+
+                        case "QBB":
+                            payFlag = false;
+                            payCurrency = "4";
+                            txtPayType.setText("钱包币");
+                            txtPayType.setBackgroundDrawable(getResources().getDrawable(R.drawable.corners_pay_type));
+                            layoutPayType.setVisibility(View.GONE);
+                            break;
+
+                        case "RQ": //人民币/钱包币
+                            payFlag = true;
+                            break;
+                    }
+                    payCurrencyList.clear();
+                    payCurrencyList.add(payCurrency);
+                    adapter.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onTip(String tip) {
+                Toast.makeText(ProductActivity.this, tip, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error, boolean isOnCallback) {
+                Toast.makeText(ProductActivity.this, "无法连接服务器，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

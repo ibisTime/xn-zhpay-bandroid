@@ -20,13 +20,15 @@ import butterknife.ButterKnife;
 public class ParameterAdapter extends BaseAdapter {
 
     private Context context;
+    private List<String> payCurrency;
     private ViewHolder viewHolder;
     private List<ParameterModel> list;
     private SharedPreferences userInfoSp;
 
-    public ParameterAdapter(Context context, List<ParameterModel> list) {
+    public ParameterAdapter(Context context, List<ParameterModel> list, List<String> payCurrency) {
         this.list = list;
         this.context = context;
+        this.payCurrency = payCurrency;
     }
 
     @Override
@@ -62,7 +64,17 @@ public class ParameterAdapter extends BaseAdapter {
     public void setView(int i) {
         viewHolder.txtVersion.setText(list.get(i).getName());
         try {
-            viewHolder.txtTotal.setText(NumberUtil.doubleFormatMoney(list.get(i).getPrice1())+"人民币");
+            if (payCurrency.get(0)!=null){
+                switch (payCurrency.get(0)){
+                    case "2":
+                        viewHolder.txtTotal.setText(NumberUtil.doubleFormatMoney(list.get(i).getPrice1())+"人民币");
+                        break;
+
+                    case "4":
+                        viewHolder.txtTotal.setText(NumberUtil.doubleFormatMoney(list.get(i).getPrice1())+"钱包币");
+                        break;
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -307,6 +307,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
                         editor.putBoolean("storeFlag", true);
                         editor.putString("storeCode", list.get(0).getCode());
                         editor.putString("level", list.get(0).getLevel());
+                        editor.putString("productCurrency", list.get(0).getProductCurrency());
 
                         setView();
                     } else {
@@ -824,7 +825,7 @@ public class Main2Activity extends MyBaseActivity implements SwipeRefreshLayout.
 
     private void tip() {
         new AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("您确定要退出正汇商家吗?")
+                .setMessage("您确定要退出"+getString(R.string.app_name)+"吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -25,7 +25,7 @@ public class Xutil {
     public static String URL = "http://106.15.49.68:5601/forward-service/api";
     public static String LOGOUT = "http://106.15.49.68:5601/forward-service/user/logOut";
 
-    // 正汇线上环境
+    // 线上环境
 //    public static String URL = "http://139.224.200.54:5601/forward-service/api";
 //    public static String LOGOUT = "http://139.224.200.54:5601/forward-service/user/logOut";
 
@@ -75,7 +75,6 @@ public class Xutil {
                         backPost.onTip("登录验证已失效，请重新登录");
 
                     } else{
-//                        backPost.onTip("errorCode="+object.getString("errorCode")+",errorInfo:"+object.getString("errorInfo"));
                         System.out.println("code="+code+"请求失败，errorCode="+object.getString("errorCode")+",errorInfo:"+object.getString("errorInfo"));
                     }
                 } catch (JSONException e) {

@@ -184,8 +184,13 @@ public class OrderDetailActivity extends MyBaseActivity {
         }
         txtNumber.setText("数量*" + model.getQuantity());
 
-        txtPrice.setText(NumberUtil.doubleFormatMoney(model.getAmount1()));
-        txtYunfei.setText(NumberUtil.doubleFormatMoney(model.getYunfei()));
+        if (model.getPayType().equals("24")){
+            txtPrice.setText("钱包币"+NumberUtil.doubleFormatMoney(model.getAmount1()));
+            txtYunfei.setText("钱包币"+NumberUtil.doubleFormatMoney(model.getYunfei()));
+        }else {
+            txtPrice.setText("人民币"+NumberUtil.doubleFormatMoney(model.getAmount1()));
+            txtYunfei.setText("人民币"+NumberUtil.doubleFormatMoney(model.getYunfei()));
+        }
 
 
         txtTotalNumber.setText("共计" + 1 + "件货物");

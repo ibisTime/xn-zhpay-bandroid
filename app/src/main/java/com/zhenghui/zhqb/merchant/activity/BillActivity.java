@@ -52,6 +52,7 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
 
     private double accountAmount;
     private String accountNumber;
+    private String accountName;
 
     private int page = 1;
     private int pageSize = 10;
@@ -87,7 +88,12 @@ public class BillActivity extends MyBaseActivity implements SwipeRefreshLayout.O
         adapter = new BillAdapter(this, list);
 
         accountNumber = getIntent().getStringExtra("code");
+        accountName = getIntent().getStringExtra("accountName");
         accountAmount = getIntent().getDoubleExtra("accountAmount", 0.0);
+
+        if (accountName!=null && accountName.equals("qbb")){
+            txtWithdrawal.setVisibility(View.GONE);
+        }
 
         txtBalance.setText(NumberUtil.doubleFormatMoney(accountAmount) + "");
     }

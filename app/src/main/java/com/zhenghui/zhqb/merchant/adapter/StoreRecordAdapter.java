@@ -89,6 +89,9 @@ public class StoreRecordAdapter extends BaseAdapter {
             case "23":
                 return "贡献值";
 
+            case "24":
+                return "钱包币";
+
             default:
                 return "";
         }

@@ -45,14 +45,20 @@ public class WalletActivity extends MyBaseActivity {
     TextView txtBtb;
     @BindView(R.id.layout_btb)
     LinearLayout layoutBtb;
+    @BindView(R.id.txt_qbb)
+    TextView txtQbb;
+    @BindView(R.id.layout_qbb)
+    LinearLayout layoutQbb;
 
     private double frb;
     private double hkb;
     private double btb;
+    private double qbb;
 
     private String btbCode;
     private String frbCode;
     private String hkbCode;
+    private String qbbCode;
 
     private List<WalletModel> list;
 
@@ -71,7 +77,7 @@ public class WalletActivity extends MyBaseActivity {
         list = new ArrayList<>();
     }
 
-    @OnClick({R.id.layout_back, R.id.layout_hkb, R.id.layout_frb, R.id.layout_btb})
+    @OnClick({R.id.layout_back, R.id.layout_hkb, R.id.layout_frb, R.id.layout_btb, R.id.layout_qbb})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
@@ -97,6 +103,13 @@ public class WalletActivity extends MyBaseActivity {
                         .putExtra("code", btbCode)
                         .putExtra("accountAmount", btb)
                         .putExtra("accountName", "btb"));
+                break;
+
+            case R.id.layout_qbb:
+                startActivity(new Intent(this, BillActivity.class)
+                        .putExtra("code", qbbCode)
+                        .putExtra("accountAmount", qbb)
+                        .putExtra("accountName", "qbb"));
                 break;
         }
     }
@@ -167,6 +180,13 @@ public class WalletActivity extends MyBaseActivity {
                     btb = model.getAmount();
 
                     btbCode = model.getAccountNumber();
+                    break;
+
+                case "QBB": // 钱包币
+                    txtQbb.setText(NumberUtil.doubleFormatMoney(model.getAmount()));
+                    qbb = model.getAmount();
+
+                    qbbCode = model.getAccountNumber();
                     break;
             }
         }
