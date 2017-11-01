@@ -117,6 +117,7 @@ public class StoreManage2Activity extends MyBaseActivity {
                 }
             }
         });
+
     }
 
     @OnClick({R.id.layout_back, R.id.layout_deal, R.id.txt_edit, R.id.layout_fhq, R.id.layout_store})

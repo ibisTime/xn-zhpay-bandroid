@@ -45,10 +45,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="发布"
             android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
+            android:text="发布"
             android:textColor="@color/fontColor_rose"
             android:textSize="14sp" />
 
