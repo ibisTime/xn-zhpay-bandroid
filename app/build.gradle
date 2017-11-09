@@ -2,14 +2,16 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.zhenghui.zhqb.merchant"
+        applicationId "com.zhenghui.zhqb.merchant2"
         minSdkVersion 19
         targetSdkVersion 24
         versionCode 20
         versionName "4.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
 
         // Enabling multidex support.
         multiDexEnabled true
@@ -88,7 +90,7 @@ dependencies {
     // citypicker
     compile 'liji.library.dev:citypickerview:+'
     //    compile 'com.zzhoujay.glideimagegetter:glideimagegetter:1.0.1'
-    compile files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
+//    compile files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
     compile 'com.android.support:appcompat-v7:24.2.1'
     //    compile project(':easeUI')
     compile 'com.android.support:design:24.2.1'
